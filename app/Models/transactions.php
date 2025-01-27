@@ -5,13 +5,14 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class api_keys extends Model
+class transactions extends Model
 {
     use HasFactory;
+
     protected $fillable = [
         'user_id',
-        'api_key',
-        'callback_url'
-
+        'currency',
+        'balance',
+        
     ];
 }
