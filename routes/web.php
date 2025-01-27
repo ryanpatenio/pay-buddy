@@ -13,9 +13,20 @@ use Illuminate\Support\Facades\Route;
 | contains the "web" middleware group. Now create something great!
 |
 */
-#public routes
-Route::post('/register',[AuthController::class,'register'])->name('register');
-Route::post('/login',[AuthController::class,'login'])->name('login');
+#public routes 
+
+#public ulr for redirecting
+Route::get('/register',function(){
+
+    return view('auth.register');
+
+})->name('register');
+
+
+
+#post Routes
+Route::post('/register',[AuthController::class,'register'])->name('process-register');
+Route::post('/login',[AuthController::class,'login'])->name('process-login');
 
 Route::middleware(['auth'])->group(function(){
 
@@ -44,10 +55,11 @@ Route::middleware(['auth'])->group(function(){
 });
 
 #temporary
-Route::get('/home',function(){
+Route::get('/user-dashboard',function(){
    return view('welcome');
-})->name('home');
+})->name('user-dashboard');
 
 Route::get('/', function () {
-    return view('welcome');
+    return view('auth.login');
 });
+

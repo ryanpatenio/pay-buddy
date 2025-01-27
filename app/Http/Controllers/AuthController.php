@@ -31,7 +31,7 @@ class AuthController extends Controller
                 cookie()->queue(cookie()->forget('remember'));
             }
     
-            return redirect()->intended('home')->with('success', 'Login successful.');
+            return redirect()->intended('user-dashboard')->with('success', 'Login successful.');
         }
     
         // Log failed attempt (optional)
@@ -50,7 +50,7 @@ class AuthController extends Controller
         // $validator = Validator::make($request->all(),[
         //     'name' => 'required|string|max:255',
         //     'email' => 'required|string|email|max:255|unique:users',
-        //     'password' => 'required|string|min:8',
+        //     'password' => 'required|string|min:8|confirmed',
             
         // ]);
         // if($validator->fails()){
@@ -77,8 +77,8 @@ class AuthController extends Controller
                     'balance' => 500.00, // Default starting balance
                 ]);
             });
-    
-            return redirect()->route('home')->with('success', 'Registration successful.');
+            
+            return redirect()->route('user-dashboard')->with('success', 'Registration successful.');
 
         } catch (\Exception $e) {
             // Log error and redirect back with an error message
