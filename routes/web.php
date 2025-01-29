@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\DashboardController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -56,8 +57,17 @@ Route::middleware(['auth'])->group(function(){
 
 #temporary
 Route::get('/user-dashboard',function(){
-   return view('welcome');
+   return view('users.dashboard');
 })->name('user-dashboard');
+
+#testing
+
+Route::get('/balance-data', [DashboardController::class, 'getBalanceData']);
+
+Route::get('/Profile',function(){
+    return view('users.profile');
+});
+
 
 Route::get('/', function () {
     return view('auth.login');
