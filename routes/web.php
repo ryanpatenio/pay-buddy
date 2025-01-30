@@ -55,7 +55,38 @@ Route::middleware(['auth'])->group(function(){
 
 });
 
-#temporary
+#temporary for ADMIN
+Route::get('/Dashboard-admin',function(){
+    return view('admin.dashboard');
+
+});
+Route::get('/Dashboard-Transactions',function(){
+    return view('admin.transactions');
+
+});
+Route::get('/Dashboard-Requests',function(){
+    return view('admin.requests');
+
+});
+Route::get('/Dashboard-Users',function(){
+    return view('admin.users');
+
+});
+Route::get('/Dashboard-Api-keys',function(){
+    return view('admin.user-api-keys');
+
+});
+Route::get('/Dashboard-Logs',function(){
+    return view('admin.logs');
+
+});
+Route::get('/Dashboard-Profile-Account',function(){
+    return view('admin.profileAccount');
+
+});
+
+
+#temporary for Users
 Route::get('/user-dashboard',function(){
    return view('users.dashboard');
 })->name('user-dashboard');
