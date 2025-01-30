@@ -68,7 +68,7 @@
                                         <h5 class="text-uppercase  text-muted fw-semibold mb-2">Send Money
                                         </h5>
                                         <!-- Subtitle -->
-                                        <a href="">
+                                        <a href="/Xpress-Send">
                                             <h2 class="mb-0">Send Money
                                             </h2>
                                         </a>
@@ -147,6 +147,10 @@
                                             <th>
                                                 <a href="javascript: void(0);" class="text-muted list-sort" data-sort="name">Transaction Type
                                             </th>
+                                            <th>
+                                                <a href="javascript: void(0);" class="text-muted list-sort" data-sort="key">Transaction Code
+                                                </a>
+                                            </th>
                                             
                                             <th class="text-end">
                                                 <a href="javascript: void(0);" class="text-muted list-sort" data-sort="amount">Amount
@@ -156,14 +160,40 @@
                                                 <a href="javascript: void(0);" class="text-muted list-sort" data-sort="sales">Date
                                                 </a>
                                             </th>
+                                            <th>
+                                                <a href="javascript: void(0);" class="text-muted list-sort" data-sort="status">Status
+                                                </a>
+                                            </th>
                                         </tr>
                                     </thead>
                                     <tbody class="list">
                                         <tr>
                                             <td class="name fw-bold">Send Money</td>
+                                            <td class="key" data-key="FC6F7D6B-BADD-0DD4-A7B0-EB34A1EFA527">
+                                                <div class="d-flex">
+                                                    <input id="key-01" class="form-control w-350px me-3" value="FC6F7D6B-BADD-0DD4-A7B0-EB34A1EFA527">
+                                                    <!-- Button -->
+                                                    <button class="clipboard btn btn-link px-0" data-clipboard-target="#key-01" data-bs-toggle="tooltip" data-bs-title="Copy to clipboard">
+                                                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" height="18" width="18">
+                                                            <g>
+                                                                <path d="M13.4,4.73a.24.24,0,0,0,.2.26,1.09,1.09,0,0,1,.82,1.11V7.5a1.24,1.24,0,0,0,1.25,1.24h0A1.23,1.23,0,0,0,16.91,7.5V4a1.5,1.5,0,0,0-1.49-1.5H13.69a.29.29,0,0,0-.18.07.26.26,0,0,0-.07.18C13.44,3.2,13.44,4.22,13.4,4.73Z" style="fill: currentColor"/>
+                                                                <path d="M9,21.26A1.23,1.23,0,0,0,7.71,20H3.48a1.07,1.07,0,0,1-1-1.14V6.1A1.08,1.08,0,0,1,3.33,5a.25.25,0,0,0,.2-.26c0-.77,0-1.6,0-2a.25.25,0,0,0-.25-.25H1.5A1.5,1.5,0,0,0,0,4V21a1.5,1.5,0,0,0,1.49,1.5H7.71A1.24,1.24,0,0,0,9,21.26Z" style="fill: currentColor"/>
+                                                                <path d="M11.94,4.47v-2a.5.5,0,0,0-.5-.49h-.76a.26.26,0,0,1-.25-.22,2,2,0,0,0-3.95,0A.25.25,0,0,1,6.23,2H5.47A.49.49,0,0,0,5,2.48v2a.49.49,0,0,0,.49.5h6A.5.5,0,0,0,11.94,4.47Z" style="fill: currentColor"/>
+                                                                <path d="M19,17.27H15a.75.75,0,0,0,0,1.5h4a.75.75,0,0,0,0-1.5Z" style="fill: currentColor"/>
+                                                                <path d="M14.29,14.54a.76.76,0,0,0,.75.75h2.49a.75.75,0,0,0,0-1.5H15A.76.76,0,0,0,14.29,14.54Z" style="fill: currentColor"/>
+                                                                <path d="M23.5,13.46a2,2,0,0,0-.58-1.41l-1.41-1.4a2,2,0,0,0-1.41-.59H12.49a2,2,0,0,0-2,2V22a2,2,0,0,0,2,2h9a2,2,0,0,0,2-2Zm-11-.4a1,1,0,0,1,1-1h6.19a1,1,0,0,1,.71.29l.82.82a1,1,0,0,1,.29.7V21a1,1,0,0,1-1,1h-7a1,1,0,0,1-1-1Z" style="fill: currentColor"/>
+                                                            </g>
+                                                        </svg>
+                                                    </button>
+                                                </div>
+                                            </td>
                                             <td class="price text-end">$599</td>
                                          
                                             <td class="amount text-end">January 1 2025</td>
+                                            <td class="status" data-status="Active">
+                                                <span class="legend-circle bg-success"></span>
+                                                Success
+                                            </td>
                                            
                                         </tr>
                                       
@@ -180,5 +210,45 @@
               
             </div>
             <!-- / .container-fluid -->
+
+            <!--Modal---->
+
+            <div class="modal fade bd-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+                <div class="modal-dialog modal-lg" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h3 class="modal-title" id="myLargeModalLabel">Send Money</h3>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            <div class="row mb-5">
+                                <div class="col">
+                                    <label for="">Acount Number</label>
+                                    <input type="text" class="form-control" name="account_number" id="account-number" required placeholder="Account Number">
+                                </div>
+                                <div class="col">
+                                    <label for="">Account Name</label>
+                                    <input type="text" class="form-control" name="account_name" id="account-name"  placeholder="" readonly>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col">
+                                    <label for="">Amount</label>
+                                    <input type="text" class="form-control" name="amount" id="amount-to-send" required>
+                                </div>
+                            </div>
+                            
+                            <div class="modal-footer">
+                                
+                                <button type="button" class="btn btn-light" data-bs-dismiss="modal">Close </button >
+                                <button type="button" class="btn btn-primary" id="proceed">Proceed </button >
+                           </div >
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            
+        
        
 @endsection

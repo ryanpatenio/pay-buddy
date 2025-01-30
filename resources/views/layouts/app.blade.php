@@ -143,6 +143,9 @@
             }
         }
     </script>
+    
+    <!--Jquery-->
+    <script src="{{asset('assets/js/jquery.js')}}"></script>
 
         <!-- Page Title -->
         <title>@yield('title', 'Pay Buddy')</title>

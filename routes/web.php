@@ -60,6 +60,28 @@ Route::get('/user-dashboard',function(){
    return view('users.dashboard');
 })->name('user-dashboard');
 
+Route::get('/Transactions',function(){
+    return view('users.transactions');
+});
+
+Route::get('/Profile-Account',function(){
+    return view('users.profileAccount');
+
+});
+Route::get('/Api-keys',function(){
+    return view('users.api-keys');
+
+});
+
+Route::get('/Xpress-Send',function(){
+    return view('users.express-send');
+
+});
+
+Route::get('/Notifications',function(){
+    return view('users.notifications');
+
+});
 #testing
 
 Route::get('/balance-data', [DashboardController::class, 'getBalanceData']);
