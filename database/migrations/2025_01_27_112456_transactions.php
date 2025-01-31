@@ -25,6 +25,9 @@ return new class extends Migration
 
             $table->enum('type', ['credit', 'debit']);
             $table->decimal('amount', 15, 2);
+            
+            $table->decimal('fee', 15, 2);
+
             $table->enum('status', ['pending', 'success', 'failed'])->default('pending');
             $table->text('description')->nullable();
 
