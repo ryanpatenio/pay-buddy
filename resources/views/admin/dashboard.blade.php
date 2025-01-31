@@ -61,9 +61,60 @@
             </div>
         </div>
         <!--End of Users-->
+       
+
+            <div class="col-lg-6 col-xxl-3 d-flex">
+            <!-- Card -->
+            <div class="card border-0 flex-fill w-100">
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col">
+                            <!-- Title -->
+                            <h5 class="text-uppercase text-muted fw-semibold mb-2">Request
+                            </h5>
+                            <!-- Subtitle -->
+                            <h2 class="mb-0">10
+                            </h2>
+                        </div>
+                        <div class="col-auto">
+                            <!-- Icon -->
+                            <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="currentColor" class="bi bi-person-fill-exclamation text-primary" viewBox="0 0 16 16">
+                                <path d="M11 5a3 3 0 1 1-6 0 3 3 0 0 1 6 0m-9 8c0 1 1 1 1 1h5.256A4.5 4.5 0 0 1 8 12.5a4.5 4.5 0 0 1 1.544-3.393Q8.844 9.002 8 9c-5 0-6 3-6 4"/>
+                                <path d="M16 12.5a3.5 3.5 0 1 1-7 0 3.5 3.5 0 0 1 7 0m-3.5-2a.5.5 0 0 0-.5.5v1.5a.5.5 0 0 0 1 0V11a.5.5 0 0 0-.5-.5m0 4a.5.5 0 1 0 0-1 .5.5 0 0 0 0 1"/>
+                              </svg>
+                        </div>
+                    </div>
+                    <!-- / .row -->
+                </div>
+                <div class="card-footer">
+                    <div class="row justify-content-between">
+                        <div class="col-auto">
+                            <!-- Label -->
+                            <p class="fs-6 text-muted text-uppercase mb-0">Today Request
+                            </p>
+                            <!-- Comment -->
+                            <p class="fs-5 fw-bold mb-0">₱ 2,230
+                            </p>
+                        </div>
+                        <div class="col text-end text-truncate">
+                            <!-- Label -->
+                            <p class="fs-6 text-muted text-uppercase mb-0">Monthly Request
+                            </p>
+                            <!-- Comment -->
+                            <p class="fs-5 fw-bold mb-0">₱ 158,990
+                            </p>
+                        </div>
+                        
+                    </div>
+                    <!-- / .row -->
+                </div>
+            </div>
+        </div>
+
+        
 
         <!---Investors-->
-        <div class="col-lg-6 col-xxl-3 d-flex">
+        {{-- <div class="col-lg-6 col-xxl-3 d-flex">
             <!-- Card -->
             <div class="card border-0 flex-fill w-100">
                 <div class="card-body">
@@ -106,7 +157,7 @@
                     <!-- / .row -->
                 </div>
             </div>
-        </div>
+        </div> --}}
 
         <!---End User Request-->
 
