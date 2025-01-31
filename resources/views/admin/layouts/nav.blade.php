@@ -78,7 +78,24 @@
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link {{ request()->is('Dashboard-Users') ? 'active' : '' }} " href="/Dashboard-Users">
+                    <a class="nav-link {{ request()->is('Dashboard-Investors') || request()->is('Dashboard-Investor-Details')  ? 'active' : '' }} " href="/Dashboard-Investors">
+                       
+                            <svg class="nav-link-icon" viewBox="0 0 24 24" height="18" width="18" class="text-primary" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M2.250 6.000 A2.250 2.250 0 1 0 6.750 6.000 A2.250 2.250 0 1 0 2.250 6.000 Z" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"/>
+                                <path d="M4.5,9.75A3.75,3.75,0,0,0,.75,13.5v2.25h1.5l.75,6H6" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"/>
+                                <path d="M17.250 6.000 A2.250 2.250 0 1 0 21.750 6.000 A2.250 2.250 0 1 0 17.250 6.000 Z" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"/>
+                                <path d="M19.5,9.75a3.75,3.75,0,0,1,3.75,3.75v2.25h-1.5l-.75,6H18" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"/>
+                                <path d="M9.000 3.750 A3.000 3.000 0 1 0 15.000 3.750 A3.000 3.000 0 1 0 9.000 3.750 Z" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"/>
+                                <path d="M17.25,13.5a5.25,5.25,0,0,0-10.5,0v2.25H9l.75,7.5h4.5l.75-7.5h2.25Z" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"/>
+                            </svg>
+                       
+                        <span>Investors</span>
+                    </a>
+                </li>
+                
+                
+                <li class="nav-item">
+                    <a class="nav-link {{ request()->is('Dashboard-Users') || request()->is('Dashboard-viewUser') ? 'active' : '' }} " href="/Dashboard-Users">
                        
                             <svg class="nav-link-icon" viewBox="0 0 24 24" height="18" width="18" class="text-primary" xmlns="http://www.w3.org/2000/svg">
                                 <path d="M2.250 6.000 A2.250 2.250 0 1 0 6.750 6.000 A2.250 2.250 0 1 0 2.250 6.000 Z" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"/>

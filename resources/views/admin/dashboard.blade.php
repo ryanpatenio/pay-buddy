@@ -62,7 +62,7 @@
         </div>
         <!--End of Users-->
 
-        <!---User Request-->
+        <!---Investors-->
         <div class="col-lg-6 col-xxl-3 d-flex">
             <!-- Card -->
             <div class="card border-0 flex-fill w-100">
@@ -70,7 +70,7 @@
                     <div class="row">
                         <div class="col">
                             <!-- Title -->
-                            <h5 class="text-uppercase text-muted fw-semibold mb-2">Requests
+                            <h5 class="text-uppercase text-muted fw-semibold mb-2">Investors
                             </h5>
                             <!-- Subtitle -->
                             <h2 class="mb-0">10
@@ -78,10 +78,14 @@
                         </div>
                         <div class="col-auto">
                             <!-- Icon -->
-                            <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="currentColor" class="bi bi-person-fill-exclamation text-primary" viewBox="0 0 16 16">
-                                <path d="M11 5a3 3 0 1 1-6 0 3 3 0 0 1 6 0m-9 8c0 1 1 1 1 1h5.256A4.5 4.5 0 0 1 8 12.5a4.5 4.5 0 0 1 1.544-3.393Q8.844 9.002 8 9c-5 0-6 3-6 4"/>
-                                <path d="M16 12.5a3.5 3.5 0 1 1-7 0 3.5 3.5 0 0 1 7 0m-3.5-2a.5.5 0 0 0-.5.5v1.5a.5.5 0 0 0 1 0V11a.5.5 0 0 0-.5-.5m0 4a.5.5 0 1 0 0-1 .5.5 0 0 0 0 1"/>
-                              </svg>
+                            <svg viewBox="0 0 24 24" height="30" width="30" class="text-primary" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M2.250 6.000 A2.250 2.250 0 1 0 6.750 6.000 A2.250 2.250 0 1 0 2.250 6.000 Z" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"/>
+                                <path d="M4.5,9.75A3.75,3.75,0,0,0,.75,13.5v2.25h1.5l.75,6H6" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"/>
+                                <path d="M17.250 6.000 A2.250 2.250 0 1 0 21.750 6.000 A2.250 2.250 0 1 0 17.250 6.000 Z" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"/>
+                                <path d="M19.5,9.75a3.75,3.75,0,0,1,3.75,3.75v2.25h-1.5l-.75,6H18" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"/>
+                                <path d="M9.000 3.750 A3.000 3.000 0 1 0 15.000 3.750 A3.000 3.000 0 1 0 9.000 3.750 Z" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"/>
+                                <path d="M17.25,13.5a5.25,5.25,0,0,0-10.5,0v2.25H9l.75,7.5h4.5l.75-7.5h2.25Z" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"/>
+                            </svg>
                         </div>
                     </div>
                     <!-- / .row -->
@@ -90,20 +94,14 @@
                     <div class="row justify-content-between">
                         <div class="col-auto">
                             <!-- Label -->
-                            <p class="fs-6 text-muted text-uppercase mb-0">Today Request
+                            <a href="/Dashboard-Investors"class="text-primary">View Investors</a>
+                            <p class="fs-6 text-muted text-uppercase mb-0">
                             </p>
                             <!-- Comment -->
-                            <p class="fs-5 fw-bold mb-0">121
+                            <p class="fs-5 fw-bold mb-0">
                             </p>
                         </div>
-                        <div class="col text-end text-truncate">
-                            <!-- Label -->
-                            <p class="fs-6 text-muted text-uppercase mb-0">Monthly request
-                            </p>
-                            <!-- Comment -->
-                            <p class="fs-5 fw-bold mb-0">1,944
-                            </p>
-                        </div>
+                        
                     </div>
                     <!-- / .row -->
                 </div>
@@ -185,7 +183,7 @@
             <div class="card border-0 text-bg-primary flex-fill w-100">
                 <div class="card-body">
                     <!-- Title -->
-                    <h4 class="text-uppercase fw-semibold mb-2">Overall Balance
+                    <h4 class="text-uppercase fw-semibold mb-2">Total Bank Balance
                     </h4>
                     <!-- Subtitle -->
                     <h2 class="mb-0">₱ 981,340

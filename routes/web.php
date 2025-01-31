@@ -69,7 +69,7 @@ Route::get('/Dashboard-Requests',function(){
 
 });
 Route::get('/Dashboard-Users',function(){
-    return view('admin.users');
+    return view('admin.users.users');
 
 });
 Route::get('/Dashboard-Api-keys',function(){
@@ -84,6 +84,19 @@ Route::get('/Dashboard-Profile-Account',function(){
     return view('admin.profileAccount');
 
 });
+Route::get('/Dashboard-Investors',function(){
+    return view('admin.investors.investors');
+
+});
+Route::get('/Dashboard-Investor-Details',function(){
+    return view('admin.investors.viewInvestor');
+
+});
+Route::get('/Dashboard-viewUser',function(){
+    return view('admin.users.viewUser');
+
+});
+
 
 
 #temporary for Users
