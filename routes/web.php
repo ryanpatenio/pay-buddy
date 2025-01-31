@@ -84,14 +84,7 @@ Route::get('/Dashboard-Profile-Account',function(){
     return view('admin.profileAccount');
 
 });
-Route::get('/Dashboard-Investors',function(){
-    return view('admin.investors.investors');
 
-});
-Route::get('/Dashboard-Investor-Details',function(){
-    return view('admin.investors.viewInvestor');
-
-});
 Route::get('/Dashboard-viewUser',function(){
     return view('admin.users.viewUser');
 
@@ -139,3 +132,13 @@ Route::get('/', function () {
     return view('auth.login');
 });
 
+
+#set aside for future purposes/ features loan and investment
+// Route::get('/Dashboard-Investors',function(){
+//     return view('admin.investors.investors');
+
+// });
+// Route::get('/Dashboard-Investor-Details',function(){
+//     return view('admin.investors.viewInvestor');
+
+// });

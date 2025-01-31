@@ -77,7 +77,7 @@
                         <span>Requests</span>
                     </a>
                 </li>
-                <li class="nav-item">
+                {{-- <li class="nav-item">
                     <a class="nav-link {{ request()->is('Dashboard-Investors') || request()->is('Dashboard-Investor-Details')  ? 'active' : '' }} " href="/Dashboard-Investors">
                        
                             <svg class="nav-link-icon" viewBox="0 0 24 24" height="18" width="18" class="text-primary" xmlns="http://www.w3.org/2000/svg">
@@ -91,7 +91,7 @@
                        
                         <span>Investors</span>
                     </a>
-                </li>
+                </li> --}}
                 
                 
                 <li class="nav-item">
