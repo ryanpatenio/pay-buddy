@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title','Create Receipt')
+@section('title','Xpress Send')
 
 @section('content')
 <div class="container-fluid">
@@ -18,26 +18,98 @@
             </ol>
         </nav>
     </div>
+    <div class="row">
+        <div class="col-lg-6 col-xxl-3 d-flex">
+            <!-- Card -->
+            <div class="card border-0 flex-fill w-100">
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col">
+                            <!-- Title -->
+                            
+                            <h5 class="text-uppercase text-muted fw-semibold mb-2">
+                                <span class="legend-circle-sm bg-success"></span>
+                                Current Balance
+                            </h5>
+                            <!-- Subtitle -->
+                         
+                            
+                            <h2 class="mb-0" class=""  id="wallet-balance"> ₱ 
+                                
+                            </h2> 
+                        </div>
+                        <div class="col-auto">
+                            <span class="text-primary">
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" height="32" width="32">
+                                    <defs>
+                                        <style>
+                                            .a {
+                                                fill: none;
+                                                stroke: currentColor;
+                                                stroke-linecap: round;
+                                                stroke-linejoin: round;
+                                                stroke-width: 1.5px;
+                                            }
+                                        </style>
+                                    </defs>
+                                    <title>cash-briefcase</title>
+                                    <path class="a" d="M9.75,15.937c0,.932,1.007,1.688,2.25,1.688s2.25-.756,2.25-1.688S13.243,14.25,12,14.25s-2.25-.756-2.25-1.688,1.007-1.687,2.25-1.687,2.25.755,2.25,1.687"/>
+                                    <line class="a" x1="12" y1="9.75" x2="12" y2="10.875"/>
+                                    <line class="a" x1="12" y1="17.625" x2="12" y2="18.75"/>
+                                    <rect class="a" x="1.5" y="6.75" width="21" height="15" rx="1.5" ry="1.5"/>
+                                    <path class="a" d="M15.342,3.275A1.5,1.5,0,0,0,13.919,2.25H10.081A1.5,1.5,0,0,0,8.658,3.275L7.5,6.75h9Z"/>
+                                </svg>
+                            </span>
+                        </div>
+                    </div>
+                    <!-- / .row -->
+                </div>
+                <div class="card-footer">
+                   
+                    <!-- / .row -->
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-6  col-xxl-3 d-flex">
+            <form method="GET" >
+                <select id="currencySelect" name="currency" class="form-select bg-primary text-black mb-5" style="width:120px;">
+                    <option value="PHP" >🇵🇭 PHP</option>
+                    <option value="USD" >🇺🇸 USD</option>
+                    <option value="EUR" >🇪🇺 EUR</option>
+                </select>
+            </form>
+        </div>
+      
+    </div>
 
     <div class="col-lg-12 col-xxl-12 d-flex">
         <!-- Card -->
         <div class="card border-0 flex-fill w-100">
             <div class="card-body">
+
+            <form action="" id="xpressForm">
+                <input type="hidden" id="hidden_val" value="">
+                @csrf
                 <div class="row mb-2">
                     <div class="col">
-                        <label for=""> Account Number</label>
-                        <input type="text" class="form-control" name="account_number" id="account-number" required placeholder="Account Number">
+                        <label for="" class="mb-2"> Account Number</label>
+                        <input type="text" class="form-control" maxlength="11" name="account_number" id="account-number" required placeholder="Account Number">
+                        <span class="text-danger px-2 mt-2" role="alert">
+                            <strong id="acct-error"></strong>
+                        </span>
                     </div>
+                   
                     <div class="col">
-                        <label for=""> Account Name</label>
-                        <input type="text" class="form-control" name="account_name" id="account-name" required placeholder="Account Name">
+                        <label for="" class="mb-2"> Account Name</label>
+                        <input type="text" class="form-control" name="account_name" id="account-name" required placeholder="Account Name" required readonly>
                     </div>
                 </div>
                 <hr>
                
                 <div class="row mb-5">
                     <div class="col">
-                        <label for="">Amount</label>
+                        <label for="" class="mb-2 text-primary">Amount |  <strong>Currency: <strong class="text-primary" id="curr">PHP</strong></strong></label>
                         <input type="text" class="form-control" name="amount" id="amount-to-send" required placeholder="Amount">
                     </div>
                 </div>
@@ -62,7 +134,7 @@
                 <div class="mb-3">
                     <div class="form-check">
                         <!-- Input -->
-                        <input type="checkbox" class="form-check-input" id="">
+                        <input type="checkbox" class="form-check-input" id="" required>
                         <!-- Label -->
                         <label class="form-check-label" for="deleteAccount">I confirm that details are correct.
                         </label>
@@ -70,14 +142,19 @@
                 </div>
                 <div class="d-flex justify-content-end mt-5">
                     <!-- Button -->
-                    <button type="button" class="btn btn-primary">Send</button>
+                    <button type="submit" class="btn btn-primary">Send</button>
                 </div>
+            </form>
             </div>
                 
             </div>
         </div>
     </div>
-
 </div>
+<script>
+     const dashboardRoute = @json(route('user.dashboard'));
+</script>
+<script src="{{asset('assets/js/xpress/xpress.js')}}"></script>
+<script src="{{asset('assets/js/dashboard/dash.js')}}"></script>
 
 @endsection

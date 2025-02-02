@@ -6,6 +6,14 @@
                 <!-- Title -->
                 <h1 class="h2">My Wallet
                 </h1>
+                <form method="GET" >
+                    <select id="currencySelect" name="currency" class="form-select bg-primary text-black mb-5" style="width:120px;">
+                        <option value="PHP" >🇵🇭 PHP</option>
+                        <option value="USD" >🇺🇸 USD</option>
+                        <option value="EUR" >🇪🇺 EUR</option>
+                    </select>
+                </form>
+                
                 <div class="row">
                     <div class="col-lg-6 col-xxl-6 d-flex">
                         <!-- Card -->
@@ -20,8 +28,9 @@
                                             Current Balance
                                         </h5>
                                         <!-- Subtitle -->
+                                     
                                         
-                                        <h2 class="mb-0">₱ 6,328
+                                        <h2 class="mb-0" class="" id="wallet-balance"> ₱ <?= number_format($walletBalance, 2) ?>
                                         </h2> 
                                     </div>
                                     <div class="col-auto">
@@ -248,7 +257,12 @@
                 </div>
             </div>
 
-            
-        
-       
+            <script src="{{URL::asset('assets/js/dashboard/balanceChart.js')}}"></script>
+            <script>
+                // Define route as a JavaScript variable
+                const dashboardRoute = @json(route('user.dashboard'));
+                const dashGetBalUrl = @json(route('user.wallet.balance'));
+            </script>
+            <script src="{{URL::asset('assets/js/dashboard/dash.js')}}"></script>
+ 
 @endsection

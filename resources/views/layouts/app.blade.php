@@ -174,4 +174,3 @@
 
     </body>
     </html>
-    <script src="{{URL::asset('assets/js/dashboard/balanceChart.js')}}"></script>

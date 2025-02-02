@@ -242,8 +242,8 @@
                             <img src="https://d33wubrfki0l68.cloudfront.net/053f2dfd0df2f52c41e903a21d177b0b44abc9b1/1282c/assets/images/profiles/profile-06.jpeg" alt="..." class="avatar-img" width="40" height="40">
                         </div>
                         <div class="flex-grow-1 ms-3">
-                            <h4 class="mb-0">Ellie Tucker</h4>
-                            <p class="card-text">ellie.tucker@dashly.com</p>
+                            <h4 class="mb-0">{{Auth::user()->name}}</h4>
+                            <p class="card-text">{{Auth::user()->email}}</p>
                         </div>
                     </div>
                 </div>
@@ -282,7 +282,10 @@
                 <a class="dropdown-item" href="/Profile-Account">Profile & account</a>
                 
                 <hr class="dropdown-divider">
-                <a class="dropdown-item" href="javascript: void(0);">Sign out</a>
+               <form method="POST" action="{{route('logout')}}">
+                @csrf
+                    <button type="submit" class="dropdown-item">Sign out</button>
+               </form>
             </div>
         </div>
         <!--End of Profile--->

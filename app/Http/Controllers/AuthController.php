@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\currency;
 use App\Models\User;
 use App\Models\Wallets;
 use Illuminate\Http\Request;
@@ -9,9 +10,11 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Str;
 
 class AuthController extends Controller
 {
+
     public function login(Request $request) {
         $request->validate([
             'email' => 'required|string|email|max:255',
@@ -19,26 +22,35 @@ class AuthController extends Controller
         ]);
     
         $credentials = $request->only('email', 'password');
-        $remember = $request->has('remember'); // Check for 'remember me'
-    
+        $remember = $request->has('remember');
+
         if (Auth::attempt($credentials, $remember)) {
-            // Set 'remember me' cookies
+            $user = Auth::user();
+
             if ($remember) {
-                cookie()->queue('email', $request->email, 1440); // Store for 1 day
+                cookie()->queue('email', $request->email, 1440);
                 cookie()->queue('remember', true, 1440);
             } else {
                 cookie()->queue(cookie()->forget('email'));
                 cookie()->queue(cookie()->forget('remember'));
             }
-    
-            return redirect()->intended('user-dashboard')->with('success', 'Login successful.');
+
+            return match ($user->role) {
+                2 => redirect()->intended('admin.dashboard')->with('success', 'Welcome, Super Admin!'),
+                1 => redirect()->intended('admin.dashboard')->with('success', 'Welcome, Admin!'),
+                0 => redirect()->intended('user-dashboard')->with('success', 'Welcome, Investor!'),
+                default => redirect()->intended('user-dashboard')->with('success', 'Welcome, User!'),
+            };
+
+
+            
         }
-    
-        // Log failed attempt (optional)
-        \Log::warning('Login failed for email: ' . $request->email);
-    
-        return back()->with('error', 'Invalid credentials.');
+
+        // Ensure error message is stored and user input is retained
+        return redirect()->back()->withInput()->with('error', 'Invalid Credentials');
     }
+    
+    
     
     public function register(Request $request) {
         $request->validate([
@@ -47,17 +59,10 @@ class AuthController extends Controller
             'password' => 'required|string|min:8|confirmed',
             
         ]);
-        // $validator = Validator::make($request->all(),[
-        //     'name' => 'required|string|max:255',
-        //     'email' => 'required|string|email|max:255|unique:users',
-        //     'password' => 'required|string|min:8|confirmed',
-            
-        // ]);
-        // if($validator->fails()){
-        //     return json_message(EXIT_FORM_NULL,'validation errors',$validator->errors());
-        // }
+       
     
         try {
+
             DB::transaction(function () use ($request) {
                 // Create the user
                 $user = User::create([
@@ -66,19 +71,23 @@ class AuthController extends Controller
                     'password' => Hash::make($request->password),
                     
                 ]);
-    
+
+                $currency = currency::first()->value('id');
+                
                 // Auto-login the user
                 Auth::login($user);
+                $accountNumber = $this->generateUniqueAccountNumber();
     
                 // Add other initialization (e.g., create wallets)
                 Wallets::create([
                     'user_id' => $user->id,
-                    'currency' => 'PHP',
+                    'currency_id' => $currency,//which mean PHP or PESO DEFAULT
+                    'account_number'=> $accountNumber ,
                     'balance' => 500.00, // Default starting balance
                 ]);
             });
             
-            return redirect()->route('user-dashboard')->with('success', 'Registration successful.');
+            return redirect()->route('user.dashboard')->with('success', 'Registration successful.');
 
         } catch (\Exception $e) {
             // Log error and redirect back with an error message
@@ -124,4 +133,21 @@ class AuthController extends Controller
        return $this->json_message(EXIT_BE_ERROR, 'error');
    }
    
+   public function generateUniqueAccountNumber()
+{
+    do {
+        // Generate a random 11-digit number
+        $accountNumber = str_pad(rand(10000000000, 99999999999), 11, '0', STR_PAD_LEFT); // Ensures 11 digits
+    } while ($this->accountNumberExists($accountNumber));
+
+    return $accountNumber;
+}
+   
+   public function accountNumberExists($accountNumber)
+   {
+       // Check if the generated account number already exists in the 'wallets' table
+       return \App\Models\Wallets::where('account_number', $accountNumber)->exists();
+   }
+
+
 }

@@ -104,6 +104,7 @@
     </style>
 </head>
 <body class="d-flex align-items-center justify-content-center vh-100">
+    {{-- /@dump(session()->all()) --}}
 
 
     <div class="card shadow-sm">
@@ -147,7 +148,8 @@
                 
                 <div class="mb-4">
                     <label for="password" class="form-label">Password</label>
-                    <input type="password" class="form-control" id="password" name="password" placeholder="Enter your password" required>
+                    <input type="password" class="form-control @error('password') is-invalid @enderror" id="password" name="password" placeholder="Enter your password" required>
+
                     @error('password')
                         <span class="invalid-feedback" role="alert">
                             <strong>{{ $message }}</strong>

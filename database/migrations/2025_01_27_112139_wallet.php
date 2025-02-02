@@ -15,9 +15,13 @@ return new class extends Migration
     {
         Schema::create('wallets', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('user_id')->constrained()->onDelete('cascade'); // Link to the user
-            $table->string('currency', 3); // ISO currency code (e.g., USD, EUR, PHP)
+            
+            $table->foreignId('user_id')->constrained()->onDelete('cascade'); // Link to the user          
+            $table->foreignId('currency_id')->constrained()->onDelete('cascade'); // Link to currencies table
+
+            $table->string('account_number')->unique();
             $table->decimal('balance', 15, 2)->default(0); // Balance in the specific currency
+
             $table->timestamps();
         });
         

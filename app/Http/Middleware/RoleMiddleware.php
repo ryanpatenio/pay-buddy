@@ -4,6 +4,7 @@ namespace App\Http\Middleware;
 
 use Closure;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Symfony\Component\HttpFoundation\Response;
 
 class roleMiddleware
@@ -29,6 +30,10 @@ class roleMiddleware
         $roleIds = array_map(function ($role) {
             return $this->roleMap[$role] ?? null;
         }, $roles);
+        
+        if (!Auth::check()) {
+            return redirect()->route('login');  // Redirect to login page for unauthenticated users
+        }
 
         // Check if the user is authenticated and has the required role
         if (!$user || !in_array($user->role, $roleIds)) {

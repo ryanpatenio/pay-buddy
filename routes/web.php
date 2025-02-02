@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\Transactions;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -34,6 +35,43 @@ Route::middleware(['auth'])->group(function(){
     #user
     Route::middleware('role:user')->group(function(){
 
+        #dashboard
+        Route::get('/user-dashboard',[DashboardController::class,'index'])->name('user.dashboard');
+        Route::get('/user-wallet-balance',[DashboardController::class,'getUserWalletBalance'])->name('user.wallet.balance');
+
+        #transactions
+        Route::get('/Transactions',function(){
+            return view('users.transactions');
+        });
+        Route::post('/checkAccount',[Transactions::class,'checkAccount']);
+        
+
+        Route::get('/Notifications',function(){
+            return view('users.notifications');
+        
+        });
+        
+        Route::get('/Profile-Account',function(){
+            return view('users.profileAccount');
+        
+        });
+        Route::get('/Api-keys',function(){
+            return view('users.api-keys');
+        
+        });
+        
+        Route::get('/Xpress-Send',function(){
+            return view('users.express-send');
+        
+        });
+        
+       
+        #testing
+        Route::get('/balance-data', [DashboardController::class, 'getBalanceData']);
+        
+        Route::get('/Profile',function(){
+            return view('users.profile');
+        });
 
     });
 
@@ -56,10 +94,12 @@ Route::middleware(['auth'])->group(function(){
 });
 
 #temporary for ADMIN
+
 Route::get('/Dashboard-admin',function(){
     return view('admin.dashboard');
 
-});
+})->name('admin.dashboard');
+
 Route::get('/Dashboard-Transactions',function(){
     return view('admin.transactions');
 
@@ -93,44 +133,11 @@ Route::get('/Dashboard-viewUser',function(){
 
 
 #temporary for Users
-Route::get('/user-dashboard',function(){
-   return view('users.dashboard');
-})->name('user-dashboard');
-
-Route::get('/Transactions',function(){
-    return view('users.transactions');
-});
-
-Route::get('/Profile-Account',function(){
-    return view('users.profileAccount');
-
-});
-Route::get('/Api-keys',function(){
-    return view('users.api-keys');
-
-});
-
-Route::get('/Xpress-Send',function(){
-    return view('users.express-send');
-
-});
-
-Route::get('/Notifications',function(){
-    return view('users.notifications');
-
-});
-#testing
-
-Route::get('/balance-data', [DashboardController::class, 'getBalanceData']);
-
-Route::get('/Profile',function(){
-    return view('users.profile');
-});
-
 
 Route::get('/', function () {
     return view('auth.login');
-});
+})->name('login');
+
 
 
 #set aside for future purposes/ features loan and investment
