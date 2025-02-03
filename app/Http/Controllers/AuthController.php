@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\currency;
 use App\Models\User;
 use App\Models\Wallets;
+use App\Services\WalletService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -14,6 +15,12 @@ use Illuminate\Support\Str;
 
 class AuthController extends Controller
 {
+    private $walletService;
+
+    public function __construct(WalletService $walletService)
+    {
+        $this->walletService = $walletService;
+    }
 
     public function login(Request $request) {
         $request->validate([
@@ -50,8 +57,7 @@ class AuthController extends Controller
         return redirect()->back()->withInput()->with('error', 'Invalid Credentials');
     }
     
-    
-    
+
     public function register(Request $request) {
         $request->validate([
             'name' => 'required|string|max:255',
@@ -76,7 +82,7 @@ class AuthController extends Controller
                 
                 // Auto-login the user
                 Auth::login($user);
-                $accountNumber = $this->generateUniqueAccountNumber();
+                $accountNumber = $this->walletService->generateUniqueAccountNumber();
     
                 // Add other initialization (e.g., create wallets)
                 Wallets::create([
@@ -95,7 +101,6 @@ class AuthController extends Controller
             return redirect()->back()->with('error', 'Registration failed. Please try again.');
         }
     }
-    
 
    public function logout(Request $request){
 
@@ -132,22 +137,8 @@ class AuthController extends Controller
        // If no user record is found, return an error response
        return $this->json_message(EXIT_BE_ERROR, 'error');
    }
-   
-   public function generateUniqueAccountNumber()
-{
-    do {
-        // Generate a random 11-digit number
-        $accountNumber = str_pad(rand(10000000000, 99999999999), 11, '0', STR_PAD_LEFT); // Ensures 11 digits
-    } while ($this->accountNumberExists($accountNumber));
 
-    return $accountNumber;
-}
    
-   public function accountNumberExists($accountNumber)
-   {
-       // Check if the generated account number already exists in the 'wallets' table
-       return \App\Models\Wallets::where('account_number', $accountNumber)->exists();
-   }
 
 
 }

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Fees;
 use App\Models\Transactions;
+use App\Services\WalletService;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -11,6 +12,12 @@ use Illuminate\Support\Facades\DB;
 
 class DashboardController extends Controller
 {
+    private $walletService;
+
+    public function __construct(WalletService $walletService)
+    {
+        $this->walletService = $walletService;
+    }
  
     public function index(Request $request) {
         // Get the user's selected currency from the session or request
@@ -21,14 +28,14 @@ class DashboardController extends Controller
     
         // Get wallet balance based on selected currency
         $walletBalance = $this->getUserWalletBalance($selectedCurrency);
+        $walletCurrencies = $this->walletService->userWalletCurrencies();
     
         if ($request->ajax()) {
             return response()->json(['walletBalance' => number_format($walletBalance, 2)]);
         }
 
-        return view('users.dashboard', compact('walletBalance', 'selectedCurrency'));
+        return view('users.dashboard', compact('walletBalance', 'selectedCurrency','walletCurrencies'));
     }
-    
 
     public function getUserWalletBalance($currency = 'PHP') {
 

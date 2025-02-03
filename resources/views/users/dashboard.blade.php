@@ -8,9 +8,16 @@
                 </h1>
                 <form method="GET" >
                     <select id="currencySelect" name="currency" class="form-select bg-primary text-black mb-5" style="width:120px;">
-                        <option value="PHP" >🇵🇭 PHP</option>
+                        <?php
+                        
+                        foreach ($walletCurrencies as $curr) { ?>
+                            <option value="<?=$curr->code ?>" ><?=$curr->name ?></option>
+                       <?php }
+
+                        ?>
+                        {{-- <option value="" >🇵🇭 PHP</option>
                         <option value="USD" >🇺🇸 USD</option>
-                        <option value="EUR" >🇪🇺 EUR</option>
+                        <option value="EUR" >🇪🇺 EUR</option> --}}
                     </select>
                 </form>
                 

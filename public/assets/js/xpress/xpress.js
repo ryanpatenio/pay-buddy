@@ -6,26 +6,51 @@ $(document).ready(function(){
     fetchBalance();
 
 
-    $('#xpressForm').submit(function(e){
+    $('#xpressForm').submit( async function(e){
         e.preventDefault();
 
-        let Data = $(this).serialize();
+        let account = $('#account-number').val().trim();      
         let balance = $('#hidden_val').val()
         let amount = $('#amount-to-send').val();
+        let currency = $('#currencySelect').val();
+
         
         if(parseInt(balance) < parseInt(amount)){
           return   alert('Insufficient Balance');
         }
-        // axios.post('/submit-web-route', Data)
 
-        //     .then(response => {
-        //         console.log('Form submitted successfully:', response.data);
-        //         alert('Success!');
-        //     })
-        //     .catch(error => {
-        //         console.error('An error occurred:', error);
-        //         alert('Something went wrong!');
-        //     });
+        const data = {
+            account_number: account, // Ensure this is a string if it has leading zeros
+            amount: parseFloat(amount), // Convert amount to a proper number
+            currency: currency.trim() // Trim whitespace for validation
+        };
+
+        try {
+
+            const checkAccount = await axios.post('/checkAccount', { account_number: account });
+            if(checkAccount.status !== 200){
+              return  alert('Account cant be found!');
+            }
+
+            const sendTransaction = await axios.post('/process-transaction',data);
+
+            if(sendTransaction.status !== 200){
+                return alert('Cannot process Transaction!');
+            }
+
+            fetchBalance();
+
+            console.log(sendTransaction)
+            
+        } catch (error) {
+            //console.log(error)
+            let err_response = error.response.data;
+            console.log(error.response)
+            if(error.status == 422 || error.response.data.code == 'EXIT_FORM_NULL'){
+                alert(err_response.message);
+            }
+        }
+       
     });
     
     
@@ -41,6 +66,7 @@ $(document).ready(function(){
             if(response.data.message == "Invalid-acct"){
                return $('#acct-error').text('Account cannot be found!')
             }
+
             $('#acct-error').text('')
             $('#account-name').val(response.data.data.user_name)
            
@@ -120,3 +146,14 @@ $(document).ready(function(){
 
 // // Call the function
 // fetchUserData();
+
+ // axios.post('/submit-web-route', Data)
+
+        //     .then(response => {
+        //         console.log('Form submitted successfully:', response.data);
+        //         alert('Success!');
+        //     })
+        //     .catch(error => {
+        //         console.error('An error occurred:', error);
+        //         alert('Something went wrong!');
+        //     });

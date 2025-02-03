@@ -89,7 +89,7 @@
             <div class="card-body">
 
             <form action="" id="xpressForm">
-                <input type="hidden" id="hidden_val" value="">
+                <input type="hidden" id="hidden_val" value=""><!--500 example wallet Balance--->
                 @csrf
                 <div class="row mb-2">
                     <div class="col">
