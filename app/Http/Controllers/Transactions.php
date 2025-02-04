@@ -2,12 +2,14 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Earnings;
 use App\Models\Wallets;
 use App\Services\WalletService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
+use PhpParser\Node\Expr\Throw_;
 
 class Transactions extends Controller
 {   
@@ -29,7 +31,8 @@ class Transactions extends Controller
             'account_number' => 'required|string|digits:11', // Ensures exactly 11-digit string
             'currency'       => 'required|string|max:3', // Assuming 3-letter currency codes (e.g., "PHP", "USD")
             'amount'         => 'required|numeric|min:1', // Allows decimals, e.g., 100.50
-            'account_name'   => 'required|string'
+            'account_name'   => 'required|string',
+            'fee'            => 'required|numeric'
         ]);
     
         $receiverWalletCurrency = $this->getReceiverWalletCurrency($request->account_number); // Get the Receiver wallet currency
@@ -49,6 +52,14 @@ class Transactions extends Controller
         if ($senderBal < $request->amount + 1) {
             return json_message(EXIT_FORM_NULL, 'Insufficient Wallet Balance!');
         }
+
+        $senderWalletId = $this->walletService->getUserwallet(null,$request->currency);
+        $receiverWalletId = $this->walletService->getUserWallet($request->account_number, null);
+
+        if($senderWalletId->id === $receiverWalletId->user_id){
+           
+            return json_message(EXIT_FORM_NULL, 'You cannot send money to your own wallet!');
+        }
     
         try {
             $transactionData = DB::transaction(function () use ($request) {
@@ -65,23 +76,30 @@ class Transactions extends Controller
                 $clientRefIdSender = $this->walletService->genClient_ref();
         
                 // Create the Sender Transaction (Debit)
-                DB::table('transactions')->insert([
+              $transactionLastInsertedId =  DB::table('transactions')->insertGetId([
                     'wallet_id' => $senderWallet->sender_wallet_id,
                     'receiver_wallet_id' => $receiverWallet->id,
                     'transaction_id' => $transactionIdSender,
                     'client_ref_id' => $clientRefIdSender,
                     'type' => 'Debit',
                     'amount' => $request->amount,
-                    'fee' => 1,
+                    'fee' => $request->fee,
                     'status' => 'success',
                     'description' => 'Transfer Money',
                     'created_at' => now(),
                     'updated_at' => now(),
+                    'currency_id'=> $senderWallet->sender_currency_id
                 ]);
         
                 // Deduct from sender's wallet
-                $deductAmount = $request->amount + 1; // 1 is the fee
+                $deductAmount = $request->amount + $request->fee; 
                 Wallets::where('id', $senderWallet->sender_wallet_id)->decrement('balance', $deductAmount);
+
+                #earning Save in the database  Table Earnings
+                $earningSave = $this->storeInEarnings($transactionLastInsertedId,$senderWallet->id,$request->fee);
+                if(!$earningSave){
+                    throw new \Exception('Failed to store earning information.');
+                }
         
                 // Generate transaction ID for receiver
                 $transactionIdReceiver = $this->walletService->generateTransactionID();
@@ -100,6 +118,7 @@ class Transactions extends Controller
                     'description' => 'Received Money',
                     'created_at' => now(),
                     'updated_at' => now(),
+                    'currency_id' => $senderWallet->sender_currency_id
                 ]);
         
                 // Add amount to receiver's wallet
@@ -110,28 +129,47 @@ class Transactions extends Controller
                     ->where('transaction_id', $transactionIdSender) // Get the sender transaction
                     ->first();
             });
-        
-            // 🔹 If transaction is successfully inserted, return data
-            $data = [
-                'transaction_type' => '__SEND MONEY__',
-                'sent_to'          => $request->account_name,
-                'account_number'   => $request->account_number,
-                'trans_date'       => $transactionData->created_at, // Get transaction date
-                'total_amount'     => $transactionData->amount + $transactionData->fee, // Total amount including fee
-                'trans_code'       => $transactionData->transaction_id, // Transaction code
-                'status'           => $transactionData->status, // Transaction status
-            ];
-
-            //return redirect()->route('receipt.page')->with('transaction', $data);
-        
+                
             return response()->json([
                 'message' => 'Transaction successful!',
-                'transaction' => $data
-            ]);
+                'transaction_id' => $transactionData->transaction_id
+            ],200);
+
         } catch (\Exception $e) {
+            handleException($e,'transaction Error');
             return response()->json(['error' => $e->getMessage()], 500);
         }
         
+    }
+
+    public function getTransaction($id){
+
+        $transaction = DB::table('transactions as t')
+        ->join('wallets as w', 't.receiver_wallet_id', '=', 'w.id')
+        ->join('users as u', 'w.user_id', '=', 'u.id')
+        ->join('currencies as c', 'w.currency_id', '=', 'c.id')
+        ->selectRaw("
+            CASE 
+                WHEN t.description = 'Transfer Money' THEN '__SEND MONEY__' 
+            END AS transaction_type,
+            u.name,
+            w.account_number,
+            t.created_at AS transaction_date,
+            t.transaction_id,
+            c.code,
+            t.amount,
+            t.fee,
+            t.status
+        ")
+        ->where('t.transaction_id', $id)
+        ->first(); // Using first() to get a single result
+
+        if (!$transaction) {
+            return response()->json(['error' => 'Transaction not found'], 404);
+        }
+    
+        return response()->json($transaction);
+    
     }
     
 
@@ -197,4 +235,41 @@ class Transactions extends Controller
         }
 
     }
+
+    public function storeInEarnings($transaction_id,$user_id,$amount){
+
+        $earning = Earnings::create([
+            'transaction_id' => $transaction_id,
+            'user_id' => $user_id,
+            'amount' => $amount,
+            'earned_at' => now()
+        ]);
+        if(!$earning){
+            return false;
+        }
+
+        return true;
+        
+    }
+
+    
+
 }
+
+    /*SELECT DATE_FORMAT(earned_at, '%Y-%m') AS month, SUM(amount) AS total_earnings
+        FROM earnings
+        GROUP BY month
+        ORDER BY month DESC;
+
+    $earningsByMonth = DB::table('earnings')
+        ->selectRaw("DATE_FORMAT(earned_at, '%Y-%m') as month, SUM(amount) as total_earnings")
+        ->groupBy('month')
+        ->orderByDesc('month')
+        ->get();
+
+        create()	When inserting a single record using mass assignment
+        insert()	When inserting multiple records (fast but no timestamps)
+        save()	When inserting with additional logic before saving
+*/
+
+

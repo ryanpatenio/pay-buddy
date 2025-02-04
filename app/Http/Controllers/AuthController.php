@@ -78,7 +78,8 @@ class AuthController extends Controller
                     
                 ]);
 
-                $currency = currency::first()->value('id');
+                $currency = currency::where('code','PHP')->value('id');
+              
                 
                 // Auto-login the user
                 Auth::login($user);

@@ -27,7 +27,7 @@
                     {{-- <img src="" alt="..." class="mb-7" width="125" height="25"> --}}
                     <div>
                        <h2 class="h3">Transaction Type</h2>
-                       <strong class="text-primary"> __SEND MONEY___</strong>
+                       <strong class="text-primary" id="transactio-type"> __SEND MONEY___</strong>
                     </div>
                 </div>
                 {{-- <div class="col-auto text-md-end">
@@ -47,12 +47,12 @@
                     <div class="row">
                         <div class="col-auto w-150px">
                             <p class="mb-3 mb-md-5">
-                                <span class="text-secondary">Sent To:</span>
+                                <span class="text-secondary"> Sent To:</span>
                             </p>
                         </div>
                         <div class="col-auto">
                             <p class="mb-3">
-                                <strong class="text-primary">Ryan Wong</strong> | Account Name
+                                <strong class="text-primary" id="sent-to">Ryan Wong</strong> | Account Name
                             </p>
                             <p class="mb-5">
                                
@@ -63,11 +63,11 @@
                     <div class="row">
                         <div class="col-auto w-150px">
                             <p class="mb-3 mb-md-5">
-                                <span class="text-secondary">Account Number:</span>
+                                <span class="text-secondary" >Account Number:</span>
                             </p>
                         </div>
                         <div class="col-auto">
-                            <p class="mb-5 text-primary">5345084395</p>
+                            <p class="mb-5 text-primary" id="account-number">5345084395</p>
                         </div>
                     </div>
                     <!-- / .row -->
@@ -79,7 +79,7 @@
                             </p>
                         </div>
                         <div class="col-auto">
-                            <p class="mb-5">06/03/2022</p>
+                            <p class="mb-5" id="transaction-date">06/03/2022</p>
                         </div>
                     </div>
             
@@ -90,17 +90,18 @@
                             </p>
                         </div>
                         <div class="col-auto">
-                            <p class="mb-5">#PO-AC-002931</p>
+                            <p class="mb-5" id="transaction-code">#PO-AC-002931</p>
                         </div>
                     </div>
                     <!-- / .row -->
                 </div>
                 <div class="col col-lg-auto text-end">
-                    <span class="text-secondary">Total Amount Sent (PHP)</span>
-                    <h3 class="display-2 mb-6">2000</h3>
+                    <span class="text-secondary">Total Amount Sent (<span id="currency" class="text-primary">PHP</span>)</span>
+                    <h3 class="display-2 mb-2" id="total-amount">2000</h3>
+                   
                     <span class="text-secondary">status</span>
                     <br>
-                    <span class="badge text-bg-success-soft fs-6 fw-bold mb-6">Success</span>
+                    <span class="badge  fs-6 fw-bold mb-6" id="status">Success</span>
                 </div>
             </div>
             <!-- / .row -->
@@ -114,7 +115,7 @@
                 </div>
                 <div class="col-md-auto">
                     <!-- Button -->
-                    <button type="button" class="btn btn-light">Print</button>
+                    <button type="button" class="btn btn-light bg-primary">Print</button>
                     <!-- Button -->                  
                 </div>
             </div>
@@ -122,5 +123,6 @@
         </div>
     </div>
 </div>
+<script src="{{asset('assets/js/xpress/receipt.js')}}"></script>
 
 @endsection

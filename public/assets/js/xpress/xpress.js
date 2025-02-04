@@ -1,6 +1,4 @@
 
-
-
 $(document).ready(function(){
 
     fetchBalance();
@@ -28,11 +26,12 @@ $(document).ready(function(){
             account_number: account, // Ensure this is a string if it has leading zeros
             amount: parseFloat(amount), // Convert amount to a proper number
             currency: currency.trim(), // Trim whitespace for validation
-            account_name: account_name
+            account_name: account_name,
+            fee : fee
         };
         
         swalMessage('custom',
-            'You are about to send '+currency+' '+amount+' to John Doe (Account: '+account+'). A transaction fee of ₱1.00 will be applied. Your total deduction will be '+currency+' '+total+'. Do you want to proceed?', 
+            'You are about to send '+currency+' '+amount+' to '+account_name+' (Account: '+account+'). A transaction fee of '+currency+' '+fee+' will be applied. Your total deduction will be '+currency+' '+total+'. Do you want to proceed?', 
             async function () {  // ✅ Make this function async
                 try {
                     const checkAccount = await axios.post('/checkAccount', { account_number: account });
@@ -44,11 +43,18 @@ $(document).ready(function(){
                     if (sendTransaction.status !== 200) {
                         return alert('Cannot process Transaction!');
                     }
-        
-                    fetchBalance();
+
                     resetForm($('#xpressForm'));
-        
-                    console.log(sendTransaction);
+
+                    // Redirect user to receipt page
+                    const transactionId = sendTransaction.data.transaction_id;
+
+                    msg(sendTransaction.data.message,'success');
+
+                    setTimeout(() => {
+                        window.location.href = `/Xpress-Receipt?transaction_id=${transactionId}`;
+                    }, 2000);
+               
                 } catch (error) {
                     let err_response = error.response?.data;
                     console.log(error.response);

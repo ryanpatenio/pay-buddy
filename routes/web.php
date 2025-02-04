@@ -41,6 +41,7 @@ Route::middleware(['auth'])->group(function(){
         #dashboard
         Route::get('/user-dashboard',[DashboardController::class,'index'])->name('user.dashboard');
         Route::get('/user-wallet-balance',[DashboardController::class,'getUserWalletBalance'])->name('user.wallet.balance');
+        
 
         #transactions
         Route::get('/Transactions',function(){
@@ -48,6 +49,7 @@ Route::middleware(['auth'])->group(function(){
         });
         Route::post('/checkAccount',[Transactions::class,'checkAccount']);
         Route::post('/process-transaction',[Transactions::class,'sendMoneyToUser'])->name('sendMoney');
+        Route::get('/get-transaction/{id}', [Transactions::class, 'getTransaction']);
         
 
         Route::get('/Notifications',function(){

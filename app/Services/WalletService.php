@@ -19,8 +19,9 @@ class WalletService
                 ->join('currencies', 'wallets.currency_id', '=', 'currencies.id')
                 ->where('currencies.code', '=', $currency)
                 ->where('users.id', Auth::id())
-                ->select('wallets.id as sender_wallet_id','users.name') // Ensure the wallet belongs to the authenticated user
+                ->select('wallets.id as sender_wallet_id','users.name','users.id','currencies.id as sender_currency_id') // Ensure the wallet belongs to the authenticated user
                 ->first(); // Return the first match (should be a single record)
+                #this will return SENDER DATA
         }
     
         // If account number is provided, return wallet associated with that account number
