@@ -69,6 +69,23 @@ if (!function_exists('json_message')) {
     
 }
 
+if (!function_exists('be_logs')) {
+    function be_logs($message, \Throwable $exception = null) {
+        if ($exception) {
+            // Log error with exception details
+            \Log::error($message, [
+                'error' => $exception->getMessage(),
+                'trace' => $exception->getTraceAsString(),
+                'file' => $exception->getFile(),
+                'line' => $exception->getLine(),
+            ]);
+        } else {
+            // Log as an informational message
+            \Log::info($message);
+        }
+    }
+}
+
 
 if (!function_exists('handleException')) {
     /**

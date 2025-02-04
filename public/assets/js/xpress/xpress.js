@@ -13,6 +13,11 @@ $(document).ready(function(){
         let balance = $('#hidden_val').val()
         let amount = $('#amount-to-send').val();
         let currency = $('#currencySelect').val();
+        let account_name = $('#account-name').val();
+
+        let fee = $('#fee').val();
+
+        let total = parseFloat(amount)+parseFloat(fee);
 
         
         if(parseInt(balance) < parseInt(amount)){
@@ -22,34 +27,41 @@ $(document).ready(function(){
         const data = {
             account_number: account, // Ensure this is a string if it has leading zeros
             amount: parseFloat(amount), // Convert amount to a proper number
-            currency: currency.trim() // Trim whitespace for validation
+            currency: currency.trim(), // Trim whitespace for validation
+            account_name: account_name
         };
-
-        try {
-
-            const checkAccount = await axios.post('/checkAccount', { account_number: account });
-            if(checkAccount.status !== 200){
-              return  alert('Account cant be found!');
+        
+        swalMessage('custom',
+            'You are about to send '+currency+' '+amount+' to John Doe (Account: '+account+'). A transaction fee of ₱1.00 will be applied. Your total deduction will be '+currency+' '+total+'. Do you want to proceed?', 
+            async function () {  // ✅ Make this function async
+                try {
+                    const checkAccount = await axios.post('/checkAccount', { account_number: account });
+                    if (checkAccount.status !== 200) {
+                        return alert('Account cannot be found!');
+                    }
+        
+                    const sendTransaction = await axios.post('/process-transaction', data);
+                    if (sendTransaction.status !== 200) {
+                        return alert('Cannot process Transaction!');
+                    }
+        
+                    fetchBalance();
+                    resetForm($('#xpressForm'));
+        
+                    console.log(sendTransaction);
+                } catch (error) {
+                    let err_response = error.response?.data;
+                    console.log(error.response);
+        
+                    if (error.response?.status === 422 || err_response?.code === 'EXIT_FORM_NULL') {
+                        alert(err_response?.message || 'An error occurred');
+                    }
+                }
             }
+        );
+        
 
-            const sendTransaction = await axios.post('/process-transaction',data);
-
-            if(sendTransaction.status !== 200){
-                return alert('Cannot process Transaction!');
-            }
-
-            fetchBalance();
-
-            console.log(sendTransaction)
-            
-        } catch (error) {
-            //console.log(error)
-            let err_response = error.response.data;
-            console.log(error.response)
-            if(error.status == 422 || error.response.data.code == 'EXIT_FORM_NULL'){
-                alert(err_response.message);
-            }
-        }
+      
        
     });
     
@@ -84,8 +96,9 @@ $(document).ready(function(){
         const response = await axios.get("/user-wallet-balance");
 
         if (response.status === 200) {
-            $('#wallet-balance').text(`₱ ${response.data}`);
-            $('#hidden_val').val(response.data);
+           
+            $('#wallet-balance').text(`₱ ${response.data.balance}`);
+            $('#hidden_val').val(response.data.balance);
         }
     } catch (error) {
         console.error("Failed to fetch wallet balance:", error.response ? error.response.data : error);

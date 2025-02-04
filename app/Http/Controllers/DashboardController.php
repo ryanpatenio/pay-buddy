@@ -21,30 +21,33 @@ class DashboardController extends Controller
  
     public function index(Request $request) {
         // Get the user's selected currency from the session or request
-        $selectedCurrency = $request->input('currency', session('selected_currency', 'PHP'));
-    
-        // Store the selected currency in session
-        session(['selected_currency' => $selectedCurrency]);
-    
-        // Get wallet balance based on selected currency
+        $selectedCurrency = $request->input('currency') ?? 'PHP'; // Default to PHP if null
+       
+        
         $walletBalance = $this->getUserWalletBalance($selectedCurrency);
-        $walletCurrencies = $this->walletService->userWalletCurrencies();
+       
+        $walletCurrencies = $this->walletService->userWalletCurrencies(); #sender Wallet Currencies
+        $transactionFee = $this->walletService->getFee('send_money',$selectedCurrency);
     
         if ($request->ajax()) {
-            return response()->json(['walletBalance' => number_format($walletBalance, 2)]);
+            return response()->json([
+                'walletBalance' => $walletBalance,
+                'fee'=> number_format($transactionFee,2)
+            ]);
         }
 
         return view('users.dashboard', compact('walletBalance', 'selectedCurrency','walletCurrencies'));
     }
 
-    public function getUserWalletBalance($currency = 'PHP') {
-
-       return DB::table('wallets')
+    public function getUserWalletBalance($currency = null) {
+        $currency = $currency ?? 'PHP'; // Ensure default is 'PHP' even if null is passed
+    
+        return DB::table('wallets')
             ->join('currencies', 'wallets.currency_id', '=', 'currencies.id') // Join with the currencies table
             ->where('wallets.user_id', Auth::id()) // Filter by user
             ->where('currencies.code', $currency) // Filter by selected currency
-            ->value('wallets.balance'); // Get the balance directly
-
+            ->select('wallets.balance', 'currencies.symbol')
+            ->first(); // Get the balance directly
     }
     
     public function getEarningsByMonth(){

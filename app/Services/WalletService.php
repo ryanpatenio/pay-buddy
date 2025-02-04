@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Models\Fees;
 use App\Models\Wallets;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -18,7 +19,7 @@ class WalletService
                 ->join('currencies', 'wallets.currency_id', '=', 'currencies.id')
                 ->where('currencies.code', '=', $currency)
                 ->where('users.id', Auth::id())
-                ->select('wallets.id as sender_wallet_id') // Ensure the wallet belongs to the authenticated user
+                ->select('wallets.id as sender_wallet_id','users.name') // Ensure the wallet belongs to the authenticated user
                 ->first(); // Return the first match (should be a single record)
         }
     
@@ -31,6 +32,16 @@ class WalletService
         return Wallets::where('user_id', Auth::id())->get(); // Return all wallets for the authenticated user
     }
     
+    public function getFee($transactionType,$currency = 'PHP'){
+          
+        $fee = DB::table('fees')
+            ->where('transaction_type', $transactionType)
+            ->where('currency', $currency)
+            ->value('amount');
+
+        return $fee ?? 0; // Default to 0 if no fee is found
+
+    }
 
     #Generate Transaction ID usign random Numbers and String
     public function generateTransactionID(){

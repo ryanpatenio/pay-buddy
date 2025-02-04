@@ -14,7 +14,7 @@
                 <li class="breadcrumb-item">
                     <a href="javascript: void(0);">Pages</a>
                 </li>
-                <li class="breadcrumb-item active" aria-current="page">Create Receipt</li>
+                <li class="breadcrumb-item active" aria-current="page">Xpress Send</li>
             </ol>
         </nav>
     </div>
@@ -74,9 +74,13 @@
         <div class="col-lg-6  col-xxl-3 d-flex">
             <form method="GET" >
                 <select id="currencySelect" name="currency" class="form-select bg-primary text-black mb-5" style="width:120px;">
-                    <option value="PHP" >🇵🇭 PHP</option>
-                    <option value="USD" >🇺🇸 USD</option>
-                    <option value="EUR" >🇪🇺 EUR</option>
+                    <?php
+                        foreach ($walletCurrencies as $cur) { ?>
+                           <option value="<?=$cur->code ?>" ><?=$cur->name ?></option>
+                       <?php }
+                        
+                        ?>
+                  
                 </select>
             </form>
         </div>
@@ -112,7 +116,12 @@
                         <label for="" class="mb-2 text-primary">Amount |  <strong>Currency: <strong class="text-primary" id="curr">PHP</strong></strong></label>
                         <input type="text" class="form-control" name="amount" id="amount-to-send" required placeholder="Amount">
                     </div>
+                    <div class="col">
+                        <label for="" class="mb-2 text-primary">Fee (s)</label>
+                        <input type="text" class="form-control" id="fee" name="fee" id="transaction-fee" value="<?=$transactionFee ?? 0 ?>" required placeholder="Fee" readonly>
+                    </div>
                 </div>
+              
                 <!-- / .row -->
             </div>
             <div class="card-footer">
@@ -142,7 +151,7 @@
                 </div>
                 <div class="d-flex justify-content-end mt-5">
                     <!-- Button -->
-                    <button type="submit" class="btn btn-primary">Send</button>
+                    <button type="submit" class="btn btn-primary">Confirm</button>
                 </div>
             </form>
             </div>
@@ -154,7 +163,8 @@
 <script>
      const dashboardRoute = @json(route('user.dashboard'));
 </script>
-<script src="{{asset('assets/js/xpress/xpress.js')}}"></script>
 <script src="{{asset('assets/js/dashboard/dash.js')}}"></script>
+<script src="{{asset('assets/js/xpress/xpress.js')}}"></script>
+
 
 @endsection

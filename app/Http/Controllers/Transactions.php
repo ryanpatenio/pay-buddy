@@ -29,6 +29,7 @@ class Transactions extends Controller
             'account_number' => 'required|string|digits:11', // Ensures exactly 11-digit string
             'currency'       => 'required|string|max:3', // Assuming 3-letter currency codes (e.g., "PHP", "USD")
             'amount'         => 'required|numeric|min:1', // Allows decimals, e.g., 100.50
+            'account_name'   => 'required|string'
         ]);
     
         $receiverWalletCurrency = $this->getReceiverWalletCurrency($request->account_number); // Get the Receiver wallet currency
@@ -44,27 +45,29 @@ class Transactions extends Controller
         if (!$senderBal) {
             return json_message(EXIT_FORM_NULL, 'Wallet not Found!');
         }
-    
-        if ($senderBal < $request->amount) {
+        #change the + 1 when the fees is implemented
+        if ($senderBal < $request->amount + 1) {
             return json_message(EXIT_FORM_NULL, 'Insufficient Wallet Balance!');
         }
     
         try {
-            DB::transaction(function () use ($request) {
+            $transactionData = DB::transaction(function () use ($request) {
                 // Get Wallet Information
-                $senderWallet = $this->walletService->getUserWallet(null,$request->currency);
-                $receiverWallet = $this->walletService->getUserWallet($request->account_number,null);
-    
+                $senderWallet = $this->walletService->getUserWallet(null, $request->currency);
+                $receiverWallet = $this->walletService->getUserWallet($request->account_number, null);
+        
                 if (empty($senderWallet) || empty($receiverWallet)) {
                     throw new \Exception('Wallet not found!');
                 }
-    
-                // Create the Transaction for the Sender (Debit)
+        
+                // Generate transaction IDs
                 $transactionIdSender = $this->walletService->generateTransactionID();
                 $clientRefIdSender = $this->walletService->genClient_ref();
+        
+                // Create the Sender Transaction (Debit)
                 DB::table('transactions')->insert([
                     'wallet_id' => $senderWallet->sender_wallet_id,
-                    'receiver_wallet_id' => $receiverWallet->id, // Pass the receiver wallet ID
+                    'receiver_wallet_id' => $receiverWallet->id,
                     'transaction_id' => $transactionIdSender,
                     'client_ref_id' => $clientRefIdSender,
                     'type' => 'Debit',
@@ -75,38 +78,60 @@ class Transactions extends Controller
                     'created_at' => now(),
                     'updated_at' => now(),
                 ]);
-    
-                // Update Sender Wallet Balance (Deduct the amount + fee)
-                $deductAmount = $request->amount + 1; // 1 is for the fee
+        
+                // Deduct from sender's wallet
+                $deductAmount = $request->amount + 1; // 1 is the fee
                 Wallets::where('id', $senderWallet->sender_wallet_id)->decrement('balance', $deductAmount);
-    
-                // Create the Transaction for the Receiver (Credit)
+        
+                // Generate transaction ID for receiver
                 $transactionIdReceiver = $this->walletService->generateTransactionID();
                 $clientRefIdReceiver = $this->walletService->genClient_ref();
+        
+                // Create the Receiver Transaction (Credit)
                 DB::table('transactions')->insert([
-                    'wallet_id' => $receiverWallet->id, // Pass the receiver wallet ID
-                    'receiver_wallet_id' => null, // No receiver wallet ID for the receiver's own wallet
+                    'wallet_id' => $receiverWallet->id,
+                    'receiver_wallet_id' => null,
                     'transaction_id' => $transactionIdReceiver,
                     'client_ref_id' => $clientRefIdReceiver,
-                    'type' => 'Credit', // 'Credit' instead of 'Debit' for the receiver
+                    'type' => 'Credit',
                     'amount' => $request->amount,
-                    'fee' => 0, // No fee for the receiver
+                    'fee' => 0,
                     'status' => 'success',
                     'description' => 'Received Money',
                     'created_at' => now(),
                     'updated_at' => now(),
                 ]);
-    
-                // Update Receiver Wallet Balance (Add the amount to the current balance)
+        
+                // Add amount to receiver's wallet
                 Wallets::where('id', $receiverWallet->id)->increment('balance', $request->amount);
+        
+                // 🔹 Retrieve the last transaction of the sender
+                return DB::table('transactions')
+                    ->where('transaction_id', $transactionIdSender) // Get the sender transaction
+                    ->first();
             });
+        
+            // 🔹 If transaction is successfully inserted, return data
+            $data = [
+                'transaction_type' => '__SEND MONEY__',
+                'sent_to'          => $request->account_name,
+                'account_number'   => $request->account_number,
+                'trans_date'       => $transactionData->created_at, // Get transaction date
+                'total_amount'     => $transactionData->amount + $transactionData->fee, // Total amount including fee
+                'trans_code'       => $transactionData->transaction_id, // Transaction code
+                'status'           => $transactionData->status, // Transaction status
+            ];
 
-            // Success Response
-            return json_message(EXIT_SUCCESS, 'Transaction completed successfully.');
-        } catch (\Throwable $th) {
-            // Error Response
-            return json_message(EXIT_BE_ERROR, 'Transaction failed!', $th->getMessage());
+            //return redirect()->route('receipt.page')->with('transaction', $data);
+        
+            return response()->json([
+                'message' => 'Transaction successful!',
+                'transaction' => $data
+            ]);
+        } catch (\Exception $e) {
+            return response()->json(['error' => $e->getMessage()], 500);
         }
+        
     }
     
 

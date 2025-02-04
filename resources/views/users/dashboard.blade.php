@@ -37,7 +37,8 @@
                                         <!-- Subtitle -->
                                      
                                         
-                                        <h2 class="mb-0" class="" id="wallet-balance"> ₱ <?= number_format($walletBalance, 2) ?>
+                                        <h2 class="mb-0" id="wallet-balance">  
+                                            <?= ($walletBalance->symbol ?? '₱') . ' ' . ($walletBalance->balance ?? 0) ?>
                                         </h2> 
                                     </div>
                                     <div class="col-auto">
@@ -84,7 +85,7 @@
                                         <h5 class="text-uppercase  text-muted fw-semibold mb-2">Send Money
                                         </h5>
                                         <!-- Subtitle -->
-                                        <a href="/Xpress-Send">
+                                        <a href="#" id="dash-send-btn">
                                             <h2 class="mb-0">Send Money
                                             </h2>
                                         </a>
@@ -229,36 +230,22 @@
 
             <!--Modal---->
 
-            <div class="modal fade bd-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
-                <div class="modal-dialog modal-lg" role="document">
+            <div class="modal fade sendOptionModal" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+                <div class="modal-dialog " role="document">
                     <div class="modal-content">
                         <div class="modal-header">
-                            <h3 class="modal-title" id="myLargeModalLabel">Send Money</h3>
+                            <h3 class="modal-title" id="myLargeModalLabel">Send Options</h3>
                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                         </div>
                         <div class="modal-body">
-                            <div class="row mb-5">
-                                <div class="col">
-                                    <label for="">Acount Number</label>
-                                    <input type="text" class="form-control" name="account_number" id="account-number" required placeholder="Account Number">
-                                </div>
-                                <div class="col">
-                                    <label for="">Account Name</label>
-                                    <input type="text" class="form-control" name="account_name" id="account-name"  placeholder="" readonly>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col">
-                                    <label for="">Amount</label>
-                                    <input type="text" class="form-control" name="amount" id="amount-to-send" required>
-                                </div>
-                            </div>
-                            
-                            <div class="modal-footer">
+                            <div class="mb-5 d-flex justify-content-center align-items-center gap-5">
+                                                                   
+                                <button class="btn btn-primary" type="button" id="xpress-btn">Xpress Send</button>
+                                                            
+                                <button class="btn btn-primary" type="button" id="bank-x-btn">Bank Transfer</button>                                    
                                 
-                                <button type="button" class="btn btn-light" data-bs-dismiss="modal">Close </button >
-                                <button type="button" class="btn btn-primary" id="proceed">Proceed </button >
-                           </div >
+                            </div>
+                         
                         </div>
                     </div>
                 </div>

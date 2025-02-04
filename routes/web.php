@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\ExpressController;
 use App\Http\Controllers\Transactions;
 use Illuminate\Support\Facades\Route;
 
@@ -62,10 +63,17 @@ Route::middleware(['auth'])->group(function(){
             return view('users.api-keys');
         
         });
+
+        Route::get('/Xpress-Send',[ExpressController::class,'xpress_index']);
+
+        Route::get('/Xpress-Receipt',function(){
+            return view('users.xpress.receipt');
         
-        Route::get('/Xpress-Send',function(){
-            return view('users.express-send');
-        
+        })->name('receipt.page');
+
+        #Bank transfer
+        Route::get('/Bank-Transfer',function(){
+            return view('users.bankTransfer.bankTransfer');
         });
         
        
