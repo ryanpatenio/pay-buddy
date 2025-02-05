@@ -74,9 +74,13 @@ Route::middleware(['auth'])->group(function(){
         })->name('receipt.page');
 
         #Bank transfer
-        Route::get('/Bank-Transfer',function(){
+        Route::get('/Bank-Transfer-process',function(){
             return view('users.bankTransfer.bankTransfer');
-        });
+        })->name('bank.transfer');
+
+        Route::get('/Bank-Transfer',function(){
+            return view('users.bankTransfer.bankOptions');
+        })->name('bank.options');
         
        
         #testing

@@ -256,6 +256,7 @@
                 // Define route as a JavaScript variable
                 const dashboardRoute = @json(route('user.dashboard'));
                 const dashGetBalUrl = @json(route('user.wallet.balance'));
+                const bankOptionUrl = @json(route('bank.options'));
             </script>
             <script src="{{URL::asset('assets/js/dashboard/dash.js')}}"></script>
  

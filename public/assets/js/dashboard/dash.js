@@ -44,7 +44,7 @@ $(document).ready(function() {
 
     $('#bank-x-btn').click(function(e){
         e.preventDefault();
-        window.location.href='/Bank-Transfer';
+        window.location.href= bankOptionUrl;
 
     });
 });
