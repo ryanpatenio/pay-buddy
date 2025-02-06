@@ -48,6 +48,7 @@ $(document).ready(function(){
 
                     // Redirect user to receipt page
                     const transactionId = sendTransaction.data.transaction_id;
+                    console.log(sendTransaction)
 
                     msg(sendTransaction.data.message,'success');
 
@@ -57,11 +58,15 @@ $(document).ready(function(){
                
                 } catch (error) {
                     let err_response = error.response?.data;
-                    console.log(error.response);
+                    console.log(error.response.data.error);
+                    alert(error.response.data.error);
         
                     if (error.response?.status === 422 || err_response?.code === 'EXIT_FORM_NULL') {
                         alert(err_response?.message || 'An error occurred');
                     }
+                    
+                       // alert(error.response.data.error);
+                   
                 }
             }
         );

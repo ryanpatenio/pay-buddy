@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Models\Earnings;
 use App\Models\Fees;
 use App\Models\Wallets;
 use Illuminate\Support\Facades\Auth;
@@ -31,6 +32,56 @@ class WalletService
     
         // If no account number or currency is provided, return all wallets of the authenticated user
         return Wallets::where('user_id', Auth::id())->get(); // Return all wallets for the authenticated user
+    }
+    public function getReceiverWalletCurrency($account){
+        if(empty($account)){
+            return false;
+        }
+
+        $Currency = DB::table('wallets')
+        ->join('currencies','wallets.currency_id','=','currencies.id')
+        ->where('wallets.account_number','=',$account)     
+        ->select('currencies.code')
+        ->first();
+
+        if(empty($Currency)){
+            return false;
+        }
+
+        return $Currency->code ; #return Currency "USD,PHP" if the account number is exist
+    }
+
+    public function getSenderBalance($curr){
+        if(empty($curr)){
+            return false;
+        }
+        $bal = DB::table('wallets')
+            ->join('currencies','wallets.currency_id','=','currencies.id')
+            ->where('wallets.user_id','=',Auth::id())
+            ->select('wallets.balance')
+            ->first();
+
+        if(empty($bal)){
+            return false; #no data found!
+        }
+
+        return $bal->balance;
+    }
+
+    public function storeInEarnings($transaction_id,$user_id,$amount){
+
+        $earning = Earnings::create([
+            'transaction_id' => $transaction_id,
+            'user_id' => $user_id,
+            'amount' => $amount,
+            'earned_at' => now()
+        ]);
+        if(!$earning){
+            return false;
+        }
+
+        return true;
+        
     }
     
     public function getFee($transactionType,$currency = 'PHP'){

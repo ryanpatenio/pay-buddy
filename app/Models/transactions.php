@@ -18,7 +18,8 @@ class Transactions extends Model
         'type',
         'amount',
         'status',
-        'description'
+        'description',
+        'fee'
     ];
 
     
