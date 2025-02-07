@@ -29,12 +29,12 @@
                             
                             <h5 class="text-uppercase text-muted fw-semibold mb-2">
                                 <span class="legend-circle-sm bg-success"></span>
-                                Current Balance
+                                Available Balance
                             </h5>
                             <!-- Subtitle -->
                          
                             
-                            <h2 class="mb-0" class=""  id="wallet-balance"> ₱ 1000
+                            <h2 class="mb-0" class=""  id="wallet-balance"> ₱ <?=$userWalletBalance ?? 0 ?>
                                 
                             </h2> 
                         </div>
@@ -78,14 +78,21 @@
         <!-- Card -->
         <div class="card border-0 flex-fill w-100">
             <div class="card-body">
+                <div class="row">
+                    <div class="col d-flex align-items-center justify-between">
+                        <img class="img-fluid" id="bank-img" width="80" alt="..." src="" >
+                        <span class="ms-4" id="bank-description"> </span>
+                    </div>
+                </div>
+                <hr>
 
-            <form action="" id="xpressForm">
-                <input type="hidden" id="hidden_val" value=""><!--500 example wallet Balance--->
+            <form action="" id="bank-transfer-form">
+                <input type="hidden" id="hidden-balance" value="<?=$userWalletBalance ?? 0 ?>"><!--500 example wallet Balance--->
                 @csrf
                 <div class="row mb-2">
                     <div class="col">
                         <label for="" class="mb-2"> Account Number</label>
-                        <input type="text" class="form-control" maxlength="11" name="account_number" id="account-number" required placeholder="Account Number">
+                        <input type="text" class="form-control" maxlength="12" name="account_number" id="account-number" required placeholder="Account Number">
                         <span class="text-danger px-2 mt-2" role="alert">
                             <strong id="acct-error"></strong>
                         </span>
@@ -93,7 +100,7 @@
                    
                     <div class="col">
                         <label for="" class="mb-2"> Account Name</label>
-                        <input type="text" class="form-control" name="account_name" id="account-name" required placeholder="Account Name" required readonly>
+                        <input type="text" class="form-control" name="account_name" id="account-name" required placeholder="Account Name" required>
                     </div>
                 </div>
                 <hr>
@@ -150,6 +157,7 @@
 <script>
      //const dashboardRoute = @json(route('user.dashboard'));
 </script>
+<script src="{{asset('assets/js/bankT/bankT.js')}}"></script>
 
 
 

@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\BankController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\ExpressController;
 use App\Http\Controllers\Transactions;
@@ -73,16 +74,11 @@ Route::middleware(['auth'])->group(function(){
         
         })->name('receipt.page');
 
-        #Bank transfer
-        Route::get('/Bank-Transfer-process',function(){
-            return view('users.bankTransfer.bankTransfer');
-        })->name('bank.transfer');
-
-        Route::get('/Bank-Transfer',function(){
-            return view('users.bankTransfer.bankOptions');
-        })->name('bank.options');
-        
-       
+        #Bank transfer      
+        Route::get('/Bank-Transfer-process',[BankController::class,'bankTransfer_index'])->name('bank.transfer');
+        Route::get('/Bank-Transfer',[BankController::class,'bank_option_index'])->name('bank.options');
+        Route::post('/get-user-selected-balance',[BankController::class,'bankSelected']);
+    
         #testing
         Route::get('/balance-data', [DashboardController::class, 'getBalanceData']);
         

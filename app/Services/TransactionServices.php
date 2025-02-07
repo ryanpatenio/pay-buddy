@@ -46,6 +46,9 @@ class TransactionServices
             'Content-Type' => 'application/json',
         ])->post($bankPartner->url . '/transactions/credit', $payload);
 
+        $clientRefId = $response->json('reference_id') ?? ('fallback-' . uniqid());
+        be_logs('Bank Api response : ',$response->json());
+
         // Start a database transaction
         DB::beginTransaction();
 
@@ -56,7 +59,7 @@ class TransactionServices
                 'receiver_wallet_id' => null, // No receiver wallet for bank transactions
                 'api_key_id' => $bankPartner->id,
                 'transaction_id' => $transactionId,
-                'client_ref_id' => $response->json('reference_id'), // Bank's reference ID
+                'client_ref_id' => $clientRefId, // Bank's reference ID
                 'type' => 'debit', // Deduct from sender's wallet
                 'amount' => $amount,
                 'fee' => $fee,
@@ -64,10 +67,12 @@ class TransactionServices
                 'description' => $description,
             ]);
 
-            // Deduct the amount from the sender's wallet
-            $senderWallet->balance -= ($amount + $fee);
-            $senderWallet->save();
-
+            // Deduct the amount from the sender's wallet only if the API request is successful
+            if ($response->successful()) { // Correct boolean check
+                $senderWallet->balance -= ($amount + $fee);
+                $senderWallet->save();
+            }
+        
             // Commit the transaction
             DB::commit();
 

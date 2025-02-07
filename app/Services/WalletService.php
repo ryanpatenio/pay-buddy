@@ -58,6 +58,7 @@ class WalletService
         $bal = DB::table('wallets')
             ->join('currencies','wallets.currency_id','=','currencies.id')
             ->where('wallets.user_id','=',Auth::id())
+            ->where('currencies.code',$curr)
             ->select('wallets.balance')
             ->first();
 

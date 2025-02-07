@@ -2,14 +2,13 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Earnings;
-use App\Models\Wallets;
+
 use App\Services\TransactionServices;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
-use PhpParser\Node\Expr\Throw_;
+
 
 // use App\Services\TransactionService;
 
@@ -70,11 +69,6 @@ class Transactions extends Controller
         return response()->json($transaction);
     
     }
-    
-
-   
-
-   
 
     public function checkAccount(Request $request){
         $validator = Validator::make($request->all(),[
@@ -103,10 +97,6 @@ class Transactions extends Controller
         }
 
     }
-
-    
-
-    
 
 }
 
