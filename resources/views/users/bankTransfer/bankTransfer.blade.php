@@ -112,7 +112,7 @@
                     </div>
                     <div class="col">
                         <label for="" class="mb-2 text-primary">Fee (s)</label>
-                        <input type="text" class="form-control" id="fee" name="fee" id="transaction-fee" value="<?=$transactionFee ?? 0 ?>" required placeholder="Fee" readonly>
+                        <input type="text" class="form-control" name="fee" id="transaction-fee" value="<?=$transactionFee ?? 0 ?>" required placeholder="Fee" readonly>
                     </div>
                 </div>
               

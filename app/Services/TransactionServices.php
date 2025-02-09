@@ -6,7 +6,11 @@ use App\Models\BankPartners;
 use App\Models\Transactions;
 use App\Models\Wallets;
 use App\Services\WalletService;
+use App\Services\NotificationServices;
+
+use Carbon\Carbon;
 use Exception;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\DB;
 
@@ -14,18 +18,20 @@ use Illuminate\Support\Facades\DB;
 class TransactionServices
 {
     private $walletService;
+    private $notificationService;
 
-    public function __construct(WalletService $walletService)
+    public function __construct(WalletService $walletService,NotificationServices $notificationServices)
     {
-        $this->walletService = $walletService;   
+        $this->walletService = $walletService;
+        $this->notificationService = $notificationServices;   
     }
 
-    public function sendMoneyToBank($senderWalletId, $receiverBankAccount, $amount, $fee, $description = null,$bank,$currency)
+    public function sendMoneyToBank($senderWalletId, $receiverBankNumber, $amount, $fee, $description = null, $bank, $currency)
     {
         // Retrieve sender wallet
         $senderWallet = Wallets::findOrFail($senderWalletId);
 
-        // Retrieve the bank partner (e.g., BPI)
+        // Retrieve the bank partner (e.g., BPI)s
         $bankPartner = BankPartners::where('name', $bank)->firstOrFail();
 
         // Generate a unique transaction ID
@@ -33,7 +39,7 @@ class TransactionServices
 
         // Prepare the payload for the bank API
         $payload = [
-            'account_number' => $receiverBankAccount,
+            'account_number' => $receiverBankNumber,
             'amount' => $amount,
             'currency' => $currency, 
             'reference_id' => $transactionId,
@@ -55,14 +61,14 @@ class TransactionServices
         try {
             // Create a new transaction record
             $transaction = Transactions::create([
-                'wallet_id' => $senderWalletId,
+                'wallet_id' => $senderWallet->id,
                 'receiver_wallet_id' => null, // No receiver wallet for bank transactions
                 'api_key_id' => $bankPartner->id,
-                'transaction_id' => $transactionId,
-                'client_ref_id' => $clientRefId, // Bank's reference ID
+                'transaction_id' => $transactionId,#generated
+                'client_ref_id' => $clientRefId, // Bank's reference ID from api response else generated fail client_ref_id
                 'type' => 'debit', // Deduct from sender's wallet
-                'amount' => $amount,
-                'fee' => $fee,
+                'amount' => $amount, #amount to send
+                'fee' => $fee, #default 15 pesos
                 'status' => $response->successful() ? 'success' : 'failed',
                 'description' => $description,
             ]);
@@ -77,6 +83,7 @@ class TransactionServices
             DB::commit();
 
             return $transaction;
+            
         } catch (\Exception $e) {
             // Rollback the transaction on error
             DB::rollBack();
@@ -96,6 +103,7 @@ class TransactionServices
     {
         // Validate input data
         $this->validateRequest($requestData);
+       
 
         // Get sender and receiver wallets
         $senderWallet = $this->walletService->getUserWallet(null, $requestData['currency']);
@@ -123,6 +131,19 @@ class TransactionServices
                 'description' => 'Transfer Money',
                 'currency_id' => $senderWallet->sender_currency_id,
             ]);
+           
+            #create Notifications Data
+            $dateTimeNow = Carbon::now()->toDateTimeString(); // Output: 2025-02-09 14:30:45
+            $sendMoneyNotif = [
+                'title' =>'Send Money',
+                'message' =>'You have Sent '.$requestData['currency'].' '.$requestData['amount'].' to Account Number : '.$requestData['account_number'].' on '.$dateTimeNow.'.',
+                'user_id' => $senderWallet->id
+            ];
+            $receiveMoneyNotif = [
+                'title' =>'Received Money',
+                'message' =>'You have received '.$requestData['currency'].' '.$requestData['amount'].' from : '.$senderWallet->name.' on '.$dateTimeNow.'.',
+                'user_id' => $receiverWallet->id
+            ];
 
             // Deduct amount from sender's wallet
             $this->updateWalletBalance($senderWallet->sender_wallet_id, -($requestData['amount'] + $requestData['fee']));
@@ -143,6 +164,16 @@ class TransactionServices
 
             // Store earnings (if applicable)
             $this->storeEarnings($senderTransaction->id, $senderWallet->id, $requestData['fee']);
+            #logs Notifications
+            $send =  $this->notificationService->createNotifications($sendMoneyNotif);
+            $received =  $this->notificationService->createNotifications($receiveMoneyNotif);
+
+            if(!$send){
+                be_logs('failed to create send Notifications');
+            }
+            if(!$received){
+                be_logs('failed to create received Notifications');
+            }
 
             return [
                 'message' => 'Transaction successful!',
@@ -266,5 +297,41 @@ class TransactionServices
         }
     }
 
-    
+    #returns recent Transactions Of Authenticated USER
+    public function showUserTransactions($status = null){
+
+       /**
+        * @param status if !null return recent Transction or this Day! ELSE returns all transactions of USERS
+        */
+ 
+       // Start the query builder
+        $query = DB::table('transactions')
+            ->join('wallets', 'transactions.wallet_id', '=', 'wallets.id')
+            ->join('users', 'wallets.user_id', '=', 'users.id')
+            ->where('users.id', Auth::id()) // Filter by authenticated user
+            ->select(
+                'transactions.transaction_id',
+                'transactions.description',
+                'transactions.status',
+                'transactions.amount',
+                'transactions.fee',
+                'transactions.created_at'
+        );
+
+        // If status is provided, filter transactions of the current day
+        if (!is_null($status)) {
+            $query->whereDate('transactions.created_at', Carbon::today());
+        }
+
+        // Get transactions sorted by most recent first
+        $recentTransactions = $query->orderBy('transactions.created_at', 'DESC')->get();
+
+        // Format the created_at date using Carbon
+        foreach ($recentTransactions as $recent) {
+            $recent->date_created = Carbon::parse($recent->created_at)->format('F j, Y g:i A'); // Example: January 1, 2025 10:30 AM
+        }
+
+        return $recentTransactions;
+     }
+  
 }

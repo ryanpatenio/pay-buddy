@@ -8,7 +8,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
-
+use Carbon\Carbon;
 
 // use App\Services\TransactionService;
 
@@ -24,8 +24,10 @@ class Transactions extends Controller
     }
   
     public function index(){
+
+        $Transactions = $this->transactionService->showUserTransactions();
        
-        return view('transaction.index');
+        return view('users.transactions.index',compact('Transactions'));
     }
 
     public function sendMoneyToUser(Request $request)
@@ -98,6 +100,7 @@ class Transactions extends Controller
 
     }
 
+   
 }
 
     /*SELECT DATE_FORMAT(earned_at, '%Y-%m') AS month, SUM(amount) AS total_earnings

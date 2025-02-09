@@ -19,7 +19,8 @@ class Transactions extends Model
         'amount',
         'status',
         'description',
-        'fee'
+        'fee',
+        'currency_id'
     ];
 
     

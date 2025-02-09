@@ -20,6 +20,7 @@ $(document).ready(function(){
             msg('Insufficient Balance','info');           
             return;
         }
+        let total = parseFloat(amount) + parseFloat(fee);
 
         const data = {
             account_number : account_number,
@@ -27,20 +28,26 @@ $(document).ready(function(){
             amount : parseFloat(amount),
             fee : parseFloat(fee),
             bankName : bankName
-        };
-        try {
+        };  
+        
+        swalMessage('custom',
+            'You are about to send PHP '+amount+' to '+account_name+' (Account: '+account_number+'). A transaction fee of PHP '+fee+' will be applied. Your total deduction will be PHP '+total+'. Do you want to proceed?', async function(){
 
-            const processTransaction = await axios.post('/process-bank-transfer',data);
-            if(processTransaction.status !== 200){
-                console.log('failed to process Bank Transfer!');
-            }
+                try {
 
-            console.log(processTransaction);
-            
-        } catch (error) {
-            
-        }
+                    // const processTransaction = await axios.post('/process-bank-transfer',data);
+                    // if(processTransaction.status !== 200){
+                    //     console.log('failed to process Bank Transfer!');
+                    // }
+        
+                    // console.log(processTransaction);
+                    msg('Bank Transfer Features are not available at this time Due to Update!')
+                    
+                } catch (error) {
+                    console.log(error)
+                }
 
+            });
 
 
     });

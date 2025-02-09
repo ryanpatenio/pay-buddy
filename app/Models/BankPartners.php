@@ -16,15 +16,15 @@ class BankPartners extends Model
     ];
 
     // Optionally, you can encrypt the API key when storing it
-    public function setApiKeyAttribute($value)
-    {
-        $this->attributes['api_key'] = encrypt($value);
-    }
+    // public function setApiKeyAttribute($value)
+    // {
+    //     $this->attributes['api_key'] = encrypt($value);
+    // }
 
-    // Optionally, decrypt the API key when retrieving it
-    public function getApiKeyAttribute($value)
-    {
-        return decrypt($value);
-    }
+    // // Optionally, decrypt the API key when retrieving it
+    // public function getApiKeyAttribute($value)
+    // {
+    //     return decrypt($value);
+    // }
 
 }

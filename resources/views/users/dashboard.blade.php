@@ -133,7 +133,7 @@
                         <div class="card border-0 flex-fill w-100" data-list='{"valueNames": ["name", "price", "quantity", "amount", {"name": "sales", "attr": "data-sales"}], "page": 5}' id="topSellingProducts">
                             <div class="card-header border-0 card-header-space-between">
                                 <!-- Title -->
-                                <h2 class="card-header-title h4 text-uppercase">Recent Transactions
+                                <h2 class="card-header-title h4 text-uppercase">Transactions Today
                                 </h2>
                                 <!-- Dropdown -->
                                 <div class="dropdown">
@@ -163,32 +163,40 @@
                                         <tr>
                                             <th>
                                                 <a href="javascript: void(0);" class="text-muted list-sort" data-sort="name">Transaction Type
+                                                </a>
                                             </th>
                                             <th>
                                                 <a href="javascript: void(0);" class="text-muted list-sort" data-sort="key">Transaction Code
                                                 </a>
                                             </th>
+                                            <th>
+                                                <a href="javascript: void(0);" class="text-muted list-sort" data-sort="key">Amount
+                                                </a>
+                                            </th>
+                                            <th>
+                                                <a href="javascript: void(0);" class="text-muted list-sort" data-sort="key">Fee (Optional)
+                                                </a>
+                                            </th>
                                             
-                                            <th class="text-end">
-                                                <a href="javascript: void(0);" class="text-muted list-sort" data-sort="amount">Amount
-                                                </a>
-                                            </th>
-                                            <th class="text-end pe-7 min-w-200px">
-                                                <a href="javascript: void(0);" class="text-muted list-sort" data-sort="sales">Date
-                                                </a>
-                                            </th>
                                             <th>
                                                 <a href="javascript: void(0);" class="text-muted list-sort" data-sort="status">Status
                                                 </a>
                                             </th>
+                                            <th>
+                                                <a href="javascript: void(0);" class="text-muted list-sort" data-sort="created">Date
+                                                </a>
+                                            </th>
+                                            {{-- <th class="text-end">Actions</th> --}}
                                         </tr>
                                     </thead>
                                     <tbody class="list">
-                                        <tr>
-                                            <td class="name fw-bold">Send Money</td>
-                                            <td class="key" data-key="FC6F7D6B-BADD-0DD4-A7B0-EB34A1EFA527">
+                                       <?php
+                                        foreach ($recentTransactions as $recent) { ?>
+                                          <tr>
+                                            <td class="name"><?=$recent->description ?? '' ?></td>
+                                            <td class="key" data-key="<?= $recent->transaction_id ?? 0?>">
                                                 <div class="d-flex">
-                                                    <input id="key-01" class="form-control w-350px me-3" value="FC6F7D6B-BADD-0DD4-A7B0-EB34A1EFA527">
+                                                    <input id="key-01" class="form-control w-350px me-3" value="<?=$recent->transaction_id?? 0 ?>" readonly>
                                                     <!-- Button -->
                                                     <button class="clipboard btn btn-link px-0" data-clipboard-target="#key-01" data-bs-toggle="tooltip" data-bs-title="Copy to clipboard">
                                                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" height="18" width="18">
@@ -204,15 +212,19 @@
                                                     </button>
                                                 </div>
                                             </td>
-                                            <td class="price text-end">$599</td>
-                                         
-                                            <td class="amount text-end">January 1 2025</td>
+                                            <td><?=$recent->amount ?? 0 ?></td>
+                                            <td><?=$recent->fee ?? 0 ?></td>
                                             <td class="status" data-status="Active">
-                                                <span class="legend-circle bg-success"></span>
-                                                Success
+                                                <span class="legend-circle <?= $recent->status === 'success' ? 'bg-success' : 'bg-danger' ?>"></span>
+                                                <?=$recent->status ?? '' ?>
                                             </td>
+                                            <td class="created" data-created=""><?=$recent->date_created ?></td>
                                            
                                         </tr>
+
+                                       <?php }
+                                        
+                                        ?>
                                       
                                     </tbody>
                                 </table>

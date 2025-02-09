@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Fees;
 use App\Models\Transactions;
+use App\Services\TransactionServices;
 use App\Services\WalletService;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -13,10 +14,12 @@ use Illuminate\Support\Facades\DB;
 class DashboardController extends Controller
 {
     private $walletService;
+    private $transactionService;
 
-    public function __construct(WalletService $walletService)
+    public function __construct(WalletService $walletService, TransactionServices $transactionServices)
     {
         $this->walletService = $walletService;
+        $this->transactionService = $transactionServices;
     }
  
     public function index(Request $request) {
@@ -28,6 +31,8 @@ class DashboardController extends Controller
        
         $walletCurrencies = $this->walletService->userWalletCurrencies(); #sender Wallet Currencies
         $transactionFee = $this->walletService->getFee('send_money',$selectedCurrency);
+
+        $recentTransactions = $this->transactionService->showUserTransactions('recent'); #return all Transaction this DaY!
     
         if ($request->ajax()) {
             return response()->json([
@@ -36,7 +41,7 @@ class DashboardController extends Controller
             ]);
         }
 
-        return view('users.dashboard', compact('walletBalance', 'selectedCurrency','walletCurrencies'));
+        return view('users.dashboard', compact('walletBalance', 'selectedCurrency','walletCurrencies','recentTransactions'));
     }
 
     public function getUserWalletBalance($currency = null) {

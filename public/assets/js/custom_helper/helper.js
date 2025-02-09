@@ -16,6 +16,15 @@ function msgThenRedirect($text ="",$msg_type ="", _url){
 	});
 }
 
+const animateBtn = (time,btn_name,btn_restore_text) => {
+    btn_name.prop('disabled', true);
+    btn_name.html('<i class="fa fa-spinner fa-spin"></i> Processing...');
+    setTimeout(() => {
+        btn_name.prop('disabled', false); // Re-enable the button
+        btn_name.html(btn_restore_text); // Restore the original text
+    }, time); // Simulate a 2-second delay 2000
+}
+
 // function message(_message, _msg_type, _url) {
 // 	Swal.fire({
 // 		title: _message,

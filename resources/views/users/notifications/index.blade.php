@@ -41,6 +41,10 @@
                         <thead class="thead-light">
                             <tr>
                                 <th>
+                                    <a href="javascript: void(0);" class="text-muted list-sort" data-sort="">#
+                                    </a>
+                                </th>
+                                <th>
                                     <a href="javascript: void(0);" class="text-muted list-sort" data-sort="name">Name
                                     </a>
                                 </th>
@@ -57,14 +61,24 @@
                             </tr>
                         </thead>
                         <tbody class="list">
-                            <tr style="cursor: pointer" data-bs-toggle="modal" data-bs-target=".notifModal">
+                           <?php
+                            foreach ($notifications as $notif) { ?>
+
+                              <tr style="cursor: pointer" class="notif-row"  data-id="<?=$notif->id ?? 0 ?>" >
+                                <td class="status" data-status="Active">
+                                    <span class="legend-circle <?= $notif->status === 'read' ? 'bg-success' : 'bg-danger' ?>"></span>
+                                    <?=$recent->status ?? '' ?>
+                                </td>
                         
-                                <td class="name">Pay Buddy</td>
+                                <td class="name"><?=$notif->title ?? '' ?></td>
                                 
-                                <td class="name">Lorem ipsum dolor sit amet...</td>
-                                <td class="created" data-created="1642550400">01.19.22</td>
+                                <td class="name"><?=$notif->message ?? '' ?></td>
+                                <td class="created" data-created="1642550400"><?=$notif->created_at ?? '' ?></td>
                                
-                            </tr>
+                            </tr>  
+                           <?php }
+                            
+                            ?>
 
                            
                         </tbody>
@@ -75,6 +89,9 @@
                     <!-- Pagination -->
                     <ul class="pagination justify-content-end list-pagination mb-0"></ul>
                 </div>
+
+
+                
             </div>
         </div>
     </div>
@@ -90,36 +107,39 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
+                <input type="hidden" id="hidden_notif_id">
                 <div class="row">
                     <div class="col">
-                        <label for="" class="h4">Name :  </label>
-                        <strong>Pay Buddy</strong>
-                        <hr style="margin-top: -16px">
+                        <label for="" ></label>
+                        <strong class="h3" id="title"></strong>
+                        <hr style="margin-top: 0px">
        
                     </div>                
                 </div>
                 <div class="row">
                     <div class="col">
-                        Lorem ipsum dolor sit amet consectetur adipisicing elit. Deleniti iure maiores ex quod error, laboriosam est accusantium facere, esse aliquid a odio officiis consequatur ducimus eveniet laudantium, incidunt alias recusandae?
+                        <span class="h4" id="msg">
+                           
+                        </span>
                     </div>
                 </div>
-                <hr>
+                <hr style="margin-bottom:0px;">
                 <div class="row">
                     <div class="col">
                         <label for="">Date : </label>
-                        <strong> January 5, 2025</strong>
+                        <strong id="date"></strong>
                     </div>
                 </div>
                 
                 <div class="modal-footer">
-                    
-                    <button type="button" class="btn btn-light" data-bs-dismiss="modal">Close </button >
-                    
+                    <button type="button" id="mark-as-read-btn" class="btn btn-primary">mark as read </button >
+                    <button type="button" class="btn btn-light" data-bs-dismiss="modal">Close </button >                   
                </div >
             </div>
         </div>
     </div>
 </div>
+<script src="{{asset('assets/js/notifications/notif.js')}}"></script>
 
 
 @endsection

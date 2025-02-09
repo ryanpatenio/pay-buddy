@@ -43,8 +43,8 @@ class AuthController extends Controller
             }
 
             return match ($user->role) {
-                2 => redirect()->intended('admin.dashboard')->with('success', 'Welcome, Super Admin!'),
-                1 => redirect()->intended('admin.dashboard')->with('success', 'Welcome, Admin!'),
+                2 => redirect()->intended('/Dashboard-admin')->with('success', 'Welcome, Super Admin!'),
+                1 => redirect()->intended('/Dashboard-admin')->with('success', 'Welcome, Admin!'),
                 0 => redirect()->intended('user-dashboard')->with('success', 'Welcome, Investor!'),
                 default => redirect()->intended('user-dashboard')->with('success', 'Welcome, User!'),
             };

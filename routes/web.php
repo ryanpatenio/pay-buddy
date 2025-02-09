@@ -4,6 +4,7 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\BankController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\ExpressController;
+use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\Transactions;
 use Illuminate\Support\Facades\Route;
 
@@ -45,18 +46,15 @@ Route::middleware(['auth'])->group(function(){
         
 
         #transactions
-        Route::get('/Transactions',function(){
-            return view('users.transactions');
-        });
+        Route::get('/Transactions',[Transactions::class,'index']);
         Route::post('/checkAccount',[Transactions::class,'checkAccount']);
         Route::post('/process-transaction',[Transactions::class,'sendMoneyToUser'])->name('sendMoney');
         Route::get('/get-transaction/{id}', [Transactions::class, 'getTransaction']);
         
-
-        Route::get('/Notifications',function(){
-            return view('users.notifications');
-        
-        });
+        #Notifications
+        Route::get('/Notifications',[NotificationController::class,'notif_index']);
+        Route::get('/Notifications/{id}',[NotificationController::class,'getNotification']);
+        Route::post('/Notifications-update',[NotificationController::class,'update']);
         
         Route::get('/Profile-Account',function(){
             return view('users.profileAccount');
@@ -78,6 +76,7 @@ Route::middleware(['auth'])->group(function(){
         Route::get('/Bank-Transfer-process',[BankController::class,'bankTransfer_index'])->name('bank.transfer');
         Route::get('/Bank-Transfer',[BankController::class,'bank_option_index'])->name('bank.options');
         Route::post('/get-user-selected-balance',[BankController::class,'bankSelected']);
+        Route::post('/process-bank-transfer',[BankController::class,'processBankTransfer']);
     
         #testing
         Route::get('/balance-data', [DashboardController::class, 'getBalanceData']);
