@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\currency;
 use App\Models\User;
+use App\Models\UserDetails;
 use App\Models\Wallets;
 use App\Services\WalletService;
 use Illuminate\Http\Request;
@@ -76,6 +77,9 @@ class AuthController extends Controller
                     'email' => $request->email,
                     'password' => Hash::make($request->password),
                     
+                ]);
+                UserDetails::create([
+                    'user_id'=> $user->id
                 ]);
 
                 $currency = currency::where('code','PHP')->value('id');

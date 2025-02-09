@@ -5,6 +5,7 @@ use App\Http\Controllers\BankController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\ExpressController;
 use App\Http\Controllers\NotificationController;
+use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\Transactions;
 use Illuminate\Support\Facades\Route;
 
@@ -56,17 +57,16 @@ Route::middleware(['auth'])->group(function(){
         Route::get('/Notifications/{id}',[NotificationController::class,'getNotification']);
         Route::post('/Notifications-update',[NotificationController::class,'update']);
         
-        Route::get('/Profile-Account',function(){
-            return view('users.profileAccount');
-        
-        });
+        #Profile
+        Route::get('/Profile-Account',[ProfileController::class,'index']);
+
         Route::get('/Api-keys',function(){
             return view('users.api-keys');
         
         });
 
+        #Xpress Send
         Route::get('/Xpress-Send',[ExpressController::class,'xpress_index']);
-
         Route::get('/Xpress-Receipt',function(){
             return view('users.xpress.receipt');
         
@@ -81,9 +81,9 @@ Route::middleware(['auth'])->group(function(){
         #testing
         Route::get('/balance-data', [DashboardController::class, 'getBalanceData']);
         
-        Route::get('/Profile',function(){
-            return view('users.profile');
-        });
+        // Route::get('/Profile',function(){
+        //     return view('users.profile');
+        // });
 
     });
 

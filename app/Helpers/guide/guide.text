@@ -1,0 +1,52 @@
+git branch -m master main ** renaming branch from master to main
+git push -u origin main ** push branch
+git push origin --delete master ** will delete master branch
+
+git remote set-url origin https://github.com/ryanpatenio/pay-buddy.git **updating remote / what if you renamed your repo and update the remote in your local
+
+git checkout -b new-feature-branch ** checkout and create new branch
+
+composer dump-autoload ** when you have update the composer.json autoload
+
+php artisan migrate:rollback --step=1
+php artisan migrate
+
+$table->foreignId('user_id')->constrained()->onDelete('cascade');
+
+insert([])
+Does not return an instance of the model.
+Does not set created_at and updated_at automatically.
+Does not trigger Eloquent events (e.g., creating, created).
+Cannot retrieve the inserted ID.
+User::insert([
+    ['name' => 'John Doe', 'email' => 'john@example.com', 'password' => bcrypt('password')],
+    ['name' => 'Jane Doe', 'email' => 'jane@example.com', 'password' => bcrypt('password')],
+]);
+
+create([])
+Returns an instance of the model with the inserted data.
+Automatically sets created_at and updated_at.
+Triggers Eloquent events (creating, created).
+Can retrieve the inserted ID using $model->id.
+Requires fillable or guarded attributes to be set in the model.
+$user = User::create([
+    'name' => 'John Doe',
+    'email' => 'john@example.com',
+    'password' => bcrypt('password'),
+]);
+
+echo $user->id; // You can retrieve the inserted ID
+
+First, create a new instance of the model.
+Allows setting additional properties before saving.
+Returns true on success.
+Triggers Eloquent events (saving, saved, creating, created).
+Can retrieve the inserted ID after saving.
+
+$user = new User();
+$user->name = 'John Doe';
+$user->email = 'john@example.com';
+$user->password = bcrypt('password');
+$user->save();
+
+echo $user->id; // You can retrieve the inserted ID
