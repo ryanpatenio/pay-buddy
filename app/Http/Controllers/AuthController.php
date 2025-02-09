@@ -24,38 +24,49 @@ class AuthController extends Controller
     }
 
     public function login(Request $request) {
+        // Validate the request data
         $request->validate([
             'email' => 'required|string|email|max:255',
             'password' => 'required|string|min:8',
         ]);
     
+        // Get credentials from the request
         $credentials = $request->only('email', 'password');
         $remember = $request->has('remember');
-
-        if (Auth::attempt($credentials, $remember)) {
+    
+        //condition to check if the user's status is 0 (active)
+        if (Auth::attempt(['email' => $credentials['email'], 'password' => $credentials['password'], 'status' => 0], $remember)) {
             $user = Auth::user();
-
+    
+            // Set remember me cookies if "remember" is checked
             if ($remember) {
-                cookie()->queue('email', $request->email, 1440);
+                cookie()->queue('email', $request->email, 1440); // 1440 minutes = 1 day
                 cookie()->queue('remember', true, 1440);
             } else {
+                // Clear remember me cookies if "remember" is not checked
                 cookie()->queue(cookie()->forget('email'));
                 cookie()->queue(cookie()->forget('remember'));
             }
-
+    
+            // Redirect based on user role
             return match ($user->role) {
                 2 => redirect()->intended('/Dashboard-admin')->with('success', 'Welcome, Super Admin!'),
                 1 => redirect()->intended('/Dashboard-admin')->with('success', 'Welcome, Admin!'),
                 0 => redirect()->intended('user-dashboard')->with('success', 'Welcome, Investor!'),
                 default => redirect()->intended('user-dashboard')->with('success', 'Welcome, User!'),
             };
-
-
-            
         }
-
-        // Ensure error message is stored and user input is retained
-        return redirect()->back()->withInput()->with('error', 'Invalid Credentials');
+    
+        // If authentication fails, check if the user exists and is deactivated
+        $user = User::where('email', $credentials['email'])->first();
+    
+        if ($user && $user->status == 1) {
+            // If the user exists but is deactivated (status = 1)
+            return redirect()->back()->withInput()->with('error', 'Your account has been deactivated. Please contact support.');
+        }
+    
+        // If the credentials are invalid or the account is not found
+        return redirect()->back()->withInput()->with('error', 'Invalid credentials or account not found.');
     }
     
 

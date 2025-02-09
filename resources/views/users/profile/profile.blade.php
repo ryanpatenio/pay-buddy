@@ -41,8 +41,8 @@
                             </label>
                             <img src="https://d33wubrfki0l68.cloudfront.net/053f2dfd0df2f52c41e903a21d177b0b44abc9b1/1282c/assets/images/profiles/profile-06.jpeg" alt="Profile picture" class="avatar-img" width="112" height="112">
                         </div>
-                        <h3 class="mb-0">Jedi Diah</h3>
-                        <span class="small text-secondary fw-semibold">Assistant Manager</span>
+                        <h3 class="mb-0" id="side-name"></h3>
+                        <span class="small text-secondary fw-semibold" id="role">Assistant Manager</span>
                     </div>
                     <!-- Divider -->
                     <hr class="mb-0">
@@ -112,7 +112,7 @@
                     </li>
                 </ul>
                 <div class="card-footer text-center">
-                    <div class="row">
+                    {{-- <div class="row">
                         <label for="" class="mb-2">Acount Number</label>
                         <input id="key-01" class="form-control w-350px me-3" value="34434327">
                         <!-- Button -->
@@ -128,24 +128,27 @@
                                 </g>
                             </svg>
                         </button>
-                    </div>
+                    </div> --}}
                 </div>
             </div>
         </div>
         <div class="col">
-            <form novalidate>
+           
                 <!-- Card -->
                 <div class="card border-0 scroll-mt-3" id="basicInformationSection">
                     <div class="card-header">
                         <h2 class="h3 mb-0">Basic information</h2>
                     </div>
                     <div class="card-body">
+                        <form id="basicForm" method="POST">
+                            @csrf
+                           
                         <div class="row mb-4">
                             <div class="col-lg-3">
                                 <label for="fullName" class="col-form-label">Full Name</label>
                             </div>
                             <div class="col-lg">
-                                <input type="text" class="form-control" placeholder="Full Name" id="fullName" value="<?=$profile->name ?? '' ?>">
+                                <input type="text" name="name" class="form-control" placeholder="Full Name" id="fullName" required value="<?=$profile->name ?? '' ?>">
                                 <div class="invalid-feedback">Please add your full name</div>
                             </div>
                         </div>
@@ -155,20 +158,11 @@
                                 <label for="phone" class="col-form-label">Phone Number</label>
                             </div>
                             <div class="col-lg">
-                                <input type="text" class="form-control" id="phone" placeholder="(+63) 934 349 232" value="<?=$profile->phone_number ?? '' ?>">
+                                <input type="text" name="phone_number" maxlength="11" class="form-control" id="phone" required placeholder="(+63) 934 349 232" value="<?=$profile->phone_number ?? '' ?>">
                                 <div class="invalid-feedback">Please add your phone number</div>
                             </div>
                         </div>
                         <!-- / .row -->
-                        <div class="row mb-4">
-                            <div class="col-lg-3">
-                                <label for="emailAddress" class="col-form-label">Email</label>
-                            </div>
-                            <div class="col-lg">
-                                <input type="text" class="form-control" id="emailAddress" placeholder="Email" value="<?=$profile->email ?? '' ?>">
-                                <div class="invalid-feedback">Please add your email address</div>
-                            </div>
-                        </div>
                         <!-- / .row -->
                         <div class="row mb-4">
                             <div class="col-lg-3">
@@ -176,19 +170,23 @@
                             </div>
                             <div class="col-lg">
                                 <div class="mb-4">
-                                    <select class="form-select " id="country" required autocomplete="off" style="cursor: pointer">
+                                    <select class="form-select " name="country" id="country" required autocomplete="off" style="cursor: pointer">
                                         {{-- <option value="" label="country placeholder"></option> --}}
-                                        <option value="PHL">Philippines</option>
+                                        <option value="Philippines">Philippines</option>
                                         
                                     </select>
                                     <div class="invalid-feedback">Please select a country</div>
                                 </div>
                                 <div class="mb-4">
-                                    <input type="text" class="form-control" placeholder="City" id="city" value="<?=$profile->city ?? '' ?>">
+                                    <input type="text" name="city" class="form-control" placeholder="City" id="city" required value="<?=$profile->city ?? '' ?>">
                                     <div class="invalid-feedback">Please add a city</div>
                                 </div>
                                 <div class="mb-4">
-                                    <input type="text" class="form-control" id="province" placeholder="Province" value="<?=$profile->province ?? '' ?>">
+                                    <input type="text" name="brgy" class="form-control" placeholder="Brgy" id="brgy" required value="<?=$profile->brgy ?? '' ?>">
+                                    <div class="invalid-feedback">Please add a Brgy</div>
+                                </div>
+                                <div class="mb-4">
+                                    <input type="text" name="province" class="form-control" id="province" placeholder="Province" required value="<?=$profile->province ?? '' ?>">
                                     <div class="invalid-feedback">Please add a state or Province</div>
                                 </div>
                             </div>
@@ -200,7 +198,7 @@
                                 <label for="zipCode" class="col-form-label">Zip code</label>
                             </div>
                             <div class="col-lg">
-                                <input type="text" class="form-control" id="zipCode" placeholder="6110" value="<?=$profile->zip_code ?? '' ?>">
+                                <input type="text" name="zip_code" class="form-control" id="zipCode" placeholder="6110" required value="<?=$profile->zip_code ?? '' ?>">
                                 <div class="invalid-feedback">Please add a zip code</div>
                             </div>
                         </div>
@@ -210,7 +208,7 @@
                                 <label for="overview" class="col-form-label">Overview</label>
                             </div>
                             <div class="col-lg">
-                                <textarea class="form-control" id="overview" rows="4">
+                                <textarea class="form-control" name="overview" id="overview" required rows="4">
                                     <?=$profile->overview ?? 'Gamer. Certified entrepreneur. Introvert. Zombie geek. Friendly coffee guru. Vegan.' ?>
                                 </textarea>
                                 <div class="invalid-feedback">Please tell something about yourself</div>
@@ -219,19 +217,22 @@
                         <!-- / .row -->
                         <div class="d-flex justify-content-end mt-5">
                             <!-- Button -->
-                            <button type="button" class="btn btn-primary">Save changes</button>
+                            <button type="submit" class="btn btn-primary">Save changes</button>
                         </div>
+                    </form>
                     </div>
                 </div>
-                <!-- Username -->
 
+                <!-- Username -->
                 <div class="card border-0 scroll-mt-3" id="usernameSection">
                     <div class="card-header">
                         <h2 class="h3 mb-0">Username</h2>
                     </div>
                     <div class="card-body">
+                        <form id="form-user-email" method="POST">
+                            @csrf
                         <p class="small text-muted mb-3">
-                            Your current username is <strong><?=$profile->email ?? '' ?></strong>
+                            Your current username is <strong id="user-email-head"></strong>
                         </p>
                         <div class="row mb-4">
                             <div class="col-lg-3">
@@ -245,7 +246,7 @@
                                             <path d="M17.25,12v2.25a3,3,0,0,0,6,0V12a11.249,11.249,0,1,0-4.5,9" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"/>
                                         </svg>
                                     </span>
-                                    <input type="text" class="form-control" id="username" placeholder="username" value="<?=$profile->email ?? '' ?>" aria-describedby="username-addon">
+                                    <input type="text" class="form-control" id="user-email-input" name="user_email" placeholder="username" value="" aria-describedby="username-addon">
                                 </div>
                                 <div class="invalid-feedback">Please add a new username</div>
                             </div>
@@ -253,8 +254,9 @@
                         <!-- / .row -->
                         <div class="d-flex justify-content-end mt-5">
                             <!-- Button -->
-                            <button type="button" class="btn btn-primary">Save changes</button>
+                            <button type="submit" class="btn btn-primary">Save changes</button>
                         </div>
+                    </form>
                     </div>
                 </div>
 
@@ -265,13 +267,15 @@
                         <h2 class="h3 mb-0">Password</h2>
                     </div>
                     <div class="card-body">
+                        <form method="POST" id="passwordForm">
+                            @csrf
                         <div class="row mb-4">
                             <div class="col-lg-3">
                                 <label for="currentPassword" class="col-form-label">Current password</label>
                             </div>
                             <div class="col-lg">
-                                <input type="password" class="form-control" id="currentPassword">
-                                <div class="invalid-feedback">Please add your current password</div>
+                                <input type="password" name="current_password" class="form-control" id="currentPassword" required>
+                                <div class="invalid-feedback curr-password">Please add your current password</div>
                             </div>
                         </div>
                         <!-- / .row -->
@@ -281,10 +285,10 @@
                             </div>
                             <div class="col-lg">
                                 <div class="input-group input-group-merge">
-                                    <input type="password" class="form-control" id="newPassword" autocomplete="off" data-toggle-password-input placeholder="Your new password">
+                                    <input type="password" name="newPassword" class="form-control" id="newPassword" autocomplete="off" data-toggle-password-input placeholder="Your new password">
                                     <button type="button" class="input-group-text px-4 text-secondary link-primary" data-toggle-password></button>
                                 </div>
-                                <div class="invalid-feedback">Please add a new password</div>
+                                <div class="invalid-feedback new-pass-invalid-feedback">Please add a new password</div>
                                 <!---Progress Bar-->
                                 <div class="d-flex justify-content-between align-items-center mt-3 h-15px">
                                     <div class="progress d-flex flex-grow-1 h-7px">
@@ -300,7 +304,7 @@
                                     <input type="password" class="form-control" id="newPasswordAgain" autocomplete="off" data-toggle-password-input placeholder="Confirm your new password">
                                     <button type="button" class="input-group-text px-4 text-secondary link-primary" data-toggle-password></button>
                                 </div>
-                                <div class="invalid-feedback">Please confirm your new password again</div>
+                                <div class="invalid-feedback confirm-pass-invalid">Please confirm your new password again</div>
                             </div>
                         </div>
                         <!-- / .row -->
@@ -320,7 +324,59 @@
                         <!-- / .row -->
                         <div class="d-flex justify-content-end mt-5">
                             <!-- Button -->
-                            <button type="button" class="btn btn-primary">Save changes</button>
+                            <button type="submit" class="btn btn-primary">Save changes</button>
+                        </form>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card border-0 scroll-mt-3" id="paymentMethodsSection">
+                    <div class="card-header d-flex justify-content-between">
+                        <h2 class="h3 mb-0">Wallet Account(s)</h2>
+                        <button class="btn btn-success" type="button" data-bs-toggle="modal" data-bs-target="#addNewWalletModal">add new currency (account)</button>
+                    </div>
+                    <div class="card-body">
+                        <ul class="list-group list-group-flush">
+                            <?php
+                            foreach ($allWallets as $wallet) { ?>
+                                 <li class="list-group-item d-flex justify-content-between align-items-center px-0">
+                                    <div class="d-flex align-items-center">
+                                        <!--SVG for VISA CARD-->
+                                        <img src="{{asset('assets/img/currencies')}}<?='/'.$wallet->img_url ?? '' ?>" alt="" width="40" height="31">
+                                        <div class="ms-4 d-flex">
+                                            <h3 class="h4 mb-0"><?=$wallet->name ?? '' ?></h3>
+                                            {{-- <p class="small text-muted mb-0">Expires 9/2024</p> --}}
+                                            <input id="key-01" class="form-control w-200px me-3 " value="<?=$wallet->account_number ?? 0 ?>" style="margin-left: 18px;" readonly>
+                                            <!-- Button -->
+                                            <button class="clipboard btn btn-link px-0" data-clipboard-target="#key-01" data-bs-toggle="tooltip" data-bs-title="Copy to clipboard">
+                                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" height="18" width="18">
+                                                    <g>
+                                                        <path d="M13.4,4.73a.24.24,0,0,0,.2.26,1.09,1.09,0,0,1,.82,1.11V7.5a1.24,1.24,0,0,0,1.25,1.24h0A1.23,1.23,0,0,0,16.91,7.5V4a1.5,1.5,0,0,0-1.49-1.5H13.69a.29.29,0,0,0-.18.07.26.26,0,0,0-.07.18C13.44,3.2,13.44,4.22,13.4,4.73Z" style="fill: currentColor"/>
+                                                        <path d="M9,21.26A1.23,1.23,0,0,0,7.71,20H3.48a1.07,1.07,0,0,1-1-1.14V6.1A1.08,1.08,0,0,1,3.33,5a.25.25,0,0,0,.2-.26c0-.77,0-1.6,0-2a.25.25,0,0,0-.25-.25H1.5A1.5,1.5,0,0,0,0,4V21a1.5,1.5,0,0,0,1.49,1.5H7.71A1.24,1.24,0,0,0,9,21.26Z" style="fill: currentColor"/>
+                                                        <path d="M11.94,4.47v-2a.5.5,0,0,0-.5-.49h-.76a.26.26,0,0,1-.25-.22,2,2,0,0,0-3.95,0A.25.25,0,0,1,6.23,2H5.47A.49.49,0,0,0,5,2.48v2a.49.49,0,0,0,.49.5h6A.5.5,0,0,0,11.94,4.47Z" style="fill: currentColor"/>
+                                                        <path d="M19,17.27H15a.75.75,0,0,0,0,1.5h4a.75.75,0,0,0,0-1.5Z" style="fill: currentColor"/>
+                                                        <path d="M14.29,14.54a.76.76,0,0,0,.75.75h2.49a.75.75,0,0,0,0-1.5H15A.76.76,0,0,0,14.29,14.54Z" style="fill: currentColor"/>
+                                                        <path d="M23.5,13.46a2,2,0,0,0-.58-1.41l-1.41-1.4a2,2,0,0,0-1.41-.59H12.49a2,2,0,0,0-2,2V22a2,2,0,0,0,2,2h9a2,2,0,0,0,2-2Zm-11-.4a1,1,0,0,1,1-1h6.19a1,1,0,0,1,.71.29l.82.82a1,1,0,0,1,.29.7V21a1,1,0,0,1-1,1h-7a1,1,0,0,1-1-1Z" style="fill: currentColor"/>
+                                                    </g>
+                                                </svg>
+                                            </button>
+                                        </div>
+                                    </div>
+                                    <div class="d-flex align-items-center">
+                                        {{-- <span class="badge text-bg-light p-2 fs-6 me-2">Default</span> --}}
+                                        <!-- Dropdown -->
+                                       
+                                    </div>
+                                </li>
+                           <?php }    
+                                
+                            ?>
+                           
+                            
+                        </ul>
+                        <div class="d-flex justify-content-end mt-5">
+                            <!-- Button -->
+                            
                         </div>
                     </div>
                 </div>
@@ -344,9 +400,11 @@
                             </div>
                         </div>
                         <div class="mb-3">
+                            <form id="deactivateForm" method="POST">
+                                @csrf
                             <div class="form-check">
                                 <!-- Input -->
-                                <input type="checkbox" class="form-check-input" id="deleteAccount">
+                                <input type="checkbox" name="confirmDeactivate" class="form-check-input" id="deleteAccount" required>
                                 <!-- Label -->
                                 <label class="form-check-label" for="deleteAccount">I confirm that I'd like to delete my account
                                 </label>
@@ -354,14 +412,19 @@
                         </div>
                         <div class="d-flex justify-content-end mt-5">
                             <!-- Button -->
-                            <button type="button" class="btn btn-danger">Delete account</button>
+                            <button type="submit" class="btn btn-danger">Delete account</button>
+                        </form>
                         </div>
                     </div>
                 </div>
-            </form>
+           
         </div>
     </div>
     <!-- / .row -->
 </div>
+@include('users.profile.modal.addWallet');
+<script src="https://cdnjs.cloudflare.com/ajax/libs/zxcvbn/4.4.2/zxcvbn.js"></script>
+<script src="{{asset('assets/js/profile/profile.js')}}"></script>
+
 
 @endsection

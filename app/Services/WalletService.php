@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Models\currency;
 use App\Models\Earnings;
 use App\Models\Fees;
 use App\Models\Wallets;
@@ -139,4 +140,17 @@ class WalletService
        // Check if the generated account number already exists in the 'wallets' table
        return \App\Models\Wallets::where('account_number', $accountNumber)->exists();
    }
+   public function availableCurrencyByUser(){
+    $user_id = Auth::id();
+        // Get currencies that are not already associated with the user's wallets
+        $availableCurrencies = currency::whereNotIn('id', function ($query) use ($user_id) {
+            $query->select('currency_id')
+                ->from('wallets')
+                ->where('user_id', $user_id);
+        })->get();
+
+    return $availableCurrencies;
+   }
+
+   
 }

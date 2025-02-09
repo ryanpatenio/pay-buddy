@@ -199,3 +199,28 @@ function swalMessage(swal_type, message, willConfirmedCallback) {
         }
     });
 }
+
+    // const processRequests = async () => {
+    //     const emailData = await fetchData('/Profile-email');
+    //     if (!emailData) return; // Stop execution if fetching email fails
+    
+    //     const profileData = await fetchData('/Profile-info');
+    //     if (!profileData) return; // Stop execution if fetching profile fails
+    
+    //     console.log('All requests succeeded!');
+    // };
+
+    // const fetchData = async (url) => {
+    //     try {
+    //         const response = await axios.get(url);
+    //         return response.data; // Return the data if successful
+    //     } catch (error) {
+    //         if (error.response) {
+    //             console.log(`Request failed. Status: ${error.response.status}`);
+    //             console.log('Response Data:', error.response.data);
+    //         } else {
+    //             console.log('Request error:', error.message);
+    //         }
+    //         return null; // Return null if an error occurs
+    //     }
+    // };

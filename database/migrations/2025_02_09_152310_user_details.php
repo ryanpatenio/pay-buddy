@@ -16,7 +16,6 @@ return new class extends Migration
         Schema::create('user_details', function (Blueprint $table) {
             $table->id();
             $table->foreignId('user_id')->constrained()->onDelete('cascade');
-            $table->string('address')->nullable();
             $table->string('province')->nullable();
             $table->string('city')->nullable();
             $table->string('brgy')->nullable();
@@ -24,6 +23,7 @@ return new class extends Migration
             $table->string('country')->nullable();
             $table->string('phone_number')->nullable();
             $table->string('overview')->nullable();
+            $table->string('img_url')->nullable();
             $table->timestamps();
         });
     }

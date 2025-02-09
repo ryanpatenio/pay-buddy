@@ -59,6 +59,12 @@ Route::middleware(['auth'])->group(function(){
         
         #Profile
         Route::get('/Profile-Account',[ProfileController::class,'index']);
+        Route::patch('/Profile-update',[PRofileController::class,'updateBasicInfo']);
+        Route::get('/Profile-email',[ProfileController::class,'getEmail']);
+        Route::patch('/Profile-update-email',[ProfileController::class,'updateEmail']);
+        Route::patch('/Profile-password-update',[ProfileController::class,'updatePassword']);
+        Route::post('/Profile-deactivate',[ProfileController::class,'deactivateAccount']);
+        Route::post('/Profile-new-wallet',[ProfileController::class,'addNewWallet']);
 
         Route::get('/Api-keys',function(){
             return view('users.api-keys');

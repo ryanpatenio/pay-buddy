@@ -19,14 +19,15 @@ return new class extends Migration
             $table->string('code', 3)->unique(); // Currency code (e.g., 'USD', 'PHP')
             $table->string('name');  // Currency name (e.g., 'US Dollar', 'Philippine Peso')
             $table->string('symbol');  // Currency symbol (e.g., '$', '₱')
+            $table->string('img_url');
             $table->timestamps();
         });
       
 
         currency::insert([
-            ['code' => 'PHP', 'name' => '🇵🇭 PHP', 'symbol' => '₱', 'created_at' => now(), 'updated_at'=>now()],
-            ['code' => 'USD', 'name' => '🇺🇸 USD', 'symbol' => '$', 'created_at' => now(), 'updated_at'=>now()],
-            ['code' => 'EUR', 'name' => '🇪🇺 EUR', 'symbol' => '€', 'created_at' => now(), 'updated_at'=>now()],
+            ['code' => 'PHP', 'name' => '🇵🇭 PHP', 'symbol' => '₱','img_url'=>'peso.png', 'created_at' => now(), 'updated_at'=>now()],
+            ['code' => 'USD', 'name' => '🇺🇸 USD', 'symbol' => '$','img_url'=>'dollar.png', 'created_at' => now(), 'updated_at'=>now()],
+            ['code' => 'EUR', 'name' => '🇪🇺 EUR', 'symbol' => '€','img_url'=>'euro.svg', 'created_at' => now(), 'updated_at'=>now()],
            
         ]);
     }
