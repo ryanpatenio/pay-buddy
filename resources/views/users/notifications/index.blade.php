@@ -67,7 +67,7 @@
                               <tr style="cursor: pointer" class="notif-row"  data-id="<?=$notif->id ?? 0 ?>" >
                                 <td class="status" data-status="Active">
                                     <span class="legend-circle <?= $notif->status === 'read' ? 'bg-success' : 'bg-danger' ?>"></span>
-                                    <?=$recent->status ?? '' ?>
+                                    <?=$notif->status ?? '' ?>
                                 </td>
                         
                                 <td class="name"><?=$notif->title ?? '' ?></td>
