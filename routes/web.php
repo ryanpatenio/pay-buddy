@@ -1,11 +1,13 @@
 <?php
 
+use App\Http\Controllers\ApiKeysController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\BankController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\ExpressController;
 use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\RequestsController;
 use App\Http\Controllers\Transactions;
 use Illuminate\Support\Facades\Route;
 
@@ -19,15 +21,6 @@ use Illuminate\Support\Facades\Route;
 | contains the "web" middleware group. Now create something great!
 |
 */
-#public routes 
-
-#public ulr for redirecting
-Route::get('/register',function(){
-
-    return view('auth.register');
-
-})->name('register');
-
 
 
 #post Routes
@@ -42,12 +35,12 @@ Route::middleware(['auth'])->group(function(){
         Route::get('/user',[AuthController::class,'user'])->name('user');
 
         #dashboard
-        Route::get('/user-dashboard',[DashboardController::class,'index'])->name('user.dashboard');
+        Route::get('/user-dashboard',[DashboardController::class,'index_user'])->name('user.dashboard');
         Route::get('/user-wallet-balance',[DashboardController::class,'getUserWalletBalance'])->name('user.wallet.balance');
         
 
         #transactions
-        Route::get('/Transactions',[Transactions::class,'index']);
+        Route::get('/Transactions',[Transactions::class,'index_user']);
         Route::post('/checkAccount',[Transactions::class,'checkAccount']);
         Route::post('/process-transaction',[Transactions::class,'sendMoneyToUser'])->name('sendMoney');
         Route::get('/get-transaction/{id}', [Transactions::class, 'getTransaction']);
@@ -66,9 +59,15 @@ Route::middleware(['auth'])->group(function(){
         Route::post('/Profile-deactivate',[ProfileController::class,'deactivateAccount']);
         Route::post('/Profile-new-wallet',[ProfileController::class,'addNewWallet']);
 
-        Route::get('/Api-keys',function(){
-            return view('users.api-keys');
-        
+        #Requests
+        Route::get('/Profile-Request',[RequestsController::class,'request_index']);
+        Route::post('/Profile-new-Request',[RequestsController::class,'newRequest']);
+
+        #Api Keys
+        Route::middleware(['is_dev'])->group(function(){
+            Route::get('/Api-keys',[ApiKeysController::class,'api_index']);
+            Route::get('/Api-keys-gen',[ApiKeysController::class,'generateKey']);
+            Route::post('/Api-keys-create',[ApiKeysController::class,'createKey']);
         });
 
         #Xpress Send
@@ -94,16 +93,42 @@ Route::middleware(['auth'])->group(function(){
     });
 
     #admin
-    Route::middleware('role:admin')->group(function(){
-
+    Route::middleware(['role:admin|super_admin'])->group(function (){
+        #Dashboard
+        Route::get('/Dashboard-admin',[DashboardController::class,'index_admin'])->name('admin.dashboard');;
+       
+        
+        #Transactions
+        Route::get('/Dashboard-Transactions',[Transactions::class,'index_admin']);
+        
+        Route::get('/Dashboard-Requests',function(){
+            return view('admin.requests');
+        
+        });
+        Route::get('/Dashboard-Users',function(){
+            return view('admin.users.users');
+        
+        });
+        Route::get('/Dashboard-Api-keys',function(){
+            return view('admin.user-api-keys');
+        
+        });
+        Route::get('/Dashboard-Logs',function(){
+            return view('admin.logs');
+        
+        });
+        Route::get('/Dashboard-Profile-Account',function(){
+            return view('admin.profileAccount');
+        
+        });
+        
+        Route::get('/Dashboard-viewUser',function(){
+            return view('admin.users.viewUser');
+        
+        });
 
     });
-    #super-admin
-    Route::middleware('role:super_admin')->group(function(){
-
-
-    });
-
+    
     #authenticated routes
     Route::get('/user',[AuthController::class,'user'])->name('myData');
     Route::post('/logout',[AuthController::class,'logout'])->name('logout');
@@ -111,51 +136,19 @@ Route::middleware(['auth'])->group(function(){
 
 });
 
-#temporary for ADMIN
-
-Route::get('/Dashboard-admin',function(){
-    return view('admin.dashboard');
-
-})->name('admin.dashboard');
-
-Route::get('/Dashboard-Transactions',function(){
-    return view('admin.transactions');
-
-});
-Route::get('/Dashboard-Requests',function(){
-    return view('admin.requests');
-
-});
-Route::get('/Dashboard-Users',function(){
-    return view('admin.users.users');
-
-});
-Route::get('/Dashboard-Api-keys',function(){
-    return view('admin.user-api-keys');
-
-});
-Route::get('/Dashboard-Logs',function(){
-    return view('admin.logs');
-
-});
-Route::get('/Dashboard-Profile-Account',function(){
-    return view('admin.profileAccount');
-
-});
-
-Route::get('/Dashboard-viewUser',function(){
-    return view('admin.users.viewUser');
-
-});
-
-
-
-#temporary for Users
-
 Route::get('/', function () {
     return view('auth.login');
 })->name('login');
 
+
+#public routes 
+
+#public ulr for redirecting
+Route::get('/register',function(){
+
+    return view('auth.register');
+
+})->name('register');
 
 
 #set aside for future purposes/ features loan and investment

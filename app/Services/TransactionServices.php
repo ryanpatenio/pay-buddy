@@ -332,6 +332,42 @@ class TransactionServices
         }
 
         return $recentTransactions;
-     }
+    }
+
+    #returns all Transactions | recent
+    public function showTransactions($status = null){
+
+        /**
+         * @param status if !null return recent Transction or this Day! ELSE returns all transactions of USERS
+         */
+  
+        // Start the query builder
+         $query = DB::table('transactions')
+             ->join('wallets', 'transactions.wallet_id', '=', 'wallets.id')
+             ->join('users', 'wallets.user_id', '=', 'users.id')            
+             ->select(
+                 'transactions.transaction_id',
+                 'transactions.description',
+                 'transactions.status',
+                 'transactions.amount',
+                 'transactions.fee',
+                 'transactions.created_at'
+         );
+ 
+         // If status is provided, filter transactions of the current day
+         if (!is_null($status)) {
+             $query->whereDate('transactions.created_at', Carbon::today());
+         }
+ 
+         // Get transactions sorted by most recent first
+         $recentTransactions = $query->orderBy('transactions.created_at', 'DESC')->get();
+ 
+         // Format the created_at date using Carbon
+         foreach ($recentTransactions as $recent) {
+             $recent->date_created = Carbon::parse($recent->created_at)->format('F j, Y g:i A'); // Example: January 1, 2025 10:30 AM
+         }
+ 
+         return $recentTransactions;
+    }
   
 }

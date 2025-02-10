@@ -23,11 +23,17 @@ class Transactions extends Controller
         $this->transactionService = $transactionService;
     }
   
-    public function index(){
+    public function index_user(){
 
         $Transactions = $this->transactionService->showUserTransactions();
        
         return view('users.transactions.index',compact('Transactions'));
+    }
+
+    public function index_admin(){
+        $Transactions = $this->transactionService->showTransactions();
+        
+        return view('admin.transactions',compact('Transactions'));
     }
 
     public function sendMoneyToUser(Request $request)

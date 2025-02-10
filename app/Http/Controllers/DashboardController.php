@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Fees;
 use App\Models\Transactions;
+use App\Services\DashboardServices;
 use App\Services\TransactionServices;
 use App\Services\WalletService;
 use Carbon\Carbon;
@@ -15,14 +16,16 @@ class DashboardController extends Controller
 {
     private $walletService;
     private $transactionService;
+    private $dashboardService;
 
-    public function __construct(WalletService $walletService, TransactionServices $transactionServices)
+    public function __construct(WalletService $walletService, TransactionServices $transactionServices,DashboardServices $dashboardServices)
     {
         $this->walletService = $walletService;
         $this->transactionService = $transactionServices;
+        $this->dashboardService = $dashboardServices;
     }
  
-    public function index(Request $request) {
+    public function index_user(Request $request) {
         // Get the user's selected currency from the session or request
         $selectedCurrency = $request->input('currency') ?? 'PHP'; // Default to PHP if null
        
@@ -42,6 +45,48 @@ class DashboardController extends Controller
         }
 
         return view('users.dashboard', compact('walletBalance', 'selectedCurrency','walletCurrencies','recentTransactions'));
+    }
+
+    public function index_admin(Request $request){
+        $selectedCurrency = $request->input('currency');
+
+        #transactions
+        $Transactions = $this->transactionService->showTransactions('recent');
+
+        #userCount
+        $userCount = $this->dashboardService->usersCount();
+        $userCountThisDay = $this->dashboardService->usersCount('now');
+        $userCountThisMonth = $this->dashboardService->usersCount('month');
+
+        #Requests
+        $totalRequest = $this->dashboardService->requestCount();
+        $requestThisDay = $this->dashboardService->requestCount('now');
+        $requestThisMonth = $this->dashboardService->requestCount('month');
+
+        $earnings = $this->dashboardService->earnings($selectedCurrency);
+        #currencies
+        $currencies = $this->dashboardService->showAllCurrencies();
+
+        if ($request->ajax()) {
+            return response()->json([
+                'total_earnings' => $earnings,              
+            ]);
+        }
+
+        return view('admin.dashboard',compact(
+            'Transactions',
+
+            'userCount',
+            'userCountThisDay',
+            'userCountThisMonth',
+
+            'totalRequest',
+            'requestThisDay',
+            'requestThisMonth',
+
+            'earnings',
+            'currencies'
+        ));
     }
 
     public function getUserWalletBalance($currency = null) {

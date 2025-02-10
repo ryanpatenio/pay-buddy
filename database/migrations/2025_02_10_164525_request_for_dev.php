@@ -13,15 +13,13 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('api_keys', function (Blueprint $table) {
+        Schema::create('user_requests', function (Blueprint $table) {
             $table->id();
             $table->foreignId('user_id')->constrained()->onDelete('cascade');
 
-            $table->string('name')->unique();
-            $table->string('api_key')->unique(); // Unique API key for each user
-            $table->string('callback_url')->nullable(); // Optional callback URL for third-party integrations
-            $table->enum('status',['active','disabled'])->default('active');
-
+            $table->string('message');
+            $table->enum('status',['pending','approved','declined'])->default('pending');
+            
             $table->timestamps();
         });
     }
@@ -33,6 +31,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('api_keys');
+        Schema::dropIfExists('user_requests');
     }
 };
