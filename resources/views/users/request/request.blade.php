@@ -71,7 +71,7 @@
                                 
                                 <td class="status">
                                     <span class="legend-circle 
-                                            <?= $req->status === 'success' ? 'bg-success' : ($req->status === 'pending' ? 'bg-warning' : 'bg-danger') ?>">
+                                            <?= $req->status === 'approved' ? 'bg-success' : ($req->status === 'pending' ? 'bg-warning' : 'bg-danger') ?>">
                                            
                                     </span> 
                                     <?=$req->status ?? '' ?>

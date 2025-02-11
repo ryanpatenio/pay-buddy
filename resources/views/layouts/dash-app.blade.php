@@ -153,6 +153,9 @@
         <script src="{{ asset('assets/js/axios/axios.min.js') }}"></script>
         <script src="{{ asset('assets/js/app.js') }}"></script>
 
+        <script src="{{asset('assets/swal/sweet.js')}}"></script> {{--Sweet alert Lib--}}
+        <script src="{{asset('assets/js/custom_helper/helper.js')}}"></script>  {{--helper--}}
+
     </head>
     <body>
         {{-- Header --}}

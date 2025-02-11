@@ -60,7 +60,7 @@ Route::middleware(['auth'])->group(function(){
         Route::post('/Profile-new-wallet',[ProfileController::class,'addNewWallet']);
 
         #Requests
-        Route::get('/Profile-Request',[RequestsController::class,'request_index']);
+        Route::get('/Profile-Request',[RequestsController::class,'index_user']);
         Route::post('/Profile-new-Request',[RequestsController::class,'newRequest']);
 
         #Api Keys
@@ -101,10 +101,13 @@ Route::middleware(['auth'])->group(function(){
         #Transactions
         Route::get('/Dashboard-Transactions',[Transactions::class,'index_admin']);
         
-        Route::get('/Dashboard-Requests',function(){
-            return view('admin.requests');
-        
-        });
+        #Request
+        Route::get('/Dashboard-Requests',[RequestsController::class,'index_admin']);
+        Route::get('/Dashboard-Requests-req/{id}',[RequestsController::class,'getRequestedData']);
+        Route::post('/Dashboard-request-approve',[RequestsController::class,'approveRequest']);
+        Route::post('/Dashboard-request-decline',[RequestsController::class,'declineRequest']);
+
+        #Users
         Route::get('/Dashboard-Users',function(){
             return view('admin.users.users');
         

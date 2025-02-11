@@ -39,6 +39,10 @@
                         <thead class="thead-light">
                             <tr>
                                 <th>
+                                    <a href="javascript: void(0);" class="text-muted list-sort" data-sort="">#
+                                    </a>
+                                </th>
+                                <th>
                                     <a href="javascript: void(0);" class="text-muted list-sort" data-sort="name">Name
                                     </a>
                                 </th>
@@ -59,18 +63,29 @@
                             </tr>
                         </thead>
                         <tbody class="list">
-                            <tr style="cursor: pointer" data-bs-toggle="modal" data-bs-target=".notifModal">
-                                <td class="name">Ryan Wong</td>
-                                <td class="key" >
-                                    Request to create an Api Key
-                                </td>
-                                <td class="status" data-status="Active">
-                                    <span class="legend-circle bg-warning"></span>
-                                    Pending
-                                </td>
-                                <td class="created" data-created="1642550400">01.19.22</td>
-                               
-                            </tr>
+                            <?php
+                            $i = 1;
+                            foreach ($requests as $req) { ?>
+
+                                 <tr style="cursor: pointer" class="requestedRow" data-name="<?=$req->name ?? '' ?>" data-id="<?= $req->request_id ?? 0 ?>">
+                                    <td><?=$i ?? 0 ?></td>
+                                    <td class="name"><?=$req->name ?? '' ?></td>
+                                    <td class="key" >
+                                        <?= $req->message ?? '' ?>
+                                    </td>
+                                    <td class="status" data-status="Active">
+                                        <span class="legend-circle 
+                                        <?= $req->status === "approved" ? 'bg-success' : ($req->status === "pending" ? 'bg-warning' : 'bg-danger')  ?>
+                                       "></span>
+                                        <?= $req->status ?? '' ?>
+                                    </td>
+                                    <td class="created" data-created=""><?=$req->date_created ?? '' ?></td>
+                                   
+                                </tr>
+                           <?php $i++; }
+
+                            ?>
+                           
 
                            
                         </tbody>
@@ -87,7 +102,7 @@
     <!-- / .row -->
 </div>
 <!-- Modal --->
-<div class="modal fade notifModal" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+<div class="modal fade approveModal" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
     <div class="modal-dialog " role="document">
         <div class="modal-content">
             <div class="modal-header">
@@ -95,22 +110,31 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                
-                <div class="row">
-                    <div class="col">
-                        Click approved to Proceed!
+                <form action="" method="POST" id="requestForm">
+                    @csrf
+                    <input type="hidden" id="hidden_u_id" name="hidden_u_id">
+                    <input type="hidden" id="hidden_req_id" name="hidden_req_id">
+                    <div class="row mb-5">
+                        <div class="col">
+                            <label for="">Name: </label>
+                            <input type="text" class="form-control" name="name" id="name" readonly>
+                        </div>                       
                     </div>
-                </div>
-                
-                
-                <div class="modal-footer">
-                    
-                    <button type="button" class="btn btn-light" data-bs-dismiss="modal">Close </button >
-                    <button type="button" class="btn btn-primary">Approve </button >
-               </div >
+                    <div class="row">
+                        <p class="m3" id="message"></p>
+                    </div>
+                                       
+                    <div class="modal-footer d-flex align-items-center justify-content-center">
+                       
+                        <button type="button" class="btn btn-light" data-bs-dismiss="modal">Close </button >
+                        <button type="button" id="approve-btn" class="btn btn-primary">Approve </button >
+                        <button type="button" id="decline-btn" class="btn btn-danger">Decline </button >
+                   </div >
+                </form>
             </div>
         </div>
     </div>
 </div>
+<script src="{{asset('assets/js/admin/requests/req.js')}}"></script>
 
 @endsection
