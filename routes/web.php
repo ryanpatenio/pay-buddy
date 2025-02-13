@@ -113,6 +113,13 @@ Route::middleware(['auth'])->group(function(){
         Route::post('/Dashboard-User-create',[UserController::class,'createUser']);
         Route::get('/Dashboard-user-details/{id}',[UserController::class,'showUserDetails']);
         Route::post('/Dashboard-user-updateDetails',[UserController::class,'updateUserDetails']);
+        Route::get('/Dashboard-user-email/{id}',[UserController::class,'getEmail']);
+        Route::patch('/Dashboard-user-upEmail',[UserController::class,'updateEmail']);
+        Route::patch('/Dashboard-user-pass-update',[UserController::class,'updatePassword']);
+        Route::post('/Dashboard-user-deactivate',[UserController::class,'deactivateUser']);
+        Route::get('/Dashboard-user-status/{id}',[UserController::class,'userStatus']);
+        Route::post('/Dashboard-user-activate',[UserController::class,'activateUser']);
+        Route::post('/Dashboard-Users-action-status',[UserController::class,'setUserStatus']);
        
         Route::get('/Dashboard-Logs',function(){
             return view('admin.logs');

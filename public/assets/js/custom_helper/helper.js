@@ -267,3 +267,31 @@ function displayFieldErrors(errorArray, fieldName, msg) {
     //         return null; // Return null if an error occurs
     //     }
     // };
+
+    //dynmic
+    function setBtnDisabledState(buttonSelectors, status) {
+      buttonSelectors.forEach(selector => {
+          const button = $(selector);
+          if (button.length > 0) {
+              button.prop('disabled', status);
+          } else {
+              console.error(`Button not found: ${selector}`);
+          }
+      });
+  }
+
+  function setButtonsDisabledState(btn1, btn2, status) {
+    // Select the buttons using jQuery
+    const button1 = $(btn1);
+    const button2 = $(btn2);
+
+    // Validate that the buttons exist
+    if (button1.length === 0 || button2.length === 0) {
+        console.error('One or both buttons not found.');
+        return;
+    }
+
+    // Set the disabled state of the buttons
+    button1.prop('disabled', status);
+    button2.prop('disabled', status);
+}

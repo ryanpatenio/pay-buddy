@@ -106,7 +106,7 @@
                                                 </a>
                                             </li>
                                             <li>
-                                                <a class="dropdown-item" data-id="<?=$user->id ?? 0 ?>" href="javascript: void(0);"><?= $user->user_status === "deactivated" ? 'enable' : 'Disable' ?>
+                                                <a class="dropdown-item" data-name="<?=$user->name ?? '' ?>" id="action-status-btn" data-id="<?=$user->id ?? 0 ?>" data-status= <?= $user->user_status === "deactivated" ? 'enable' : 'disable' ?> href="javascript: void(0);"><?= $user->user_status === "deactivated" ? 'enable' : 'Disable' ?>
                                                 </a>
                                             </li>
                                           

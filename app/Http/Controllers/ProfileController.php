@@ -223,8 +223,8 @@ class ProfileController extends Controller
     public function deactivateAccount(Request $request){
        
 
-       $remember = $request->has('confirmDeactivate');
-       if(!$remember){
+       $confirm = $request->has('confirmDeactivate');
+       if(!$confirm){
             return json_message(EXIT_FORM_NULL,'Plese check the check box!');
        }
        

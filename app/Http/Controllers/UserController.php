@@ -43,6 +43,70 @@ class UserController extends Controller
             ->where('id','!=',Auth::id())
             ->get();
     }
+    public function getEmail($id){
+       // Validate the ID
+        if (!is_numeric($id) || empty($id)) {
+            return json_message(EXIT_404, 'Invalid or missing ID!');
+        }
+        try {
+           $user = User::where('id',$id)->firstOrFail();
+
+           return json_message(EXIT_SUCCESS,'ok',$user->email);
+
+        } catch (\Throwable $th) {
+            //throw $th;
+            handleException($th,'Failed to fetch email');
+            return json_message(EXIT_BE_ERROR,'Failed to fetch email');
+        }
+    }
+    public function updateEmail(Request $request){
+        $request->validate([
+            'user_email' => 'bail|sometimes|required|string|email|unique:users,email,' . $request->id,
+            'id'    => 'bail|required|numeric|exists:users,id',
+        ]);
+
+        try {
+            $user = User::find($request->id);
+           
+            $user->email = $request->user_email;
+            $user->save();
+
+            return json_message(EXIT_SUCCESS,'ok');
+        } catch (\Throwable $th) {
+           handleException($th,'failed to update email');
+           return json_message(EXIT_BE_ERROR,'failed to update email');
+        }
+    }
+    public function updatePassword(Request $request){
+        $request->validate([
+            'current_password'=> 'bail|required|string|max:255',
+            'newPassword'     => 'bail|required|string|min:8|max:255',
+            'id'              => 'bail|required|numeric|exists:users,id'
+
+        ],[
+            'id.numeric'=>'Unexpected Error ID must be a Integer Instead of String!',
+            'id.required'=> 'Invalid or missing ID',
+            'id.exists'  => 'Invalid or missing ID'
+        ]);
+       
+        $user = User::find($request->id);
+        if(!Hash::check($request->current_password,$user->password)){
+            return response()->json([
+                'codeStatus'  => EXIT_FORM_NULL,
+                'message' => 'Invalid current password',
+            ], 401); // 401 is the HTTP status code for unauthorized
+        }
+
+        try {
+            $user->password = Hash::make($request->newPassword);
+            $user->save();
+
+            return json_message(EXIT_SUCCESS,'ok');
+        } catch (\Throwable $th) {
+           handleException($th,'Failed to updated Password');
+           return json_message(EXIT_BE_ERROR,'Failed to updated Password');
+        }
+    }
 
     public function createUser(Request $request){
 
@@ -90,6 +154,7 @@ class UserController extends Controller
         }
 
     }
+    
 
     public function showUserDetails($id){
         if(!$id || empty($id)){
@@ -160,5 +225,95 @@ class UserController extends Controller
             return json_message(EXIT_BE_ERROR,'failed to update user details!');
         }
       
+    }
+
+    public function userStatus($id){
+        if(!is_numeric($id) || empty($id)){
+            return json_message(EXIT_404,'Invalid or missing ID');
+        }
+        $user = User::find($id);
+        if(!$user){
+            return json_message(EXIT_404,'Invalid or missing ID');
+        }
+        $status = $user->status;
+        return json_message(EXIT_SUCCESS,'ok',$status);
+
+    }
+
+    public function deactivateUser(Request $request){
+        $request->validate([
+            'confirmDeactivate'=>'required',
+            'id'    => 'required|numeric|exists:users,id'        
+        ],[
+            'id.numeric'=>'Invalid or missing ID',
+            'id.exists' => 'Invalid or Missing ID',
+            'confirmDeactivate.required'=> 'Confirm Checkbox required!'
+        ]);#return status 422
+
+        $user = User::find($request->id);
+        try {
+            $user->status = 1; #means deactivated
+            $user->save();
+
+            return json_message(EXIT_SUCCESS,'ok');
+
+        } catch (\Throwable $th) {
+            handleException($th,'Failed to Delete Account!');
+            return json_message(EXIT_BE_ERROR,'Failed to Delete Account');
+            #return status 500
+        }
+
+    }
+    public function activateUser(Request $request){
+        $request->validate([
+            'id'=>'required|numeric|exists:users,id',
+        
+         ],[
+            'id.required' => 'Invalid or Missing ID',
+            'id.numeric'  => 'ID expects Integer instead of String',
+            'id.exists'    => 'Invalid or Missing ID'
+         ]
+        );#return status 422
+
+        try {
+            $user = User::find($request->id);
+
+            $user->status = 0;#active
+            $user->save();
+
+            return json_message(EXIT_SUCCESS,'ok');
+
+        } catch (\Throwable $th) {
+            handleException($th,'Failed to activate user');
+            return json_message(EXIT_BE_ERROR,'failed to activate user');
+        }
+
+        
+    }
+    public function setUserStatus(Request $request){
+        $request->validate([
+            'id' => 'required|numeric|exists:users,id',
+            'status' => 'required|string|in:enable,disable'
+        ],[
+            'id.required' => 'Invalid or missing ID',
+            'id.numeric' => 'ID expects Numeric instead of String',
+            'id.exists' => 'Invalid or missing ID',
+            'status.in' => 'Status must be either "enable" or "disable"',
+        ]
+        );
+        $status = $request->status === "enable" ? STATUS_ENABLED : STATUS_DISABLED;
+    
+        try {
+           $user = User::find($request->id);
+
+           $user->status = $status;
+           $user->save();
+
+           return json_message(EXIT_SUCCESS,'ok');
+
+        } catch (\Throwable $th) {
+            handleException($th,'Failed to '.$status.' User');
+            return json_message(EXIT_BE_ERROR,'failed to '.$status.' User account');
+        }
     }
 }

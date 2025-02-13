@@ -331,8 +331,6 @@
                     </div>
                 </div>
 
-               
-      
                 <!-- Card -->
                 <div class="card border-0 scroll-mt-3" id="deleteAccountSection">
                     <div class="card-header">
@@ -364,7 +362,8 @@
                         </div>
                         <div class="d-flex justify-content-end mt-5">
                             <!-- Button -->
-                            <button type="submit" class="btn btn-danger">Delete account</button>
+                            <button type="submit" id="delete-btn" class="btn btn-danger">Delete account</button>
+                            <button type="button" id="activate-btn" class="btn btn-success " style="margin-left: 5px;">Activate account</button>
                         </form>
                         </div>
                     </div>
@@ -374,7 +373,7 @@
     </div>
     <!-- / .row -->
 </div>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/zxcvbn/4.4.2/zxcvbn.js"></script>
+<script src="{{asset('assets/js/admin/users/zxcvbn.js')}}"></script>
 <script src="{{asset('assets/js/admin/users/view.js')}}"></script>
 
 

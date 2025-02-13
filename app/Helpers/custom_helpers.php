@@ -27,6 +27,8 @@ if (!defined('EXIT_DEFAULT')) {
 if (!defined('EXIT_404')) {
     define('EXIT_404', 'EXIT_404'); // Maps to HTTP 400
 }
+define('STATUS_ENABLED', 0);
+define('STATUS_DISABLED', 1);
 
 if (!function_exists('json_message')) {
     /**
