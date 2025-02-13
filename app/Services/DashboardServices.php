@@ -36,13 +36,12 @@ class DashboardServices{
                 ->whereDate('created_at',Carbon::today())
                 ->count();
             case 'month':
-                return UserRequests::where('status','pending')
-                ->whereMonth('created_at', Carbon::now()->month) // Filter by current month
+                return UserRequests::whereMonth('created_at', Carbon::now()->month) // Filter by current month
                 ->whereYear('created_at', Carbon::now()->year) // Ensure it's the current year
                 ->count();
 
             default:
-            return UserRequests::where('status','pending')->count();
+            return UserRequests::count();
         }
         
     }

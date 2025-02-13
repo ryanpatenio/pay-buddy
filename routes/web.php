@@ -9,6 +9,7 @@ use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\RequestsController;
 use App\Http\Controllers\Transactions;
+use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -108,14 +109,11 @@ Route::middleware(['auth'])->group(function(){
         Route::post('/Dashboard-request-decline',[RequestsController::class,'declineRequest']);
 
         #Users
-        Route::get('/Dashboard-Users',function(){
-            return view('admin.users.users');
-        
-        });
-        Route::get('/Dashboard-Api-keys',function(){
-            return view('admin.user-api-keys');
-        
-        });
+        Route::get('/Dashboard-Users',[UserController::class,'index']);
+        Route::post('/Dashboard-User-create',[UserController::class,'createUser']);
+        Route::get('/Dashboard-user-details/{id}',[UserController::class,'showUserDetails']);
+        Route::post('/Dashboard-user-updateDetails',[UserController::class,'updateUserDetails']);
+       
         Route::get('/Dashboard-Logs',function(){
             return view('admin.logs');
         

@@ -1,13 +1,14 @@
 @extends('layouts.dash-app')
 
-@section('title','Profile | Account')
+@section('title','Dashboard  | Users')
 
 @section('content')
+
 
 <div class="container-fluid">
     <div class="d-flex align-items-baseline justify-content-between">
         <!-- Title -->
-        <h1 class="h2">User Account Details
+        <h1 class="h2">Account Details
         </h1>
         <!-- Breadcrumb -->
         <nav aria-label="breadcrumb">
@@ -41,8 +42,8 @@
                             </label>
                             <img src="https://d33wubrfki0l68.cloudfront.net/053f2dfd0df2f52c41e903a21d177b0b44abc9b1/1282c/assets/images/profiles/profile-06.jpeg" alt="Profile picture" class="avatar-img" width="112" height="112">
                         </div>
-                        <h3 class="mb-0">Marko</h3>
-                        <span class="small text-secondary fw-semibold">User</span>
+                        <h3 class="mb-0" id="side-name"></h3>
+                        <span class="small text-secondary fw-semibold" id="role">Assistant Manager</span>
                     </div>
                     <!-- Divider -->
                     <hr class="mb-0">
@@ -97,12 +98,24 @@
                         </a>
                     </li>
 
-                    
+                    <li>
+                        <a href="#deleteAccountSection" class="d-flex align-items-center py-3">
+                            <svg viewBox="0 0 24 24" height="14" width="14" class="me-3" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M18.177,23.25H7.677a1.5,1.5,0,0,1-1.5-1.5V8.25h13.5v13.5A1.5,1.5,0,0,1,18.177,23.25Z" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"/>
+                                <path d="M10.677 18.75L10.677 12.75" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"/>
+                                <path d="M15.177 18.75L15.177 12.75" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"/>
+                                <path d="M2.427 6.212L21.501 2.158" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"/>
+                                <path d="M13.541.783l-4.4.935A1.5,1.5,0,0,0,7.984,3.5L8.3,4.965l7.336-1.56L15.32,1.938A1.5,1.5,0,0,0,13.541.783Z" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"/>
+                            </svg>
+                            Delete account
+                        
+                        </a>
+                    </li>
                 </ul>
                 <div class="card-footer text-center">
-                    <div class="row">
+                    {{-- <div class="row">
                         <label for="" class="mb-2">Acount Number</label>
-                        <input id="key-01" class="form-control w-350px me-3" value="34434327" >
+                        <input id="key-01" class="form-control w-350px me-3" value="34434327">
                         <!-- Button -->
                         <button class="clipboard btn btn-link px-0" data-clipboard-target="#key-01" data-bs-toggle="tooltip" data-bs-title="Copy to clipboard">
                             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" height="18" width="18">
@@ -116,55 +129,41 @@
                                 </g>
                             </svg>
                         </button>
-                    </div>
-                    
-                    <div class="row mt-5">
-                        <div class="col text-start">
-                            <label for="label">Total Balance : </label>
-                            <strong class="text-primary"> ₱2020</strong>
-                        </div>
-                    </div>
-                    
+                    </div> --}}
                 </div>
             </div>
         </div>
         <div class="col">
-            <form novalidate>
-                <!-- Card -->
+           
+                <!-- Card Basic Info -->
                 <div class="card border-0 scroll-mt-3" id="basicInformationSection">
                     <div class="card-header">
                         <h2 class="h3 mb-0">Basic information</h2>
                     </div>
                     <div class="card-body">
+                        <form id="basicForm" method="POST">
+                            @csrf
+                           
                         <div class="row mb-4">
                             <div class="col-lg-3">
                                 <label for="fullName" class="col-form-label">Full Name</label>
                             </div>
                             <div class="col-lg">
-                                <input type="text" class="form-control" id="fullName" value="Ellie K. Tucker">
+                                <input type="text" name="name" class="form-control" placeholder="Full Name" id="fullName" required value="<?=$profile->name ?? '' ?>">
                                 <div class="invalid-feedback">Please add your full name</div>
                             </div>
                         </div>
                         <!-- / .row -->
                         <div class="row mb-4">
                             <div class="col-lg-3">
-                                <label for="phone" class="col-form-label">Phone</label>
+                                <label for="phone" class="col-form-label">Phone Number</label>
                             </div>
                             <div class="col-lg">
-                                <input type="text" class="form-control" id="phone" value="+1(119)980-03-11">
+                                <input type="text" name="phone_number" maxlength="11" class="form-control" id="phoneNumber" required placeholder="(+63) 934 349 232" value="<?=$profile->phone_number ?? '' ?>">
                                 <div class="invalid-feedback">Please add your phone number</div>
                             </div>
                         </div>
                         <!-- / .row -->
-                        <div class="row mb-4">
-                            <div class="col-lg-3">
-                                <label for="emailAddress" class="col-form-label">Email address</label>
-                            </div>
-                            <div class="col-lg">
-                                <input type="text" class="form-control" id="emailAddress" value="ellie.tucker@dashly.com">
-                                <div class="invalid-feedback">Please add your email address</div>
-                            </div>
-                        </div>
                         <!-- / .row -->
                         <div class="row mb-4">
                             <div class="col-lg-3">
@@ -172,300 +171,35 @@
                             </div>
                             <div class="col-lg">
                                 <div class="mb-4">
-                                    <select class="form-select" id="country" required autocomplete="off" data-select='{
-                                            "placeholder": "Country"
-                                        }' data-option-template='<span class="d-flex align-items-center py-2"><span class="avatar avatar-circle avatar-xxs"><img class="avatar-img shadow-sm" src="./assets/images/flags/1x1/[[value]].svg" /></span><span class="text-truncate ms-2">[[text]]</span></span>' data-item-template='<span class="d-flex align-items-center"><span class="avatar avatar-circle avatar-xxs"><img class="avatar-img shadow-sm" src="" /></span><span class="text-truncate ms-2">[[text]]</span></span>'>
-                                        <option value="" label="country placeholder"></option>
-                                        <option value="af">Afghanistan</option>
-                                        <option value="ax">Aland Islands</option>
-                                        <option value="al">Albania</option>
-                                        <option value="dz">Algeria</option>
-                                        <option value="as">American Samoa</option>
-                                        <option value="ad">Andorra</option>
-                                        <option value="ao">Angola</option>
-                                        <option value="ai">Anguilla</option>
-                                        <option value="aq">Antarctica</option>
-                                        <option value="ag">Antigua and Barbuda</option>
-                                        <option value="ar">Argentina</option>
-                                        <option value="am">Armenia</option>
-                                        <option value="aw">Aruba</option>
-                                        <option value="au">Australia</option>
-                                        <option value="at">Austria</option>
-                                        <option value="az">Azerbaijian</option>
-                                        <option value="bs">Bahamas</option>
-                                        <option value="bh">Bahrain</option>
-                                        <option value="bd">Bangladesh</option>
-                                        <option value="bb">Barbados</option>
-                                        <option value="by">Belarus</option>
-                                        <option value="be">Belgium</option>
-                                        <option value="bz">Belize</option>
-                                        <option value="bj">Benin</option>
-                                        <option value="bm">Bermuda</option>
-                                        <option value="bt">Bhutan</option>
-                                        <option value="bo">Bolivia (Plurinational State of)</option>
-                                        <option value="bq">Bonaire, Sint Eustatius and Saba</option>
-                                        <option value="ba">Bosnia and Herzegovina</option>
-                                        <option value="bw">Botswana</option>
-                                        <option value="br">Brazil</option>
-                                        <option value="io">British Indian Ocean Territory</option>
-                                        <option value="bn">Brunei Darussalam</option>
-                                        <option value="bg">Bulgaria</option>
-                                        <option value="bf">Burkina Faso</option>
-                                        <option value="bi">Burundi</option>
-                                        <option value="cv">Cabo Verde</option>
-                                        <option value="kh">Cambodia</option>
-                                        <option value="cm">Cameroon</option>
-                                        <option value="ca">Canada</option>
-                                        <option value="ky">Cayman Islands</option>
-                                        <option value="cf">Central African Republic</option>
-                                        <option value="td">Chad</option>
-                                        <option value="cl">Chile</option>
-                                        <option value="cn">China</option>
-                                        <option value="cx">Christmas Island</option>
-                                        <option value="cc">Cocos (Keeling) Islands</option>
-                                        <option value="co">Colombia</option>
-                                        <option value="km">Comoros</option>
-                                        <option value="cg">Congo</option>
-                                        <option value="cd">Congo (the Democratic Republic of the)</option>
-                                        <option value="ck">Cook Islands</option>
-                                        <option value="cr">Costa Rica</option>
-                                        <option value="ci">Cote D'ivoire</option>
-                                        <option value="hr">Croatia</option>
-                                        <option value="cu">Cuba</option>
-                                        <option value="cw">Curacao</option>
-                                        <option value="cy">Cyprus</option>
-                                        <option value="cz">Czechia</option>
-                                        <option value="dk">Denmark</option>
-                                        <option value="dj">Djibouti</option>
-                                        <option value="dm">Dominica</option>
-                                        <option value="do">Dominican Republic</option>
-                                        <option value="ec">Ecuador</option>
-                                        <option value="eg">Egypt</option>
-                                        <option value="sv">El Salvador</option>
-                                        <option value="gq">Equatorial Guinea</option>
-                                        <option value="er">Eritrea</option>
-                                        <option value="ee">Estonia</option>
-                                        <option value="et">Ethiopia</option>
-                                        <option value="fk">Falkland Islands (Malvinas)</option>
-                                        <option value="fo">Faroe Islands</option>
-                                        <option value="fj">Fiji</option>
-                                        <option value="fi">Finland</option>
-                                        <option value="fr">France</option>
-                                        <option value="gf">French Guiana</option>
-                                        <option value="pf">French Polynesia</option>
-                                        <option value="tf">French Southern Territories</option>
-                                        <option value="ga">Gabon</option>
-                                        <option value="gm">Gambia</option>
-                                        <option value="ge">Georgia</option>
-                                        <option value="de">Germany</option>
-                                        <option value="gh">Ghana</option>
-                                        <option value="gi">Gibraltar</option>
-                                        <option value="gr">Greece</option>
-                                        <option value="gl">Greenland</option>
-                                        <option value="gd">Grenada</option>
-                                        <option value="gp">Guadeloupe</option>
-                                        <option value="gu">Guam</option>
-                                        <option value="gt">Guatemala</option>
-                                        <option value="gg">Guernsey</option>
-                                        <option value="gn">Guinea</option>
-                                        <option value="gw">Guinea-Bissau</option>
-                                        <option value="gy">Guyana</option>
-                                        <option value="ht">Haiti</option>
-                                        <option value="va">Holy See</option>
-                                        <option value="hn">Honduras</option>
-                                        <option value="hk">Hong Kong</option>
-                                        <option value="hu">Hungary</option>
-                                        <option value="is">Iceland</option>
-                                        <option value="in">India</option>
-                                        <option value="id">Indonesia</option>
-                                        <option value="ir">Iran (Islamic Republic of)</option>
-                                        <option value="iq">Iraq</option>
-                                        <option value="ie">Ireland</option>
-                                        <option value="im">Isle of Man</option>
-                                        <option value="il">Israel</option>
-                                        <option value="it">Italy</option>
-                                        <option value="jm">Jamaica</option>
-                                        <option value="jp">Japan</option>
-                                        <option value="je">Jersey</option>
-                                        <option value="jo">Jordan</option>
-                                        <option value="kz">Kazakhstan</option>
-                                        <option value="ke">Kenya</option>
-                                        <option value="ki">Kiribati</option>
-                                        <option value="kp">Korea (the Democratic People's Republic of)</option>
-                                        <option value="kr">Korea (the Republic of)</option>
-                                        <option value="kw">Kuwait</option>
-                                        <option value="kg">Kyrgyzstan</option>
-                                        <option value="la">Lao People's Democratic Republic</option>
-                                        <option value="lv">Latvia</option>
-                                        <option value="lb">Lebanon</option>
-                                        <option value="ls">Lesotho</option>
-                                        <option value="lr">Liberia</option>
-                                        <option value="ly">Libya</option>
-                                        <option value="li">Liechtenstein</option>
-                                        <option value="lt">Lithuania</option>
-                                        <option value="lu">Luxembourg</option>
-                                        <option value="mo">Macao</option>
-                                        <option value="mk">North Macedonia</option>
-                                        <option value="mg">Madagascar</option>
-                                        <option value="mw">Malawi</option>
-                                        <option value="my">Malaysia</option>
-                                        <option value="mv">Maldives</option>
-                                        <option value="ml">Mali</option>
-                                        <option value="mt">Malta</option>
-                                        <option value="mh">Marshall Islands</option>
-                                        <option value="mq">Martinique</option>
-                                        <option value="mr">Mauritania</option>
-                                        <option value="mu">Mauritius</option>
-                                        <option value="yt">Mayotte</option>
-                                        <option value="mx">Mexico</option>
-                                        <option value="fm">Micronesia (Federated States of)</option>
-                                        <option value="md">Moldova (the Republic of)</option>
-                                        <option value="mc">Monaco</option>
-                                        <option value="mn">Mongolia</option>
-                                        <option value="me">Montenegro</option>
-                                        <option value="ms">Montserrat</option>
-                                        <option value="ma">Morocco</option>
-                                        <option value="mz">Mozambique</option>
-                                        <option value="mm">Myanmar</option>
-                                        <option value="na">Namibia</option>
-                                        <option value="nr">Nauru</option>
-                                        <option value="np">Nepal</option>
-                                        <option value="nl">Netherlands</option>
-                                        <option value="nc">New Caledonia</option>
-                                        <option value="nz">New Zealand</option>
-                                        <option value="ni">Nicaragua</option>
-                                        <option value="ne">Niger</option>
-                                        <option value="ng">Nigeria</option>
-                                        <option value="nu">Niue</option>
-                                        <option value="nf">Norfolk Island</option>
-                                        <option value="mp">Northern Mariana Islands</option>
-                                        <option value="no">Norway</option>
-                                        <option value="om">Oman</option>
-                                        <option value="pk">Pakistan</option>
-                                        <option value="pw">Palau</option>
-                                        <option value="ps">Palestine, State of</option>
-                                        <option value="pa">Panama</option>
-                                        <option value="pg">Papua New Guinea</option>
-                                        <option value="py">Paraguay</option>
-                                        <option value="pe">Peru</option>
-                                        <option value="ph">Philippines</option>
-                                        <option value="pn">Pitcairn</option>
-                                        <option value="pl">Poland</option>
-                                        <option value="pt">Portugal</option>
-                                        <option value="pr">Puerto Rico</option>
-                                        <option value="qa">Qatar</option>
-                                        <option value="re">Reunion</option>
-                                        <option value="ro">Romania</option>
-                                        <option value="ru">Russian Federation</option>
-                                        <option value="rw">Rwanda</option>
-                                        <option value="bl">Saint Barthelemy</option>
-                                        <option value="sh">Saint Helena, Ascension and Tristan Da Cunha</option>
-                                        <option value="kn">Saint Kitts and Nevis</option>
-                                        <option value="lc">Saint Lucia</option>
-                                        <option value="mf">Saint Martin (French Part)</option>
-                                        <option value="pm">Saint Pierre and Miquelon</option>
-                                        <option value="vc">Saint Vincent and The Grenadines</option>
-                                        <option value="ws">Samoa</option>
-                                        <option value="sm">San Marino</option>
-                                        <option value="st">Sao Tome and Principe</option>
-                                        <option value="sa">Saudi Arabia</option>
-                                        <option value="sn">Senegal</option>
-                                        <option value="rs">Serbia</option>
-                                        <option value="sc">Seychelles</option>
-                                        <option value="sl">Sierra Leone</option>
-                                        <option value="sg">Singapore</option>
-                                        <option value="sx">Sint Maarten (Dutch Part)</option>
-                                        <option value="sk">Slovakia</option>
-                                        <option value="si">Slovenia</option>
-                                        <option value="sb">Solomon Islands</option>
-                                        <option value="so">Somalia</option>
-                                        <option value="za">South Africa</option>
-                                        <option value="gs">South Georgia and The South Sandwich Islands</option>
-                                        <option value="ss">South Sudan</option>
-                                        <option value="es">Spain</option>
-                                        <option value="lk">Sri Lanka</option>
-                                        <option value="sd">Sudan</option>
-                                        <option value="sr">Suriname</option>
-                                        <option value="sj">Svalbard and Jan Mayen</option>
-                                        <option value="sz">Eswatini</option>
-                                        <option value="se">Sweden</option>
-                                        <option value="ch">Switzerland</option>
-                                        <option value="sy">Syrian Arab Republic</option>
-                                        <option value="tw">Taiwan (Province of China)</option>
-                                        <option value="tj">Tajikistan</option>
-                                        <option value="tz">Tanzania, United Republic of</option>
-                                        <option value="th">Thailand</option>
-                                        <option value="tl">Timor-Leste</option>
-                                        <option value="tg">Togo</option>
-                                        <option value="tk">Tokelau</option>
-                                        <option value="to">Tonga</option>
-                                        <option value="tt">Trinidad and Tobago</option>
-                                        <option value="tn">Tunisia</option>
-                                        <option value="tr">Turkey</option>
-                                        <option value="tm">Turkmenistan</option>
-                                        <option value="tc">Turks and Caicos Islands</option>
-                                        <option value="tv">Tuvalu</option>
-                                        <option value="ug">Uganda</option>
-                                        <option value="ua">Ukraine</option>
-                                        <option value="ae">United Arab Emirates</option>
-                                        <option value="gb">United Kingdom of Great Britain and Northern Ireland</option>
-                                        <option value="us" selected>United States of America</option>
-                                        <option value="um">United States Minor Outlying Islands</option>
-                                        <option value="uy">Uruguay</option>
-                                        <option value="uz">Uzbekistan</option>
-                                        <option value="vu">Vanuatu</option>
-                                        <option value="ve">Venezuela (Bolivarian Republic of)</option>
-                                        <option value="vn">Viet Nam</option>
-                                        <option value="vg">Virgin Islands (British)</option>
-                                        <option value="vi">Virgin Islands (U.S.)</option>
-                                        <option value="wf">Wallis and Futuna</option>
-                                        <option value="eh">Western Sahara</option>
-                                        <option value="ye">Yemen</option>
-                                        <option value="zm">Zambia</option>
-                                        <option value="zw">Zimbabwe</option>
+                                    <select class="form-select " name="country" id="country" required autocomplete="off" style="cursor: pointer">
+                                        {{-- <option value="" label="country placeholder"></option> --}}
+                                        <option value="Philippines">Philippines</option>
+                                        
                                     </select>
                                     <div class="invalid-feedback">Please select a country</div>
                                 </div>
                                 <div class="mb-4">
-                                    <input type="text" class="form-control" id="city" value="Houston">
+                                    <input type="text" name="city" class="form-control" placeholder="City" id="city" required value="<?=$profile->city ?? '' ?>">
                                     <div class="invalid-feedback">Please add a city</div>
                                 </div>
                                 <div class="mb-4">
-                                    <input type="text" class="form-control" id="state" value="Texas">
-                                    <div class="invalid-feedback">Please add a state or county</div>
+                                    <input type="text" name="brgy" class="form-control" placeholder="Brgy" id="brgy" required value="<?=$profile->brgy ?? '' ?>">
+                                    <div class="invalid-feedback">Please add a Brgy</div>
+                                </div>
+                                <div class="mb-4">
+                                    <input type="text" name="province" class="form-control" id="province" placeholder="Province" required value="<?=$profile->province ?? '' ?>">
+                                    <div class="invalid-feedback">Please add a state or Province</div>
                                 </div>
                             </div>
                         </div>
-                        <!-- / .row -->
-                        <div class="row mb-4">
-                            <div class="col-lg-3">
-                                <label for="addressLine1" class="col-form-label">Address Line 1</label>
-                            </div>
-                            <div class="col-lg">
-                                <input type="text" class="form-control" id="addressLine1" value="3227 Wines Lane">
-                                <div class="invalid-feedback">Please add an address</div>
-                            </div>
-                        </div>
-                        <!-- / .row -->
-                        <div class="row mb-4">
-                            <div class="col-lg-3">
-                                <label for="addressLine2" class="col-form-label">
-                                    Address Line 2
-                                    <span class="text-muted fw-normal">(Optional)</span>
-                                </label>
-                            </div>
-                            <div class="col-lg">
-                                <input type="text" class="form-control" id="addressLine2">
-                                <div class="invalid-feedback">Please add an address</div>
-                            </div>
-                        </div>
+
                         <!-- / .row -->
                         <div class="row mb-4">
                             <div class="col-lg-3">
                                 <label for="zipCode" class="col-form-label">Zip code</label>
                             </div>
                             <div class="col-lg">
-                                <input type="text" class="form-control" id="zipCode" value="77032">
+                                <input type="text" name="zip_code" class="form-control" id="zip-code" placeholder="6110" required value="<?=$profile->zip_code ?? '' ?>">
                                 <div class="invalid-feedback">Please add a zip code</div>
                             </div>
                         </div>
@@ -475,26 +209,31 @@
                                 <label for="overview" class="col-form-label">Overview</label>
                             </div>
                             <div class="col-lg">
-                                <textarea class="form-control" id="overview" rows="4">Gamer. Certified entrepreneur. Introvert. Zombie geek. Friendly coffee guru. Vegan.</textarea>
+                                <textarea class="form-control" name="overview" id="overview" required rows="4">
+                                     
+                                </textarea>
                                 <div class="invalid-feedback">Please tell something about yourself</div>
                             </div>
                         </div>
                         <!-- / .row -->
                         <div class="d-flex justify-content-end mt-5">
                             <!-- Button -->
-                            <button type="button" class="btn btn-primary">Save changes</button>
+                            <button type="submit" class="btn btn-primary">Save changes</button>
                         </div>
+                    </form>
                     </div>
                 </div>
-                <!-- Username -->
 
+                <!-- Username -->
                 <div class="card border-0 scroll-mt-3" id="usernameSection">
                     <div class="card-header">
                         <h2 class="h3 mb-0">Username</h2>
                     </div>
                     <div class="card-body">
+                        <form id="form-user-email" method="POST">
+                            @csrf
                         <p class="small text-muted mb-3">
-                            Your current username is <strong>@ellietucker</strong>
+                            Your current username is <strong id="user-email-head"></strong>
                         </p>
                         <div class="row mb-4">
                             <div class="col-lg-3">
@@ -508,7 +247,7 @@
                                             <path d="M17.25,12v2.25a3,3,0,0,0,6,0V12a11.249,11.249,0,1,0-4.5,9" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"/>
                                         </svg>
                                     </span>
-                                    <input type="text" class="form-control" id="username" placeholder="username" value="ellietucker" aria-describedby="username-addon">
+                                    <input type="text" class="form-control" id="user-email-input" name="user_email" placeholder="username" value="" aria-describedby="username-addon">
                                 </div>
                                 <div class="invalid-feedback">Please add a new username</div>
                             </div>
@@ -516,8 +255,9 @@
                         <!-- / .row -->
                         <div class="d-flex justify-content-end mt-5">
                             <!-- Button -->
-                            <button type="button" class="btn btn-primary">Save changes</button>
+                            <button type="submit" class="btn btn-primary">Save changes</button>
                         </div>
+                    </form>
                     </div>
                 </div>
 
@@ -528,13 +268,15 @@
                         <h2 class="h3 mb-0">Password</h2>
                     </div>
                     <div class="card-body">
+                        <form method="POST" id="passwordForm">
+                            @csrf
                         <div class="row mb-4">
                             <div class="col-lg-3">
                                 <label for="currentPassword" class="col-form-label">Current password</label>
                             </div>
                             <div class="col-lg">
-                                <input type="password" class="form-control" id="currentPassword">
-                                <div class="invalid-feedback">Please add your current password</div>
+                                <input type="password" name="current_password" class="form-control" id="currentPassword" required>
+                                <div class="invalid-feedback curr-password">Please add your current password</div>
                             </div>
                         </div>
                         <!-- / .row -->
@@ -544,10 +286,10 @@
                             </div>
                             <div class="col-lg">
                                 <div class="input-group input-group-merge">
-                                    <input type="password" class="form-control" id="newPassword" autocomplete="off" data-toggle-password-input placeholder="Your new password">
+                                    <input type="password" name="newPassword" class="form-control" id="newPassword" autocomplete="off" data-toggle-password-input placeholder="Your new password">
                                     <button type="button" class="input-group-text px-4 text-secondary link-primary" data-toggle-password></button>
                                 </div>
-                                <div class="invalid-feedback">Please add a new password</div>
+                                <div class="invalid-feedback new-pass-invalid-feedback">Please add a new password</div>
                                 <!---Progress Bar-->
                                 <div class="d-flex justify-content-between align-items-center mt-3 h-15px">
                                     <div class="progress d-flex flex-grow-1 h-7px">
@@ -563,7 +305,7 @@
                                     <input type="password" class="form-control" id="newPasswordAgain" autocomplete="off" data-toggle-password-input placeholder="Confirm your new password">
                                     <button type="button" class="input-group-text px-4 text-secondary link-primary" data-toggle-password></button>
                                 </div>
-                                <div class="invalid-feedback">Please confirm your new password again</div>
+                                <div class="invalid-feedback confirm-pass-invalid">Please confirm your new password again</div>
                             </div>
                         </div>
                         <!-- / .row -->
@@ -583,70 +325,57 @@
                         <!-- / .row -->
                         <div class="d-flex justify-content-end mt-5">
                             <!-- Button -->
-                            <button type="button" class="btn btn-primary">Save changes</button>
+                            <button type="submit" class="btn btn-primary">Save changes</button>
+                        </form>
                         </div>
                     </div>
                 </div>
+
+               
       
-                <!--Logs-->
-                <div class="card border-0 scroll-mt-3" id="passwordSection">
+                <!-- Card -->
+                <div class="card border-0 scroll-mt-3" id="deleteAccountSection">
                     <div class="card-header">
-                        <h2 class="h3 mb-0">Logs</h2>
+                        <h2 class="h3 mb-0">Delete Account</h2>
                     </div>
                     <div class="card-body">
-                        <div class="table-responsive">
-                            <table class="table align-middle table-hover table-nowrap mb-0">
-                                <thead class="thead-light">
-                                    <tr>
-                                        
-                                        <th>
-                                            <a href="javascript: void(0);" class="text-muted list-sort" data-sort="key">Transaction Type
-                                            </a>
-                                        </th>
-                                        <th>
-                                            <a href="javascript: void(0);" class="text-muted list-sort" data-sort="key">Amount
-                                            </a>
-                                        </th>
-                                        
-                                        <th>
-                                            <a href="javascript: void(0);" class="text-muted list-sort" data-sort="status">Status
-                                            </a>
-                                        </th>
-                                        <th>
-                                            <a href="javascript: void(0);" class="text-muted list-sort" data-sort="created">Date
-                                            </a>
-                                        </th>
-                                       
-                                    </tr>
-                                </thead>
-                                <tbody class="list">
-                                    <tr>
-                                       
-                                        <td>
-                                           Transfer Fund
-                                        </td>
-                                        <td class="key" >
-                                            1000
-                                        </td>
-                                       
-                                        <td class="status" data-status="Active">
-                                            <span class="legend-circle bg-success"></span>
-                                            Active
-                                        </td>
-                                        <td class="created" data-created="1642550400">01.19.22</td>
-                                        
-                                    </tr>
-                                </tbody>
-                            </table>
+                        <div class="alert text-bg-danger-soft d-flex align-items-center" role="alert">
+                            <div>
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" height="32" width="32" class="me-3">
+                                    <path d="M23.39,10.53,13.46.6a2.07,2.07,0,0,0-2.92,0L.61,10.54a2.06,2.06,0,0,0,0,2.92h0l9.93,9.92A2,2,0,0,0,12,24a2.07,2.07,0,0,0,1.47-.61l9.92-9.92A2.08,2.08,0,0,0,23.39,10.53ZM11,6.42a1,1,0,0,1,2,0v6a1,1,0,1,1-2,0Zm1.05,11.51h0a1.54,1.54,0,0,1-1.52-1.47A1.47,1.47,0,0,1,12,14.93h0A1.53,1.53,0,0,1,13.5,16.4,1.48,1.48,0,0,1,12.05,17.93Z" style="fill: currentColor"/>
+                                </svg>
+                            </div>
+                            <div>
+                                <h4 class="mb-0">If you delete your account, you will lose all your data</h4>
+                                Take a backup of your data
+                            
+                            </div>
                         </div>
-                        
+                        <div class="mb-3">
+                            <form id="deactivateForm" method="POST">
+                                @csrf
+                            <div class="form-check">
+                                <!-- Input -->
+                                <input type="checkbox" name="confirmDeactivate" class="form-check-input" id="deleteAccount" required>
+                                <!-- Label -->
+                                <label class="form-check-label" for="deleteAccount">I confirm that I'd like to delete my account
+                                </label>
+                            </div>
+                        </div>
+                        <div class="d-flex justify-content-end mt-5">
+                            <!-- Button -->
+                            <button type="submit" class="btn btn-danger">Delete account</button>
+                        </form>
+                        </div>
                     </div>
                 </div>
-                
-            </form>
+           
         </div>
     </div>
     <!-- / .row -->
 </div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/zxcvbn/4.4.2/zxcvbn.js"></script>
+<script src="{{asset('assets/js/admin/users/view.js')}}"></script>
+
 
 @endsection

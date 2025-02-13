@@ -25,6 +25,16 @@ const animateBtn = (time,btn_name,btn_restore_text) => {
     }, time); // Simulate a 2-second delay 2000
 }
 
+//serialize object @example you want to add another data in the form.serialize()
+function serializeToObject(serializedData) {
+  const formData = {};
+  serializedData.split('&').forEach(pair => {
+      const [key, value] = pair.split('=');
+      formData[decodeURIComponent(key)] = decodeURIComponent(value || '');
+  });
+  return formData;
+}
+
 // function message(_message, _msg_type, _url) {
 // 	Swal.fire({
 // 		title: _message,
@@ -199,6 +209,39 @@ function swalMessage(swal_type, message, willConfirmedCallback) {
         }
     });
 }
+
+/**
+ * Displays validation errors for a specific field.
+ * @param {Array} errorArray - The error array for the field (e.g., err.data?.zip_code).
+ * @param {string} fieldName - The name of the field (e.g., "zip_code").
+ * @param {Function} msg - The function to display the error message (e.g., toast, alert, etc.).
+ */
+function displayFieldErrors(errorArray, fieldName, msg) {
+  if (Array.isArray(errorArray) && errorArray.length > 0) {
+      errorArray.forEach((errorMessage) => {
+          msg(`${fieldName}: ${errorMessage}`, 'error');
+      });
+  }
+}
+
+
+
+ /**
+     * Displays validation errors to the user.
+     * @param {Object} errors - The validation errors returned by the server.
+     * <div class="error-message text-danger">The name field is required.</div>
+     */
+//  function displayValidationErrors(errors) {
+//   // Clear previous errors
+//   $('.error-message').remove();
+
+//   // Loop through each field and display its errors
+//   for (const [field, messages] of Object.entries(errors)) {
+//       const input = $(`[name="${field}"]`);
+//       const errorContainer = $('<div>').addClass('error-message text-danger').text(messages.join(', '));
+//       input.after(errorContainer);
+//   }
+// }
 
     // const processRequests = async () => {
     //     const emailData = await fetchData('/Profile-email');

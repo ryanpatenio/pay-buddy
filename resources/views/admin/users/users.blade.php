@@ -46,6 +46,10 @@
                     <table class="table align-middle table-hover table-nowrap mb-0">
                         <thead class="thead-light">
                             <tr>
+                                <th>
+                                    <a href="javascript: void(0);" class="text-muted list-sort" data-sort="number">#
+                                    </a>
+                                </th>
                                 
                                 <th>
                                     <a href="javascript: void(0);" class="text-muted list-sort" data-sort="key">Name
@@ -67,19 +71,23 @@
                             </tr>
                         </thead>
                         <tbody class="list">
-                            <tr>
-                               
+
+                            <?php
+                            $i =1 ;
+                            foreach ($users as $user) { ?>
+                              <tr>   
+                                <td><?=$i ?? 0 ?></td>                           
                                 <td>
-                                   Ryan Wong
+                                  <?=$user->name ?? '' ?>
                                 </td>
                                 <td>
-                                    Users
+                                    <?=$user->role ?? '' ?>
                                  </td>
                                 <td class="status" data-status="Active">
-                                    <span class="legend-circle bg-success"></span>
-                                    Active
+                                    <span class="legend-circle <?=$user->status == "0" ? 'bg-success' : 'bg-danger' ?>"></span>
+                                    <?=$user->user_status ?? '' ?>
                                 </td>
-                                <td class="created" data-created="1642550400">01.19.22</td>
+                                <td class="created" data-created=""><?=$user->date_created ?? '' ?></td>
                                 <td>
                                     <!-- Dropdown -->
                                     <div class="dropdown float-end">
@@ -94,11 +102,11 @@
                                         </a>
                                         <ul class="dropdown-menu">
                                             <li>
-                                                <a class="dropdown-item" href="/Dashboard-viewUser">View
+                                                <a class="dropdown-item" href="/Dashboard-viewUser?user_id=<?=$user->id ?? 0 ?>">View
                                                 </a>
                                             </li>
                                             <li>
-                                                <a class="dropdown-item" href="javascript: void(0);">Disable
+                                                <a class="dropdown-item" data-id="<?=$user->id ?? 0 ?>" href="javascript: void(0);"><?= $user->user_status === "deactivated" ? 'enable' : 'Disable' ?>
                                                 </a>
                                             </li>
                                           
@@ -107,6 +115,9 @@
                                     </div>
                                 </td>
                             </tr>
+                           <?php $i++; }
+                            ?>
+                            
                         </tbody>
                     </table>
                 </div>
@@ -130,27 +141,28 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                
+                <form method="POST" id="userForm">
+                    @csrf
                 <div class="row mb-5">
                     <div class="col">
                       <label for="">Name</label>
-                      <input type="text" class="form-control" required placeholder="Name" required name="name">
+                      <input type="text" class="form-control"  placeholder="Name" name="name" required>
                     </div>
                     <div class="col">
                         <label for="">Email | Username</label>
-                        <input type="email" class="form-control" required placeholder="Email" required name="email">
+                        <input type="email" class="form-control"  placeholder="Email"  name="email" required>
                       </div>
                 </div>
                 <div class="row mb-5">
                     <div class="col">
                       <label for="">Password</label>
-                      <input type="password" class="form-control" required placeholder="Password" required name="password">
+                      <input type="password" class="form-control" placeholder="Password" name="password"  required>
                     </div>
                     <div class="col">
                         <label for="">Role</label>
-                        <select name="role" id="role" class="form-control">
-                            <option value="">Admin</option>
-                            <option value="">User</option>
+                        <select name="role" id="role" class="form-control" required>
+                            <option value="admin">Admin</option>
+                            <option value="user">User</option>
                         </select>
                       </div>
                 </div>
@@ -158,11 +170,13 @@
                 <div class="modal-footer">
                     
                     <button type="button" class="btn btn-light" data-bs-dismiss="modal">Close </button >
-                    <button type="button" class="btn btn-primary">Save </button >
+                    <button type="submit" class="btn btn-primary">Save </button >
                </div >
+            </form>
             </div>
         </div>
     </div>
 </div>
+<script src="{{asset('assets/js/admin/users/user.js')}}"></script>
 
 @endsection

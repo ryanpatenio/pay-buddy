@@ -39,15 +39,21 @@ class RequestsController extends Controller
         if($isUserApproved){
             return json_message(EXIT_FORM_NULL,"You're already a Developer!");
         }
-        /**
+         /**
          * if user had already an existing request with status = pending he cannot request another,
          * he must wait to declined it or approved it then he can make another reques to avoid spam!
          */
         
-        $findExistingRequest = UserRequests::where('user_id',$user_id)->where('status','pending')->first();
-        if($findExistingRequest){
-            return json_message(EXIT_FORM_NULL,'You had already a pending request, Wait until the Admin Approved it or Decline it!');
+         $findExistingRequest = UserRequests::where('user_id',$user_id)->where('status','pending')->first();
+         if($findExistingRequest){
+             return json_message(EXIT_FORM_NULL,'You had already a pending request, Wait until the Admin Approved it or Decline it!');
+         }
+
+        $hadAlreadySentRequestThisDay = UserRequests::where('user_id',$user_id)->whereDate('created_at',Carbon::today())->first();
+        if($hadAlreadySentRequestThisDay){
+            return json_message(EXIT_FORM_NULL,"You've hit your request limit for today. Please try again tomorrow!");
         }
+
        
         try {
 
@@ -138,6 +144,12 @@ class RequestsController extends Controller
         ]);
 
         try {
+            $user = User::find($request->user_id);
+            if($user && $user->dev === 1){
+                $user->dev = 0;
+                $user->save();
+            }
+            
             $user_req = UserRequests::find($request->request_id);
             if(!$user_req){
                 return json_message(EXIT_404,'Request not Found!');
@@ -145,6 +157,8 @@ class RequestsController extends Controller
 
             $user_req->status = 'declined';
             $user_req->save();
+
+            
             
             #success
             return json_message(EXIT_SUCCESS,'ok');

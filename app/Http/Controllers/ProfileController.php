@@ -46,10 +46,10 @@ class ProfileController extends Controller
                 ->first();
     }
 
-    public function test(Request $request){
+    // public function test(Request $request){
 
-        return json_message(EXIT_SUCCESS,'ok',$request->all());
-    }
+    //     return json_message(EXIT_SUCCESS,'ok',$request->all());
+    // }
 
     public function updateBasicInfo(Request $request){
          $request->validate([
