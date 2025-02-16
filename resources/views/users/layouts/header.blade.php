@@ -74,8 +74,8 @@
                 <path d="M12 3L12 0.75" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"/>
                 <path d="M12,3a7.5,7.5,0,0,1,7.5,7.5c0,7.046,1.5,8.25,1.5,8.25H3s1.5-1.916,1.5-8.25A7.5,7.5,0,0,1,12,3Z" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"/>
             </svg>
-            <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill text-bg-danger">
-                20+<span class="visually-hidden">unread messages</span>
+            <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill text-bg-danger" id="unread-banner">
+                0+<span class="visually-hidden">unread messages</span>
             </span>
         </a>
         <!-- Notifications offcanvas -->
@@ -119,24 +119,9 @@
                 </div>
             </div>
             <div class="offcanvas-body p-0">
-                <div class="list-group list-group-flush">
-                    <a href="javascript: void(0);" class="list-group-item list-group-item-action">
-                        <div class="d-flex">
-                            <div class="avatar avatar-circle avatar-xs me-2">
-                                <img src="https://d33wubrfki0l68.cloudfront.net/5dfa4398a7f2beddbcfa617402e193f2f13aaa94/2ecb0/assets/images/profiles/profile-28.jpeg" alt="..." class="avatar-img" width="30" height="30">
-                            </div>
-                            <div class="d-flex flex-column flex-grow-1">
-                                <div class="d-flex w-100 justify-content-between">
-                                    <h5 class="mb-1">Daniel</h5>
-                                    <small class="text-muted">10 minutes ago</small>
-                                </div>
-                                <div class="d-flex flex-column">
-                                    <p class="mb-1">RE: Email pre-population from external source</p>
-                                    <small class="text-secondary">Not sure if we'll need any further instruction on how to utilise the encoded ID in links from the new email broadcast tool.</small>
-                                </div>
-                            </div>
-                        </div>
-                    </a>
+                <div class="list-group list-group-flush" id="notifications-list">
+                    
+                   {{-- Populated using Jquery assets/usersUI_updates --}}
                     
                 </div>
             </div>

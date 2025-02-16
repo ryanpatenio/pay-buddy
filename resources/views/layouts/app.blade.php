@@ -169,11 +169,12 @@
         </main>
 
         {{-- Footer --}}
+       
         @include('users.layouts.footer') <!-- Reusable footer -->
 
 
         <script src="{{URL::asset('assets/js/theme.bundle.js')}}"></script>
-       
+        <script src="{{asset('assets/js/userUi_updates/ui.js')}}"></script>
 
     </body>
     </html>

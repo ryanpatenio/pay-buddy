@@ -12,7 +12,8 @@ class Api_keys extends Model
         'user_id',
         'api_key',
         'callback_url',
-        'name',
-        'status'
+        'status',
+        'expires_at',
+        'revoked_at'
     ];
 }

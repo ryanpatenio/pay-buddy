@@ -51,28 +51,31 @@ $(document).ready(function(){
                     console.log(sendTransaction)
 
                     msg(sendTransaction.data.message,'success');
+                   
 
                     setTimeout(() => {
                         window.location.href = `/Xpress-Receipt?transaction_id=${transactionId}`;
                     }, 2000);
                
                 } catch (error) {
-                    let err_response = error.response?.data;
-                    console.log(error.response.data.error);
-                    alert(error.response.data.error);
+                    console.log(error)
+                    const {response} = error;
+                    
+                    let err_response = error?.response?.data;
+                    console.log(error)
+                   console.log(error?.response?.data?.error);
+                   alert(error?.response?.data?.error);
         
                     if (error.response?.status === 422 || err_response?.code === 'EXIT_FORM_NULL') {
                         alert(err_response?.message || 'An error occurred');
                     }
                     
-                       // alert(error.response.data.error);
+                      // alert(error.response.data.error);
                    
                 }
             }
         );
-        
 
-      
        
     });
     

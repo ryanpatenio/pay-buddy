@@ -52,4 +52,27 @@ class NotificationController extends Controller
             be_logs('Failed to update Notification to read',$th);
         }
     }
+
+    public function notificationsCount(){
+
+        try {
+            $count = $this->notificationService->countUnreadNotifications();
+
+           return json_message(EXIT_SUCCESS,'ok',$count);
+        } catch (\Throwable $th) {
+           handleException($th,'failed to fetch Notificaitions count!');
+           return json_message(EXIT_BE_ERROR,'failed to fetch Notificaitions count!');
+        }
+    }
+
+    public function allNotifications(){
+        try {
+           $data = $this->notificationService->allNotifications();
+           return json_message(EXIT_SUCCESS,'ok',$data);
+
+        } catch (\Throwable $th) {
+            handleException($th,'failed to fetch Notificaitions !');
+           return json_message(EXIT_BE_ERROR,'failed to fetch Notificaitions !');
+        }
+    }
 }

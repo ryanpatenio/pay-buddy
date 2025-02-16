@@ -13,7 +13,7 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('logs', function (Blueprint $table) {
+        Schema::create('api_logs', function (Blueprint $table) {
             $table->id();
 
             $table->foreignId('api_key_id')->nullable()->constrained()->onDelete('cascade'); // API key associated with the request

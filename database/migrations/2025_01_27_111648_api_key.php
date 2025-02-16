@@ -16,13 +16,15 @@ return new class extends Migration
         Schema::create('api_keys', function (Blueprint $table) {
             $table->id();
             $table->foreignId('user_id')->constrained()->onDelete('cascade');
-
-            $table->string('name')->unique();
+         
             $table->string('api_key')->unique(); // Unique API key for each user
             $table->string('callback_url')->nullable(); // Optional callback URL for third-party integrations
-            $table->enum('status',['active','disabled'])->default('active');
+            $table->enum('status', ['active', 'inactive', 'revoked'])->default('active');
+            $table->timestamp('expires_at')->nullable(); // Expiration date   
 
             $table->timestamps();
+
+            $table->timestamp('revoked_at')->nullable(); // When the key was revoked
         });
     }
 

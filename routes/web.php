@@ -50,6 +50,8 @@ Route::middleware(['auth'])->group(function(){
         Route::get('/Notifications',[NotificationController::class,'notif_index']);
         Route::get('/Notifications/{id}',[NotificationController::class,'getNotification']);
         Route::post('/Notifications-update',[NotificationController::class,'update']);
+        Route::get('/Notifications-count',[NotificationController::class,'notificationsCount']);
+        Route::get('/Notifications-all',[NotificationController::class,'allNotifications']);
         
         #Profile
         Route::get('/Profile-Account',[ProfileController::class,'index']);
@@ -68,7 +70,8 @@ Route::middleware(['auth'])->group(function(){
         Route::middleware(['is_dev'])->group(function(){
             Route::get('/Api-keys',[ApiKeysController::class,'api_index']);
             Route::get('/Api-keys-gen',[ApiKeysController::class,'generateKey']);
-            Route::post('/Api-keys-create',[ApiKeysController::class,'createKey']);
+            Route::post('/Api-keys-create',[ApiKeysController::class,'createApiKey']);
+            Route::post('/Api-keys-regenerate',[ApiKeysController::class,'regenerateNewApiKey']);
         });
 
         #Xpress Send
@@ -120,6 +123,9 @@ Route::middleware(['auth'])->group(function(){
         Route::get('/Dashboard-user-status/{id}',[UserController::class,'userStatus']);
         Route::post('/Dashboard-user-activate',[UserController::class,'activateUser']);
         Route::post('/Dashboard-Users-action-status',[UserController::class,'setUserStatus']);
+
+        #API keys
+        Route::get('/Dashboard-Api-keys',[ApiKeysController::class,'index_admin']);
        
         Route::get('/Dashboard-Logs',function(){
             return view('admin.logs');

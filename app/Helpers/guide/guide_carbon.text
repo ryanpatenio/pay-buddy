@@ -29,3 +29,12 @@ switch ($date) {
         default:
             return DB::table('users')->count();
     }
+
+Crypt and decrypt
+use Illuminate\Support\Facades\Crypt;
+
+// Encrypt the key
+$encryptedKey = Crypt::encryptString($apiKey);
+
+// Decrypt the key
+$decryptedKey = Crypt::decryptString($encryptedKey);
