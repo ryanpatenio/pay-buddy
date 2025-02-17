@@ -126,6 +126,7 @@ Route::middleware(['auth'])->group(function(){
 
         #API keys
         Route::get('/Dashboard-Api-keys',[ApiKeysController::class,'index_admin']);
+        Route::post('/Api-Keys-disable',[ApiKeysController::class,'setDisable']);
        
         Route::get('/Dashboard-Logs',function(){
             return view('admin.logs');

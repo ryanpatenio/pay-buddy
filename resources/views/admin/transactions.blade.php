@@ -40,6 +40,10 @@
                         <thead class="thead-light">
                             <tr>
                                 <th>
+                                    <a href="javascript: void(0);" class="text-muted list-sort" data-sort="key">#
+                                    </a>
+                                </th>
+                                <th>
                                     <a href="javascript: void(0);" class="text-muted list-sort" data-sort="name">Transaction Type
                                     </a>
                                 </th>
@@ -70,10 +74,11 @@
                         <tbody class="list">
 
                            <?php
-
+                            $i = 1;
                             foreach ($Transactions as $recent) { ?>
                                
                                <tr>
+                                   <td><?=$i ?? 0 ?></td>
                                    <td class="name"><?=$recent->description ?? '' ?></td>
                                    <td class="key" data-key="<?= $recent->transaction_id ?? 0?>">
                                        <div class="d-flex">
@@ -93,7 +98,7 @@
                                            </button>
                                        </div>
                                    </td>
-                                   <td><?=$recent->amount ?? 0 ?></td>
+                                   <td><?=$recent->amount ? $recent->amount .' ('.$recent->code.')' : 0 ?></td>
                                    <td><?=$recent->fee ?? 0 ?></td>
                                    <td class="status" data-status="Active">
                                        <span class="legend-circle <?= $recent->status === 'success' ? 'bg-success' : 'bg-danger' ?>"></span>
@@ -103,7 +108,7 @@
                                   
                                </tr>
    
-                             <?php  }
+                             <?php $i++;  }
                                
                             
                             ?>

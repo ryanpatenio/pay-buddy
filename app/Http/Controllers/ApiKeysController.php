@@ -26,7 +26,34 @@ class ApiKeysController extends Controller
 
     public function index_admin(){
         
-        return view('admin.user-api-keys');
+        $apiUsers = $this->showAllApiUsers();
+
+        return view('admin.user-api-keys',compact('apiUsers'));
+    }
+
+    /**
+     * Users where api key status is active
+     * @return array
+     */
+    public function showAllApiUsers() {
+        return DB::table('api_keys as k')
+            ->join('users as u', 'k.user_id', '=', 'u.id')
+            ->where('k.status', 'active')
+            ->select(
+                'k.id',
+                'u.name',
+                'k.api_key',
+                DB::raw('
+                    CASE
+                        WHEN u.role = 0 THEN "Users"
+                        WHEN u.role = 1 THEN "Admin"
+                        WHEN u.role = 2 THEN "Super admin"
+                    END as role
+                '),
+                'k.status','k.created_at',
+                DB::raw('DATE_FORMAT(k.created_at, "%M %e, %Y, %h:%i %p") as date_created')
+            )
+            ->get();
     }
 
     public function generateKey(){
@@ -86,6 +113,11 @@ class ApiKeysController extends Controller
         ]
         );
 
+        // $isInactive = Api_keys::where('status','inactive')->first();
+        // if($isInactive){
+        //     return json_message(EXIT_FORM_NULL,'You cannot ')
+        // }
+
         try {
             $user_id = Auth::id();
             $this->revokeActiveapiKeys($user_id);#revoke all Actives APi before creating new one
@@ -126,4 +158,48 @@ class ApiKeysController extends Controller
             });
         }
     }
+
+    public function setDisable(Request $request){
+        $request->validate([
+            'id'=>'required|numeric|exists:api_keys,id',
+            'status' => 'required|string|in:Enable,Disable'
+            
+        ],[
+            'id.required'=> 'Invalid or Missing ID',
+            'id.numeric' => 'Expected Numeric instead of String',
+            'id.exists' => 'Invalid or Missing ID',
+            'status.required' => 'Status not found!',
+            'status.string'  => 'Expect status is String',
+            'status.in'     => 'Status must be either "enable" or "disable"' 
+        ]);
+
+        $stats = $request->status == "Enable" ? "active" : "inactive";
+        // return json_message(EXIT_SUCCESS,'ok',$stats);
+
+        try {
+            $userKey = api_keys::findOrFail($request->id);
+            $userKey->status = $stats;
+            $userKey->save();
+            
+            return json_message(EXIT_SUCCESS,'ok');
+
+        } catch (\Throwable $th) {
+            handleException($th,'Failed to disabled User Api key!');
+            return json_message(EXIT_BE_ERROR,'Failed to disabled User Api Key');
+        }
+    }
+
+    private function getRoleName($role){
+        switch ($role) {
+            case 0:
+                return 'Users';
+            case 1:
+                return 'Admin';
+            case 2:
+                return 'Super admin';
+            default:
+                return 'Unknown';
+        }
+    } 
+    
 }

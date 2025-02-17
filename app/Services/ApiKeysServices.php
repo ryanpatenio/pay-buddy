@@ -19,7 +19,9 @@ class ApiKeysServices{
         // ]);
        return $apiKey;
     }
-
+    /**
+     * @return array Users api keys Data
+     */
     public function showUserApiKey(){
         return Api_keys::where('user_id', Auth::id())
         ->where('status', 'active')

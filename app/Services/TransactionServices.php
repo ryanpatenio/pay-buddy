@@ -308,6 +308,7 @@ class TransactionServices
         $query = DB::table('transactions')
             ->join('wallets', 'transactions.wallet_id', '=', 'wallets.id')
             ->join('users', 'wallets.user_id', '=', 'users.id')
+            ->join('currencies','transactions.currency_id','=','currencies.id')
             ->where('users.id', Auth::id()) // Filter by authenticated user
             ->select(
                 'transactions.transaction_id',
@@ -315,7 +316,8 @@ class TransactionServices
                 'transactions.status',
                 'transactions.amount',
                 'transactions.fee',
-                'transactions.created_at'
+                'transactions.created_at',
+                'currencies.code'
         );
 
         // If status is provided, filter transactions of the current day
@@ -344,14 +346,16 @@ class TransactionServices
         // Start the query builder
          $query = DB::table('transactions')
              ->join('wallets', 'transactions.wallet_id', '=', 'wallets.id')
-             ->join('users', 'wallets.user_id', '=', 'users.id')            
+             ->join('users', 'wallets.user_id', '=', 'users.id')
+             ->join('currencies','transactions.currency_id','=','currencies.id')            
              ->select(
                  'transactions.transaction_id',
                  'transactions.description',
                  'transactions.status',
                  'transactions.amount',
                  'transactions.fee',
-                 'transactions.created_at'
+                 'transactions.created_at',
+                 'currencies.code'
          );
  
          // If status is provided, filter transactions of the current day
