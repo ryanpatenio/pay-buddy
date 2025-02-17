@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\ApiKeysController;
 use App\Http\Controllers\AuthController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -14,6 +15,12 @@ use Illuminate\Support\Facades\Route;
 | is assigned the "api" middleware group. Enjoy building your API!
 |
 */
+Route::middleware('validateApiKey')->group(function(){
+
+    Route::get('/check-api',[ApiKeysController::class,'test']);
+
+
+});
 
 
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {

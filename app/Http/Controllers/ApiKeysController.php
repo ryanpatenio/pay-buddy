@@ -201,5 +201,9 @@ class ApiKeysController extends Controller
                 return 'Unknown';
         }
     } 
+
+    public function test(){
+        return json_message(EXIT_SUCCESS,'success val api key');
+    }
     
 }

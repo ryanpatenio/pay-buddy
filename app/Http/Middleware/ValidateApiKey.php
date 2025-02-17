@@ -3,6 +3,7 @@
 namespace App\Http\Middleware;
 
 use App\Models\Api_keys;
+use Carbon\Carbon;
 use Closure;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -31,6 +32,7 @@ class ValidateApiKey
         // Fetch API key details in one query
         $key = Api_keys::where('api_key', $hashedApiKey)
             ->where('status', 'active')
+            ->where('expires_at','>',Carbon::now())
             ->first();
         
         if (!$key) {

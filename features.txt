@@ -1,0 +1,8 @@
+PayBuddy api Features
+
+request balance
+request user transactions
+
+credit and debit transactions
+
+auth users
