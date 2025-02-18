@@ -4,8 +4,10 @@ namespace App\Services;
 
 use App\Models\currency;
 use App\Models\User;
+use App\Models\UserDetails;
 use App\Models\UserRequests;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
 class DashboardServices{
@@ -38,6 +40,9 @@ class DashboardServices{
             case 'month':
                 return UserRequests::whereMonth('created_at', Carbon::now()->month) // Filter by current month
                 ->whereYear('created_at', Carbon::now()->year) // Ensure it's the current year
+                ->count();
+            case 'pending':
+                return UserRequests::where('status','pending')               
                 ->count();
 
             default:
@@ -93,4 +98,11 @@ class DashboardServices{
     public function showAllCurrencies(){       
         return currency::all();
     }
+
+    public function getUserImgUrl(){
+
+        $data = UserDetails::where('user_id',Auth::id())
+             ->first();
+         return $data->img_url;
+     }
 }

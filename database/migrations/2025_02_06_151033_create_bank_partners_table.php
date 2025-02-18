@@ -26,6 +26,7 @@ return new class extends Migration
             $table->timestamps(); // created_at and updated_at timestamps
         });
 
+        #this is temporary
         BankPartners::insert([
             ['name' => 'BPI', 'url' => 'https://api.bpi.com', 'api_key' => 'df3443dasd435','img_url'=>'bpi.png','description'=>'BPI / VYBE by BPI', 'created_at' => now()],
             ['name' => 'BDO', 'url' => 'https://api.bdo.com', 'api_key' => '434543sdfsd435','img_url'=>'bdo.png','description'=>'BDO Unibank, Inc', 'created_at' => now()],

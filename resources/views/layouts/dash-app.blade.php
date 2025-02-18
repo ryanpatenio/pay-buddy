@@ -158,7 +158,7 @@
 
     </head>
     <body>
-        {{-- Header --}}
+        {{-- Sidebar --}}
         @include('admin.layouts.nav')
 
         <!-- MAIN CONTENT -->

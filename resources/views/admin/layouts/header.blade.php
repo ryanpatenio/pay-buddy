@@ -156,24 +156,27 @@
         <div class="dropdown">
             <a href="javascript: void(0);" class="dropdown-toggle no-arrow d-flex align-items-center justify-content-center bg-white rounded-circle shadow-sm mx-1 mx-lg-2 w-40px h-40px" role="button" data-bs-toggle="dropdown" data-bs-auto-close="outside" aria-haspopup="true" aria-expanded="false" data-bs-offset="0,0">
                 <div class="avatar avatar-circle avatar-sm avatar-online">
-                    <img src="https://d33wubrfki0l68.cloudfront.net/053f2dfd0df2f52c41e903a21d177b0b44abc9b1/1282c/assets/images/profiles/profile-06.jpeg" alt="..." class="avatar-img" width="40" height="40">
+                    <img src="" alt="..." class="" id="avatar-header" width="40" height="40">
                 </div>
             </a>
             <div class="dropdown-menu">
                 <div class="dropdown-item-text">
                     <div class="d-flex align-items-center">
                         <div class="avatar avatar-sm avatar-circle">
-                            <img src="https://d33wubrfki0l68.cloudfront.net/053f2dfd0df2f52c41e903a21d177b0b44abc9b1/1282c/assets/images/profiles/profile-06.jpeg" alt="..." class="avatar-img" width="40" height="40">
+                            <?php
+                             //$avatar_img = $avatar ? 'storage/'.$avatar : 'assets/img/avatar/default.jpg';    
+                            ?>
+                            <img src="" alt="..." class="" id="avatar-img-side-header" width="40" height="40">
                         </div>
                         <div class="flex-grow-1 ms-3">
-                            <h4 class="mb-0">Ellie Tucker</h4>
-                            <p class="card-text">ellie.tucker@dashly.com</p>
+                            <h4 class="mb-0"><?=Auth::user()->name ?? '' ?></h4>
+                            <p class="card-text"><?=Auth::user()->email ?? '' ?></p>
                         </div>
                     </div>
                 </div>
                 <hr class="dropdown-divider">
                 <!-- Dropdown -->
-                <div class="dropdown dropend">
+                {{-- <div class="dropdown dropend">
                     <a class="dropdown-item dropdown-toggle" href="javascript: void(0);" id="statusDropdown" data-bs-toggle="dropdown" aria-expanded="false" data-bs-offset="-16,10">Set status
                     </a>
                     <div class="dropdown-menu dropdown-menu-end navbar-dropdown-menu navbar-dropdown-menu-borderless navbar-dropdown-sub-menu" aria-labelledby="statusDropdown">
@@ -201,14 +204,19 @@
                         <a class="dropdown-item" href="javascript: void(0);">Reset status
                         </a>
                     </div>
-                </div>
+                </div> --}}
                 <!-- End Dropdown -->
                 <a class="dropdown-item" href="/Dashboard-Profile-Account">Profile & account</a>
                 
                 <hr class="dropdown-divider">
-                <a class="dropdown-item" href="javascript: void(0);">Sign out</a>
+                <form action="{{route('logout')}}" method="POST">
+                    @csrf
+                    <button type="submit" class="dropdown-item">Sign out</button>
+                    
+                </form>
             </div>
         </div>
         <!--End of Profile--->
     </div>
+    <script src="{{asset('assets/js/admin/UI/ui.js')}}"></script>
 </header>

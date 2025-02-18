@@ -109,6 +109,11 @@ class DashboardController extends Controller
             ->get();
     }
 
+    public function requestCount(){
+
+        return $this->dashboardService->requestCount('pending');
+    }
+
     public function test(){
         $sendMoneyFee = fees::where('transaction_type', 'send_money')->value('amount'); 
         $externalApiFee = fees::where('transaction_type', 'external_api')->value('amount');
@@ -127,6 +132,8 @@ class DashboardController extends Controller
             'transaction_type' => $transactionType,
         ]);
     }
+
+
 
 
 // public function getBalanceData()

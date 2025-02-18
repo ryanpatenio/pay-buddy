@@ -17,6 +17,7 @@ class UserDetails extends Model
         'zip_code',
         'country',
         'phone_number',
-        'overview'
+        'overview',
+        'img_url'
     ];
 }

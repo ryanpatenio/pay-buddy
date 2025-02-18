@@ -59,6 +59,7 @@ class UserController extends Controller
             return json_message(EXIT_BE_ERROR,'Failed to fetch email');
         }
     }
+
     public function updateEmail(Request $request){
         $request->validate([
             'user_email' => 'bail|sometimes|required|string|email|unique:users,email,' . $request->id,
@@ -154,7 +155,7 @@ class UserController extends Controller
         }
 
     }
-    
+ 
 
     public function showUserDetails($id){
         if(!$id || empty($id)){

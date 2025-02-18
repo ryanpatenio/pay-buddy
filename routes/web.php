@@ -24,7 +24,7 @@ use Illuminate\Support\Facades\Route;
 */
 
 
-#post Routes
+#User Registration and Authentication
 Route::post('/register',[AuthController::class,'register'])->name('process-register');
 Route::post('/login',[AuthController::class,'login'])->name('process-login');
 
@@ -54,7 +54,7 @@ Route::middleware(['auth'])->group(function(){
         Route::get('/Notifications-all',[NotificationController::class,'allNotifications']);
         
         #Profile
-        Route::get('/Profile-Account',[ProfileController::class,'index']);
+        Route::get('/Profile-Account',[ProfileController::class,'index_user']);
         Route::patch('/Profile-update',[PRofileController::class,'updateBasicInfo']);
         Route::get('/Profile-email',[ProfileController::class,'getEmail']);
         Route::patch('/Profile-update-email',[ProfileController::class,'updateEmail']);
@@ -124,6 +124,19 @@ Route::middleware(['auth'])->group(function(){
         Route::post('/Dashboard-user-activate',[UserController::class,'activateUser']);
         Route::post('/Dashboard-Users-action-status',[UserController::class,'setUserStatus']);
 
+        #ADMIN Profile
+        Route::get('/Dashboard-Profile-Account',[ProfileController::class,'index_admin']);
+        Route::get('/Dashboard-profile-details',[ProfileController::class,'myDetails']);
+        Route::get('/Dashboard-profile-email',[ProfileController::class,'myEmail']);
+        Route::patch('/Dashboard-user-updateDetails',[ProfileController::class,'updateBasicInfo']);
+        Route::patch('/Dashboard-profile-upEmail',[Profilecontroller::class,'updateEmail']);
+        Route::patch('/Dashboard-profile-pass-update',[ProfileController::class,'updateProfilePassword']);
+        Route::post('/Dashboard-profile-upload-avatar',[ProfileController::class,'uploadAvatar']);
+
+        #UI
+        Route::get('/UI-dashboard-admin-avatar',[ProfileController::class,'fetchAvatar']);
+        Route::get('/UI-admin-request',[DashboardController::class,'requestCount']);
+
         #API keys
         Route::get('/Dashboard-Api-keys',[ApiKeysController::class,'index_admin']);
         Route::post('/Api-Keys-disable',[ApiKeysController::class,'setDisable']);
@@ -132,10 +145,7 @@ Route::middleware(['auth'])->group(function(){
             return view('admin.logs');
         
         });
-        Route::get('/Dashboard-Profile-Account',function(){
-            return view('admin.profileAccount');
-        
-        });
+       
         
         Route::get('/Dashboard-viewUser',function(){
             return view('admin.users.viewUser');
