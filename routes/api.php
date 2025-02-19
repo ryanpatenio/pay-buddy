@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\ApiKeysController;
+use App\Http\Controllers\ApiRequestController;
 use App\Http\Controllers\AuthController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -18,7 +19,7 @@ use Illuminate\Support\Facades\Route;
 Route::middleware('validateApiKey')->group(function(){
 
     Route::get('/check-api',[ApiKeysController::class,'test']);
-
+    Route::get('/check-balance',[ApiRequestController::class,'checkBalance']);
 
 });
 

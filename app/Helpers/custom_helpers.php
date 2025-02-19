@@ -27,6 +27,9 @@ if (!defined('EXIT_DEFAULT')) {
 if (!defined('EXIT_404')) {
     define('EXIT_404', 'EXIT_404'); // Maps to HTTP 400
 }
+if (!defined('EXIT_401')) {
+    define('EXIT_401', 'EXIT_401'); // Maps to HTTP 400
+}
 define('STATUS_ENABLED', 0);
 define('STATUS_DISABLED', 1);
 
@@ -59,6 +62,9 @@ if (!function_exists('json_message')) {
                 break;
             case 'EXIT_404':
                 $statusCode = 404; // Internal Server Error (suitable for backend errors)
+                break;
+            case 'EXIT_401':
+                $statusCode = 401; // Internal Server Error (suitable for backend errors)
                 break;
     
             default:

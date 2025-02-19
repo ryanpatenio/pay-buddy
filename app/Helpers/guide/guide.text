@@ -50,3 +50,9 @@ $user->password = bcrypt('password');
 $user->save();
 
 echo $user->id; // You can retrieve the inserted ID
+
+
+#conversion array to object
+// $userArray = ['name' => 'John', 'email' => 'john@example.com']; // Array
+// $userObject = (object) $userArray; // Object
+// echo $userObject->name; // Access as object

@@ -20,7 +20,7 @@ class ValidateApiKey
     public function handle(Request $request, Closure $next)
     {
 
-        $apiKey = $request->header('api_key'); // Retrieve the API key from the request header
+        $apiKey = $request->header('X-API-Key'); // Retrieve the API key from the request header
 
         if (!$apiKey) {
             return response()->json(['error' => 'Unauthorized'], 401);
