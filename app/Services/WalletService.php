@@ -85,7 +85,12 @@ class WalletService
         return true;
         
     }
-    
+    /**
+     * Get user Fee
+     * @param transaction type 'external api ,send_money
+     * @return int
+     * 
+     */
     public function getFee($transactionType,$currency = 'PHP'){
           
         $fee = DB::table('fees')
@@ -109,7 +114,7 @@ class WalletService
       return  Str::uuid();
     }
 
-    #generate clien_ref every Transactions for API purposes
+    #generate client_ref every Transactions for API purposes
     public function genClient_ref(){
        return 'REF-' . Auth::id() . '-' . time();
     }

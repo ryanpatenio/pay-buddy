@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Models\api_logs;
 use Exception;
 
 class ApiLogsServices{
@@ -11,7 +12,12 @@ public function createLogs( array $data){
     $this->validateData($data);
 
     try {
-       
+     api_logs::create([
+        'api_key_id' => $data['api_key_id'],
+        'request_data' => json_encode($data['request_data']),
+        'response_data' => json_encode($data['response_data']),
+        'status'       => $data['response_data']['status']
+     ]);
 
     } catch (\Throwable $th) {
         handleException($th,'Failed to create Logs for APi');
@@ -31,7 +37,7 @@ private function validateData(array $data) :void {
     if(empty($data['request_data'])){
         throw new Exception('request data required');
     }
-    if(empty($data['response_date'])){
+    if(empty($data['response_data'])){
         throw new Exception('response data required');
     }
 }

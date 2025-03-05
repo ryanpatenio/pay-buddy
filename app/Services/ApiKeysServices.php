@@ -4,14 +4,22 @@ namespace App\Services;
 
 use App\Models\Api_keys;
 use App\Models\currency;
+use App\Models\Transactions;
 use App\Models\Wallets;
 use Carbon\Carbon;
 use Exception;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
 
 class ApiKeysServices{
+
+    private $walletService;
+    public function __construct(WalletService $walletServices)
+    {
+        $this->walletService = $walletServices;
+    }
 
 /**
  * Generate random string
@@ -122,7 +130,7 @@ public function showUserApiKey(){
   * @param string Currency Code  ex : PHP
   * @return Object currencies table [id,code,name,symbols,img]
   */
- protected function convertCurrencyCodeIntoId( string $currency_code){
+ public function convertCurrencyCodeIntoId( string $currency_code){
     if(empty($currency_code)){
         throw new Exception('currency id is required');
     }
@@ -131,12 +139,269 @@ public function showUserApiKey(){
         ->first();
 
  }
+ /**
+  * Validate Credit Data
+  *@param array currency id,amount,user id, client ref
+  *@return void
+  *@throws Exceptions if validation fails
+  */
 
- protected function validateCredit(array $data){
-    if(empty($data[''])){
-        throw new Exception('');
+ protected function validateCredit(array $data) {
+     /**
+     * Expects payload
+     * user id
+     * currency id
+     * amount
+     * Client Ref
+     * api id for recordings
+     */
+       
+    if(empty($data['user_id'])){
+        throw new Exception('Id is required');
+    }
+    if(empty($data['client_ref'])){
+        throw new Exception('Client Ref is required!');
+    }
+    if(empty($data['amount'])){
+        throw new Exception('Currency is required!');
+    }
+    if(empty($data['api_key_id'])){
+        throw new Exception('api key id is required!');
+    }
+    if(empty($data['wallet_id'])){
+        throw new Exception('Wallet id is required!');
+    }
+    if(empty($data['fee'])){
+        throw new Exception('Fee is required!');
+    }
+    if(empty($data['description'])){
+        throw new Exception('Description is required!');
     }
  }
+
+ /**
+  * Create Transactions Credit by api request
+  *@param array data
+  *@return array 'transaction,amount,transaction_type,fee,status,
+  */
+ public function createCredit(array $data){
+   $fee = '0';
+   $transactionType = 'Credit, Transaction made via External Api';
+
+    try {
+        //Generate Transaction Code
+        $transaction_code = $this->walletService->generateTransactionID();
+
+       return  DB::transaction(function() use($data,$transaction_code,$fee,$transactionType){
+
+          $transactions =  Transactions::create([
+                'wallet_id' => $data['wallet_id'],
+                'api_key_id' => $data['api_key_id'],
+                'transaction_id' => $transaction_code,
+                'client_ref_id'     => $data['client_ref'],
+                'type'              => 'credit',
+                'amount'          => $data['amount'],
+                'fee'             => $fee,
+                'description'     => $transactionType,
+                'currency_id'     => $data['currency_id'],
+                'status'          => 'success'
+            ]);
+
+            #add credit to user wallets
+            $this->updateWalletBalance($data['wallet_id'],$data['amount']);
+            #fetch new User wallet Balance
+            $newUserWalletBalance =   $this->getUserWalletBalance($data['currency_id'],$data['user_id']);
+
+            $userWalletBalance = [
+                'user_id' => $newUserWalletBalance->user_id,
+                'account_number'=> $newUserWalletBalance->account_number,
+                'newBalance' => $newUserWalletBalance->balance,
+                'transaction_date' => $newUserWalletBalance->updated_at
+            ];
+            $responseData = [
+                'transaction_id' => $transactions->transaction_id,
+                'currency'       => $data['currency_code'],
+                'client_ref_id'  => $transactions->client_ref_id,
+                'type'           => 'credit',
+                'fee'            => $transactions->fee,
+                'description'    => $transactions->description,
+                'amount'         => $transactions->amount,
+                'updatedBalance' => $userWalletBalance,
+                'status'         => $transactions->status
+            ];
+         
+
+            return $responseData;
+         });
+
+       
+    } catch (\Throwable $th) {      
+        handleException($th,'Failed to create Credit Transactions');
+    }
+
+ }
+
+ /**
+  * Create Debit
+  *@param array Data
+  *@return array response data [transaction_id,client_ref,currency,type,fee,description,amount,updateBalance,status]
+  *@throws Exception failed to create debit
+  */
+ public function createDebit(array $data){
+    //validate data
+    $this->validateDebitData($data);
+   
+    try {
+       return DB::transaction(function() use($data){
+         //Generate Transaction Code
+         $transaction_code = $this->walletService->generateTransactionID();
+
+         $transactions =  Transactions::create([
+            'wallet_id' => $data['wallet_id'],
+            'api_key_id' => $data['api_key_id'],
+            'transaction_id' => $transaction_code,
+            'client_ref_id'     => $data['client_ref'],
+            'type'              => 'debit',
+            'amount'          => $data['amount'],
+            'fee'             => $data['fee'],
+            'description'     => 'Debit, Transaction made via External Api',
+            'currency_id'     => $data['currency_id'],
+            'status'          => 'success'
+        ]);
+        #update balance
+        $this->updateWalletBalance($data['wallet_id'],-($data['amount'] + $data['fee']));
+        
+        #fetch new User wallet Balance
+        $newUserWalletBalance =   $this->getUserWalletBalance($data['currency_id'],$data['user_id']);
+
+        $userWalletBalance = [
+            'user_id' => $newUserWalletBalance->user_id,
+            'account_number'=> $newUserWalletBalance->account_number,
+            'newBalance' => $newUserWalletBalance->balance,
+            'transaction_date' => $newUserWalletBalance->updated_at
+        ];
+        $responseData = [
+            'transaction_id' => $transactions->transaction_id,
+            'currency'       => $data['currency_code'],
+            'client_ref_id'  => $transactions->client_ref_id,
+            'type'           => 'debit',
+            'fee'            => $transactions->fee,
+            'description'    => $transactions->description,
+            'currentBalance' => $data['currentBalance'],
+            'amount'         => $transactions->amount,
+            'amount_to_be_deducted' => $data['amount'] + $data['fee'],
+            'updatedBalance' => $userWalletBalance,
+            'status'         => $transactions->status
+        ];
+
+        return $responseData;
+       });
+    } catch (\Throwable $th) {
+        return handleException($th,'Failed to create Debit');
+    }
+
+ }
+
+ /**
+  * validate Debit array Data
+  * @param array
+  * @return void
+  * @throws Exception if fail
+  */
+ private function validateDebitData(array $data): void{
+
+    if(empty($data['wallet_id'])){
+        throw new Exception('wallet id not found!');
+    }
+    if(empty($data['api_key_id'])){
+        throw new Exception('api id not found!');
+    }
+    if(empty($data['client_ref'])){
+        throw new Exception('client ref required');
+    }
+    if(empty($data['amount']) || !is_numeric($data['amount'])){
+        throw new Exception('amount required or not Numeric');
+    }
+    if(empty($data['user_id'])){
+        throw new Exception('user id is required');
+    }
+    if(empty($data['fee'])){
+        throw new Exception('fee is required');
+    }
+    if(empty($data['currency_id'])){
+        throw new Exception('currency id is required!');
+    }
+    if(empty($data['currency_code'])){
+        throw new Exception('currency code is required');
+    }
+    if(empty($data['currentBalance'])){
+        throw new Exception('Current Balance is required');
+    }
+ }
+
+ /**
+  * Get api id by using api key provided
+  *@param String Api key from X-API-KEY not hash
+  *@return object ['id,user_id,api_key,status,expires_at']
+  *@throws Exception if no api key found!
+  */
+ public function getApiId(string $apiKey){
+    if(empty($apiKey)){
+        throw new Exception('api key not found!');
+    }
+    $hash_api_key = hash('sha256',$apiKey);
+    $api =  Api_keys::where('api_key',$hash_api_key)->first();
+    if(!$api){
+        throw new Exception('api key id not found!');
+    }
+
+    return $api;
+
+ }
+/**
+ * Get User Wallet Balance
+ * @param int currency_id, user_id
+ * @return object ['id,user_id,currency_id,account_number,balance']
+ * @throws Exception if no user wallet found
+ */
+ public function getUserWalletBalance(int $currency_id, int $user_id){
+    $walletBalance = Wallets::where('user_id',$user_id)
+    ->where('currency_id',$currency_id)
+    ->first();
+    if(!$walletBalance){
+        throw new Exception('Failed to fetch User Wallet Balance!');
+    }
+    return $walletBalance;
+ }
+  /**
+     * Update wallet balance.
+     *
+     * @param int $walletId
+     * @param float $amount
+     */
+    protected function updateWalletBalance(int $walletId, float $amount): void
+    {
+        Wallets::where('id', $walletId)->increment('balance', $amount);
+    }
+
+    /**
+     * Checks Transaction if Exist using Client Ref
+     * @return boolean true false
+     */
+    public function isTransactionExist(int $wallet_id, string $client_ref): bool{
+        if (empty($wallet_id) || empty($client_ref)) {
+            return false;
+        }
+
+        $check = Transactions::where('wallet_id',$wallet_id)
+            ->where('client_ref_id',$client_ref)
+            ->exists();
+        if(!$check){
+            return false;
+        }
+        return true;
+    }
+    
 
 }
 
