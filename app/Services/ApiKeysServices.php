@@ -16,15 +16,17 @@ use Illuminate\Support\Str;
 class ApiKeysServices{
 
     private $walletService;
-    public function __construct(WalletService $walletServices)
+    private $transactionService;
+    public function __construct(WalletService $walletServices, TransactionServices $transactionServices)
     {
         $this->walletService = $walletServices;
+        $this->transactionService = $transactionServices;
     }
 
 /**
  * Generate random string
  * 
- * @return String $apikey
+ * @return String apikey
  */
 public function generateApiKey(){
 
@@ -270,7 +272,8 @@ public function showUserApiKey(){
         ]);
         #update balance
         $this->updateWalletBalance($data['wallet_id'],-($data['amount'] + $data['fee']));
-        
+        #Store Earnings
+        $this->transactionService->storeEarnings($transactions->id,$data['user_id'],$data['fee']);
         #fetch new User wallet Balance
         $newUserWalletBalance =   $this->getUserWalletBalance($data['currency_id'],$data['user_id']);
 
@@ -347,12 +350,14 @@ public function showUserApiKey(){
   */
  public function getApiId(string $apiKey){
     if(empty($apiKey)){
-        throw new Exception('api key not found!');
+       // throw new Exception('api key not found!');
+        return null;
     }
     $hash_api_key = hash('sha256',$apiKey);
     $api =  Api_keys::where('api_key',$hash_api_key)->first();
     if(!$api){
-        throw new Exception('api key id not found!');
+        //throw new Exception('api key id not found!');
+        return null;
     }
 
     return $api;
@@ -369,7 +374,8 @@ public function showUserApiKey(){
     ->where('currency_id',$currency_id)
     ->first();
     if(!$walletBalance){
-        throw new Exception('Failed to fetch User Wallet Balance!');
+        //throw new Exception('Failed to fetch User Wallet Balance!');
+        return null;
     }
     return $walletBalance;
  }
@@ -390,7 +396,8 @@ public function showUserApiKey(){
      */
     public function isTransactionExist(int $wallet_id, string $client_ref): bool{
         if (empty($wallet_id) || empty($client_ref)) {
-            return false;
+            throw new Exception('wallet id or client ref is required');
+            return true;
         }
 
         $check = Transactions::where('wallet_id',$wallet_id)

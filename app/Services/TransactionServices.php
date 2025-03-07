@@ -289,11 +289,12 @@ class TransactionServices
      * @param float $fee
      * @throws Exception
      */
-    protected function storeEarnings(int $transactionId, $user_id, float $fee): void
+    public function storeEarnings(int $transactionId, $user_id, float $fee): void
     {
         // Logic to store earnings
         if (!$this->walletService->storeInEarnings($transactionId, $user_id, $fee)) {
             throw new Exception('Failed to store earning information.');
+            
         }
     }
 

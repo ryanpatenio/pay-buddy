@@ -33,8 +33,8 @@ class AuthController extends Controller
         // Get credentials from the request
         $credentials = $request->only('email', 'password');
         $remember = $request->has('remember');
-    
-        //condition to check if the user's status is 0 (active)
+        try {
+            //condition to check if the user's status is 0 (active)
         if (Auth::attempt(['email' => $credentials['email'], 'password' => $credentials['password'], 'status' => 0], $remember)) {
             $user = Auth::user();
     
@@ -65,8 +65,13 @@ class AuthController extends Controller
             return redirect()->back()->withInput()->with('error', 'Your account has been deactivated. Please contact support.');
         }
     
-        // If the credentials are invalid or the account is not found
-        return redirect()->back()->withInput()->with('error', 'Invalid credentials or account not found.');
+        } catch (\Throwable $th) {
+            
+            // If the credentials are invalid or the account is not found
+            return redirect()->back()->withInput()->with('error', 'Invalid credentials or account not found.');
+        }
+    
+       
     }
     
 

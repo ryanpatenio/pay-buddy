@@ -21,7 +21,8 @@ return new class extends Migration
             $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
 
             $table->decimal('amount', 10, 2);
-            $table->date('earned_at')->default(DB::raw('CURRENT_DATE')); // Store date for grouping
+            $table->date('earned_at')->useCurrent();
+            // $table->date('earned_at')->default(DB::raw('CURRENT_DATE')); // Store date for grouping
 
             $table->timestamps();
         });

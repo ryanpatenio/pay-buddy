@@ -220,6 +220,9 @@ class ApiRequestController extends Controller
 
     try {
         $response = $this->apiServices->createDebit($data);
+        if(!$response){
+            return json_message(EXIT_BE_ERROR,'error');
+        }
         
         $useLogs = [
             'api_key_id' => $apiObj->id,
