@@ -72,6 +72,9 @@ Route::middleware(['auth'])->group(function(){
             Route::get('/Api-keys-gen',[ApiKeysController::class,'generateKey']);
             Route::post('/Api-keys-create',[ApiKeysController::class,'createApiKey']);
             Route::post('/Api-keys-regenerate',[ApiKeysController::class,'regenerateNewApiKey']);
+            Route::get('/Api-keys-setup',function(){
+                return view('users.api_keys.api_setup');
+            });
         });
 
         #Xpress Send

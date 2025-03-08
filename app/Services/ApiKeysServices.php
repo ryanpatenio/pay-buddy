@@ -43,10 +43,15 @@ public function generateApiKey(){
  * @return array Users api keys Data
  */
 public function showUserApiKey(){
-    return Api_keys::where('user_id', Auth::id())
+     $result =  Api_keys::where('user_id', Auth::id())
     ->where('status', 'active')
     ->whereDate('expires_at', '>', Carbon::today()) // Check for non-expired keys
-    ->get();
+    ->get()
+    ->map(function ($data){
+        $data->date_created = Carbon::parse($data->created_at)->format('F j, Y g:i A');
+        return $data;
+    });
+    return $result;
 }
 
 /**

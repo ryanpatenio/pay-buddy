@@ -94,7 +94,7 @@
                                         <span class="legend-circle <?=$key->status === "active" ? "bg-success" : 'bg-danger' ?> "></span>
                                        <?=$key->status ?? '' ?>
                                     </td>
-                                    <td class="created" data-created="1642550400">01.19.22</td>
+                                    <td class="created" data-created="<?=$key->created_at ?>"><?=$key->date_created ?? '' ?></td>
                                     <td>
                                         <!-- Dropdown -->
                                         <div class="dropdown float-end">
@@ -114,6 +114,8 @@
                                                 </li> --}}
                                                 <li>
                                                     <a class="dropdown-item" id="regenerate-btn" data-id="<?=$key->id ?? 0 ?>" href="javascript: void(0);">Regenerate
+                                                    </a>
+                                                    <a class="dropdown-item" id="view-btn" data-id="<?=$key->id ?? 0 ?>" href="/Api-keys-setup">View Details
                                                     </a>
                                                 </li>
                                               

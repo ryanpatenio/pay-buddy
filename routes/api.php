@@ -25,7 +25,7 @@ Route::middleware('validateApiKey')->group(function(){
 
 });
 
-
+#for future purposes
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });

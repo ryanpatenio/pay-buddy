@@ -30,6 +30,12 @@ class ApiRequestController extends Controller
     if (!$apiKey) {
         return response()->json(['error' => 'API key is required'], 400);
     }
+    $validator = Validator::make($request->all(),[
+        'currency'=> 'required|string'
+    ]);
+    if($validator->fails()){
+        return json_message(EXIT_FORM_NULL,'validations errors',$validator->errors());
+    }
 
     // Retrieve the user associated with the API key
     $user = $this->apiServices->getUserByApiKey($apiKey);
