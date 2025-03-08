@@ -103,87 +103,94 @@
         }
     </style>
 </head>
-<body class="d-flex align-items-center justify-content-center vh-100">
+<body class="">
     {{-- /@dump(session()->all()) --}}
 
+   <div class="container d-flex align-items-center justify-content-center  min-vh-100">
 
-    <div class="card shadow-sm">
-        <div class="card-body">
-            <!-- PayBuddy Header -->
-            <h1 class="paybuddy-header">PayBuddy</h1>
-            
-            <h3 class="card-title text-center mb-4" style="font-weight: 600; font-size: 1.4rem; color: #333;">Welcome Back!</h3>
-            <p class="text-center mb-4" style="color: #666;">Please log in to continue using your account.</p>
-
-            <!-- Flash Messages -->
-            @if (session('success'))
-            <div class="alert alert-success">
-                {{ session('success') }}
-            </div>
-            @endif
-
-            @if (session('error'))
-                <div class="alert alert-danger">
-                    {{ session('error') }}
+    <div class="row mt-5 mb-5">
+        <div class="col d-flex col-lg-12">
+            <div class="card shadow-sm">
+                <div class="card-body">
+                    <!-- PayBuddy Header -->
+                    <h1 class="paybuddy-header mt-5">PayBuddy</h1>
+                    
+                    <h3 class="card-title text-center mb-4" style="font-weight: 600; font-size: 1.4rem; color: #333;">Welcome Back!</h3>
+                    <p class="text-center mb-4" style="color: #666;">Please log in to continue using your account.</p>
+        
+                    <!-- Flash Messages -->
+                    @if (session('success'))
+                    <div class="alert alert-success">
+                        {{ session('success') }}
+                    </div>
+                    @endif
+        
+                    @if (session('error'))
+                        <div class="alert alert-danger">
+                            {{ session('error') }}
+                        </div>
+                    @endif
+        
+                    <form method="POST" action="{{route('process-login')}}" id="login">
+                      @csrf <!-- CSRF token for Laravel -->
+                     
+                      <div class="mb-4">
+                            <label for="email" class="form-label">Email Address</label>
+                            <input type="email" class="form-control @error('email') is-invalid @enderror" 
+                                value="{{ old('email', request()->cookie('email')) }}" 
+                                id="email" name="email" placeholder="Enter your email" 
+                                required 
+                                autofocus >
+        
+                            @error('email')
+                                <span class="invalid-feedback" role="alert">
+                                    <strong>{{ $message }}</strong>
+                                </span>
+                            @enderror
+                        </div>
+                        
+                        <div class="mb-4">
+                            <label for="password" class="form-label">Password</label>
+                            <input type="password" class="form-control @error('password') is-invalid @enderror" id="password" name="password" placeholder="Enter your password" required>
+        
+                            @error('password')
+                                <span class="invalid-feedback" role="alert">
+                                    <strong>{{ $message }}</strong>
+                                </span>
+                            @enderror
+                        </div>
+                        
+                        <!-- Remember Me Checkbox -->
+                        <div class="mb-4 form-check">
+                            <input  type="checkbox" 
+                            id="remember" 
+                            name="remember" 
+                            {{ old('remember', request()->cookie('remember') ? 'checked' : '') }}
+                            >
+                            <label class="form-check-label" for="remember">Remember Me</label>
+                        </div>
+                      
+                        <button type="submit" class="btn btn-primary w-100 mb-3">Login</button>
+                    </form>
+                    
+                    <div class="divider my-4">OR</div>
+                    
+                    <div class="d-grid">
+                        <button class="btn google-btn">
+                            <i class="bi bi-google"></i> Continue with Google
+                        </button>
+                    </div>
+                    
+                    <div class="login-footer">
+                        <span>Don't have an account? </span>
+                        <a href="{{route('register')}}" class="text-decoration-none">Register here</a>
+                    </div>
                 </div>
-            @endif
-
-            <form method="POST" action="{{route('process-login')}}" id="login">
-              @csrf <!-- CSRF token for Laravel -->
-             
-              <div class="mb-4">
-                    <label for="email" class="form-label">Email Address</label>
-                    <input type="email" class="form-control @error('email') is-invalid @enderror" 
-                        value="{{ old('email', request()->cookie('email')) }}" 
-                        id="email" name="email" placeholder="Enter your email" 
-                        required 
-                        autofocus >
-
-                    @error('email')
-                        <span class="invalid-feedback" role="alert">
-                            <strong>{{ $message }}</strong>
-                        </span>
-                    @enderror
-                </div>
-                
-                <div class="mb-4">
-                    <label for="password" class="form-label">Password</label>
-                    <input type="password" class="form-control @error('password') is-invalid @enderror" id="password" name="password" placeholder="Enter your password" required>
-
-                    @error('password')
-                        <span class="invalid-feedback" role="alert">
-                            <strong>{{ $message }}</strong>
-                        </span>
-                    @enderror
-                </div>
-                
-                <!-- Remember Me Checkbox -->
-                <div class="mb-4 form-check">
-                    <input  type="checkbox" 
-                    id="remember" 
-                    name="remember" 
-                    {{ old('remember', request()->cookie('remember') ? 'checked' : '') }}
-                    >
-                    <label class="form-check-label" for="remember">Remember Me</label>
-                </div>
-              
-                <button type="submit" class="btn btn-primary w-100 mb-3">Login</button>
-            </form>
-            
-            <div class="divider my-4">OR</div>
-            
-            <div class="d-grid">
-                <button class="btn google-btn">
-                    <i class="bi bi-google"></i> Continue with Google
-                </button>
-            </div>
-            
-            <div class="login-footer">
-                <span>Don't have an account? </span>
-                <a href="{{route('register')}}" class="text-decoration-none">Register here</a>
             </div>
         </div>
     </div>
+    
+   </div>
 
     <!-- Bootstrap Bundle with Popper -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js"></script>
