@@ -1,8 +1,9 @@
 PayBuddy api Features
 
-request balance
-request user transactions
+request balance -- Done
 
-credit and debit transactions
+request user transactions -- DONE
 
-auth users
+credit and debit transactions --Done
+
+auth users --Done

@@ -18,10 +18,10 @@ use Illuminate\Support\Facades\Route;
 */
 Route::middleware('validateApiKey')->group(function(){
 
-    Route::get('/check-api',[ApiKeysController::class,'test']);
     Route::get('/check-balance',[ApiRequestController::class,'checkBalance']);
     Route::post('/credit',[ApiRequestController::class,'credit']);
     Route::post('/debit',[ApiRequestController::class,'debit']);
+    Route::get('/userTransactions',[ApiRequestController::class,'userTransactions']);
 
 });
 

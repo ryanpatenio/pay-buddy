@@ -241,4 +241,33 @@ class ApiRequestController extends Controller
 
  }
 
+ public function userTransactions(Request $request){
+    $apiKey  = $request->header('X-API-Key');
+    if(!$apiKey){
+        return json_message(EXIT_401,'Invalid Api key!');
+    }
+
+    $apiObj = $this->apiServices->getApiId($apiKey);
+    if(!$apiObj){
+        return json_message(EXIT_401,'Invalid Api Key');
+    }
+
+    try {
+        $response = $this->apiServices->userTransactions($apiObj->user_id);  
+        if(!$response){
+            return json_message(EXIT_BE_ERROR,'Internal Server error!');
+        }
+
+        return json_message(EXIT_SUCCESS,'Transaction retrieved successfully',$response);
+
+    } catch (\Throwable $th) {
+        //throw $th;
+        handleException($th,'Failed to fetch user transactions by Api request');
+        return json_message(EXIT_BE_ERROR,'error');
+    }catch (\Exception $e){
+        handleException($e,'Failed to fetch user transactions by Api request');
+        return json_message(EXIT_BE_ERROR,'error');
+    }
+ }
+
 }

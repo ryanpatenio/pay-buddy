@@ -302,7 +302,7 @@ class TransactionServices
     public function showUserTransactions($status = null){
 
        /**
-        * @param status if !null return recent Transction or this Day! ELSE returns all transactions of USERS
+        * @param status if !null return recent Transaction or this Day! ELSE returns all transactions of USERS
         */
  
        // Start the query builder

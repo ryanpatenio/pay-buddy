@@ -346,11 +346,11 @@ public function showUserApiKey(){
   * Get api id by using api key provided
   *@param String Api key from X-API-KEY not hash
   *@return object ['id,user_id,api_key,status,expires_at']
-  *@throws Exception if no api key found!
+  *@throws Exception if no api key found! and null
   */
  public function getApiId(string $apiKey){
     if(empty($apiKey)){
-       // throw new Exception('api key not found!');
+        //throw new Exception('api key not found!');
         return null;
     }
     $hash_api_key = hash('sha256',$apiKey);
@@ -408,7 +408,44 @@ public function showUserApiKey(){
         }
         return true;
     }
+
+    /**
+     * User Transactions
+     * @throws Exception if empty params user id & null
+     * @return array or collection 
+     */
+    public function userTransactions(int $user_id) {
     
+        if(empty($user_id)){
+            throw new Exception('user id is empty or Invalid');
+            return null;           
+        }
+
+        $query = DB::table('transactions')
+        ->join('wallets', 'transactions.wallet_id', '=', 'wallets.id')
+        ->join('users', 'wallets.user_id', '=', 'users.id')
+        ->join('currencies', 'transactions.currency_id', '=', 'currencies.id')
+        ->where('users.id', $user_id) 
+        ->select(
+            'transactions.transaction_id',
+            'transactions.description',
+            'transactions.status',
+            'transactions.amount',
+            'transactions.fee',
+            'transactions.created_at',
+            'currencies.code',
+            'transactions.client_ref_id'
+        )
+        ->orderBy('transactions.created_at', 'DESC')
+        ->get()
+        ->map(function ($data) {
+            $data->date_created = Carbon::parse($data->created_at)->format('F j, Y g:i A');
+            return $data;
+        });
+
+        return $query;
+
+    }
 
 }
 
