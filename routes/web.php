@@ -3,6 +3,7 @@
 use App\Http\Controllers\ApiKeysController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\BankController;
+use App\Http\Controllers\CurrenciesController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\ExpressController;
 use App\Http\Controllers\NotificationController;
@@ -153,6 +154,15 @@ Route::middleware(['auth'])->group(function(){
         Route::get('/Dashboard-viewUser',function(){
             return view('admin.users.viewUser');
         
+        });
+    
+        #CURRENCIES
+        Route::get('/Currencies',[CurrenciesController::class,'index_admin']);
+        Route::post('/Currencies-create',[CurrenciesController::class,'create']);
+
+        #Bank-Partners
+        Route::get('/Bank-Partners',function(){
+            return view('admin.bankPartners.index');
         });
 
     });

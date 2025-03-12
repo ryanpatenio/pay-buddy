@@ -399,7 +399,7 @@ public function showUserApiKey(){
      * Checks Transaction if Exist using Client Ref
      * @return boolean true false
      */
-    public function isTransactionExist(int $wallet_id, string $client_ref): bool{
+    public function isTransactionExist(int $wallet_id, string $client_ref): bool {
         if (empty($wallet_id) || empty($client_ref)) {
             throw new Exception('wallet id or client ref is required');
             return true;

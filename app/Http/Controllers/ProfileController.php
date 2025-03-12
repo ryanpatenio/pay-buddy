@@ -189,7 +189,7 @@ class ProfileController extends Controller
 
         ]);
         if($validator->fails()){
-            return json_message(EXIT_FORM_NULL,'validatons error',$validator->errors());
+            return json_message(EXIT_FORM_NULL,'validations error',$validator->errors());
         }
         
         try {

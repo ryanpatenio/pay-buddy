@@ -332,8 +332,8 @@
                                            </button>
                                        </div>
                                    </td>
-                                   <td><?=$recent->amount ? $recent->amount .' ('.$recent->code.')' : 0 ?></td>
-                                   <td><?=$recent->fee ?? 0 ?></td>
+                                   <td class="key name"><?=$recent->amount ? $recent->amount .' ('.$recent->code.')' : 0 ?></td>
+                                   <td class="key"><?=$recent->fee ?? 0 ?></td>
                                    <td class="status" data-status="Active">
                                        <span class="legend-circle <?= $recent->status === 'success' ? 'bg-success' : 'bg-danger' ?>"></span>
                                        <?=$recent->status ?? '' ?>

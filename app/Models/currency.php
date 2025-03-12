@@ -9,7 +9,7 @@ class currency extends Model
 {
     use HasFactory;
     
-    protected $fillable = ['code', 'name', 'symbol'];
+    protected $fillable = ['code', 'name', 'symbol','img_url'];
     protected $table = 'currencies';
 
     public function wallets (){
