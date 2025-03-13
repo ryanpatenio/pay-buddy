@@ -8,7 +8,7 @@
         <!-- Theme CSS -->
         
         <link rel="stylesheet" href="{{URL::asset('assets/css/theme.bundle.css')}}" id="stylesheetLTR">
-      
+        <link rel="stylesheet" href="{{asset('assets/css/loader.css')}}">
         
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
         <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;600;700;800&display=swap">
@@ -156,14 +156,24 @@
         <script src="{{asset('assets/swal/sweet.js')}}"></script> {{--Sweet alert Lib--}}
         <script src="{{asset('assets/js/custom_helper/helper.js')}}"></script>  {{--helper--}}
 
+        
+
     </head>
     <body>
+         <!-- Loading Spinner -->
+        <div id="loading-container" style="display: none !important;">
+            <div id="loading-spinner" class="spinner-border text-primary" role="status">
+            <span class="visually-hidden">Loading...</span>
+            </div>
+        </div> 
+        
         {{-- Sidebar --}}
         @include('admin.layouts.nav')
 
         <!-- MAIN CONTENT -->
         <main>
             @include('admin.layouts.header')
+           
 
             @yield('content')
         </main>

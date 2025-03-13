@@ -159,6 +159,8 @@ Route::middleware(['auth'])->group(function(){
         #CURRENCIES
         Route::get('/Currencies',[CurrenciesController::class,'index_admin']);
         Route::post('/Currencies-create',[CurrenciesController::class,'create']);
+        Route::get('/Currency-get/{id}',[CurrenciesController::class,'getCurrency']);
+        Route::patch('/Currency-update',[CurrenciesController::class,'updateCurrency']);
 
         #Bank-Partners
         Route::get('/Bank-Partners',function(){

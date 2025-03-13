@@ -16,6 +16,14 @@ function msgThenRedirect($text ="",$msg_type ="", _url){
 	});
 }
 
+
+const toggleLoader = (show = true) => {
+  if(show) {
+    $('#loading-container').show();
+  } else {
+    $('#loading-container').attr('style', 'display: none !important');
+  }
+}
 const animateBtn = (time,btn_name,btn_restore_text) => {
     btn_name.prop('disabled', true);
     btn_name.html('<i class="fa fa-spinner fa-spin"></i> Processing...');

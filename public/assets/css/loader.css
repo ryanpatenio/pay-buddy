@@ -1,0 +1,30 @@
+/* Center the loader on the screen */
+body #loading-container {
+  display: none !important;
+  position: fixed !important; /* Fixed position to cover the entire screen */
+  top: 0 !important;
+  left: 0 !important;
+  width: 100% !important;
+  height: 100% !important;
+  background: rgba(53, 52, 52, 0.8) !important; /* Semi-transparent background */
+  display: flex !important;
+  justify-content: center !important; /* Center horizontally */
+  align-items: center !important; /* Center vertically */
+  z-index: 9999 !important; /* Ensure it's on top of other elements */
+}
+
+.hid {
+  display: none !important;
+}
+
+/* Optional: Add animation to the spinner */
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+#loading-spinner {
+  width: 5rem;
+  height: 5rem;
+  animation: spin 1s linear infinite; /* Add spinning animation */
+}

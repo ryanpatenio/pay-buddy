@@ -32,7 +32,7 @@
                         </h2>
                         <input class="form-control list-fuzzy-search mw-md-300px ms-md-auto mt-5 mt-md-0 mb-3 mb-md-0" type="search" placeholder="Search">
                         <!-- Button -->
-                        <button type="button" class="btn btn-primary ms-md-4" data-bs-toggle="modal" data-bs-target=".userModal">
+                        <button type="button" class="btn btn-primary ms-md-4" data-bs-toggle="modal" data-bs-target=".addModal">
                             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" height="14" width="14" class="me-1">
                                 <path d="M0,12a1.5,1.5,0,0,0,1.5,1.5h8.75a.25.25,0,0,1,.25.25V22.5a1.5,1.5,0,0,0,3,0V13.75a.25.25,0,0,1,.25-.25H22.5a1.5,1.5,0,0,0,0-3H13.75a.25.25,0,0,1-.25-.25V1.5a1.5,1.5,0,0,0-3,0v8.75a.25.25,0,0,1-.25.25H1.5A1.5,1.5,0,0,0,0,12Z" style="fill: currentColor"/>
                             </svg>
@@ -52,15 +52,15 @@
                                 </th>
                                 
                                 <th>
-                                    <a href="javascript: void(0);" class="text-muted list-sort" data-sort="key">Name
+                                    <a href="javascript: void(0);" class="text-muted list-sort" data-sort="key">Code
                                     </a>
                                 </th>
                                 <th>
-                                    <a href="javascript: void(0);" class="text-muted list-sort" >Role
+                                    <a href="javascript: void(0);" class="text-muted list-sort" >Name
                                     </a>
                                 </th>
                                 <th>
-                                    <a href="javascript: void(0);" class="text-muted list-sort" data-sort="status">Status
+                                    <a href="javascript: void(0);" class="text-muted list-sort" data-sort="status">Symbol
                                     </a>
                                 </th>
                                 <th>
@@ -71,7 +71,25 @@
                             </tr>
                         </thead>
                         <tbody class="list">
-
+                            <?php
+                            $i = 1;
+                            foreach ($Currencies as $cur) {
+                               ?>
+                                <tr>
+                                    <td><?=$i; ?></td>
+                                    <td><?=$cur->code ?? '' ?></td>
+                                    <td><?=$cur->name ?? '' ?></td>
+                                    <td><?=$cur->symbol ?? '' ?></td>
+                                    <td><?php echo $cur->created_at->format('F j, Y,  h : i A'); ?></td>
+                                    <td>
+                                        <button type="button" class="btn btn-sm btn-secondary btn-md-sm"id="edit-btn" data-id="<?=$cur->id ?? 0 ?>" > Edit</button>
+                                        <button type="button" class="btn btn-sm btn-primary btn-md-sm"id="edit-btn-img" data-id="<?=$cur->id ?? 0 ?>" > Change Image</button>                               
+                                    </td>
+                                </tr>
+                            <?php   
+                           $i++; }
+                                
+                            ?>
                          
                         </tbody>
                     </table>
@@ -87,7 +105,8 @@
     <!-- / .row -->
 </div>
 
-@include('admin.currencies.modal.add');
+@include('admin.currencies.modal.add')
+@include('admin.currencies.modal.edit')
 <script src="{{asset('assets/js/admin/currencies/currencies.js')}}"></script>
 
 @endSection
