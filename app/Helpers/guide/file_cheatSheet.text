@@ -1,0 +1,3 @@
+ $file = $request->file('img_url');
+$filename = 'img/currencies/' . Str::random(10) . '_' . time() . '.' . $file->getClientOriginalExtension();
+$path = $file->storeAs('public', $filename);

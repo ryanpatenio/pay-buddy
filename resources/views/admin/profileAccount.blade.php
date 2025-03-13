@@ -3,18 +3,6 @@
 @section('title','Profile | Account')
 
 @section('content')
-<style>
-    .loading {
-        display: none;
-        position: absolute;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%);
-        color: white;
-        font-size: 1.5rem;
-    }
-</style>
-
 <div class="container-fluid">
     <div class="d-flex align-items-baseline justify-content-between">
         <!-- Title -->
@@ -58,7 +46,7 @@
                             
                             ?>
                             <img src="{{asset($avatar_img)}}" alt="Profile picture" class="avatar-img" width="112" height="112">
-                            <div class="loading">Loading...</div>
+                            <div class="loading-indicator">Loading...</div>
                             <button id="save-button" class="btn btn-primary mt-3 mb-5" style="display: none;">Save</button>
                         </div>
                         

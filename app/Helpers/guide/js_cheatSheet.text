@@ -1,0 +1,14 @@
+ const serializedData = $(e.target).serialize();
+    
+//Convert the serialized string into an object
+const formData = serializeToObject(serializedData);
+       
+
+#Axios Errors
+    const {response} = error;
+    const err = response?.data;
+    
+if(response.status === 422){
+    displayFieldErrors(err.errors?.code, '', msg);
+}
+else if(response.status === 500 || err.code === "EXIT_BE_ERROR" )

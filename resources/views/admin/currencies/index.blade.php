@@ -107,6 +107,7 @@
 
 @include('admin.currencies.modal.add')
 @include('admin.currencies.modal.edit')
+@include('admin.currencies.modal.editImg')
 <script src="{{asset('assets/js/admin/currencies/currencies.js')}}"></script>
 
 @endSection

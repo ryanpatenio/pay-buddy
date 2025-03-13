@@ -4,8 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Models\currency;
 use App\Services\CurrenciesServices;
-use Illuminate\Foundation\Bootstrap\HandleExceptions;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 
 class CurrenciesController extends Controller
@@ -92,6 +92,37 @@ class CurrenciesController extends Controller
         } catch (\Throwable $th) {
            handleException($th,'Failed to update Currency');
            return json_message(EXIT_BE_ERROR,'Failed to update Currency');
+        }
+
+    }
+
+    public function updateImage(Request $request){
+        $validatedData = $request->validate([
+            'id' => 'required|numeric|exists:currencies,id',
+            'new_img' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048'
+        ]);
+
+        try {
+            $currency = currency::findOrFail($validatedData['id']);
+
+             # Delete the old image if it exists
+            if ($currency->img_url) {
+                Storage::disk('public')->delete($currency->img_url);
+            }
+
+            $file = $request->file('new_img');
+            $filename = 'img/currencies/' . Str::random(10) . '_' . time() . '.' . $file->getClientOriginalExtension();
+            $path = $file->storeAs('public', $filename);
+
+            $currency->update([
+                'img_url' => $filename
+            ]);
+
+            return json_message(EXIT_SUCCESS,'ok');
+
+        } catch (\Throwable $th) {
+            handleException($th,'Failed to update Currency Image');
+            return json_message(EXIT_BE_ERROR,'Failed to update Currency Image');
         }
 
     }
