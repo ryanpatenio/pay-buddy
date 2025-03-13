@@ -38,3 +38,22 @@ $encryptedKey = Crypt::encryptString($apiKey);
 
 // Decrypt the key
 $decryptedKey = Crypt::decryptString($encryptedKey);
+
+#format only applicable in using all() query builder
+format('F j, Y,  h : i A'); #date format
+sample # echo $bank->created_at->format('F j, Y,  h : i A');
+
+#using Map function
+return DB::table('bank_partners')
+    ->select('name', 'url', 'img_url', 'description', DB::raw('CAST(created_at AS DATETIME) as created_at'))
+    ->get();
+
+    $banks = DB::table('bank_partners')
+    ->select('name', 'url', 'img_url', 'description', 'created_at')
+    ->get()
+    ->map(function ($bank) {
+        $bank->created_at = \Carbon\Carbon::parse($bank->created_at);
+        return $bank;
+    });
+
+return $banks;

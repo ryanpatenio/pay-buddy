@@ -32,7 +32,7 @@
                         </h2>
                         <input class="form-control list-fuzzy-search mw-md-300px ms-md-auto mt-5 mt-md-0 mb-3 mb-md-0" type="search" placeholder="Search">
                         <!-- Button -->
-                        <button type="button" class="btn btn-primary ms-md-4" data-bs-toggle="modal" data-bs-target=".userModal">
+                        <button type="button" class="btn btn-primary ms-md-4" data-bs-toggle="modal" data-bs-target=".addModal">
                             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" height="14" width="14" class="me-1">
                                 <path d="M0,12a1.5,1.5,0,0,0,1.5,1.5h8.75a.25.25,0,0,1,.25.25V22.5a1.5,1.5,0,0,0,3,0V13.75a.25.25,0,0,1,.25-.25H22.5a1.5,1.5,0,0,0,0-3H13.75a.25.25,0,0,1-.25-.25V1.5a1.5,1.5,0,0,0-3,0v8.75a.25.25,0,0,1-.25.25H1.5A1.5,1.5,0,0,0,0,12Z" style="fill: currentColor"/>
                             </svg>
@@ -56,11 +56,11 @@
                                     </a>
                                 </th>
                                 <th>
-                                    <a href="javascript: void(0);" class="text-muted list-sort" >Role
+                                    <a href="javascript: void(0);" class="text-muted list-sort" >Url
                                     </a>
                                 </th>
                                 <th>
-                                    <a href="javascript: void(0);" class="text-muted list-sort" data-sort="status">Status
+                                    <a href="javascript: void(0);" class="text-muted list-sort" data-sort="status">Description
                                     </a>
                                 </th>
                                 <th>
@@ -71,7 +71,40 @@
                             </tr>
                         </thead>
                         <tbody class="list">
-
+                        <?php 
+                            $i = 1;
+                        foreach ($Banks as $bank) {
+                            ?>
+                            <tr>
+                                <td><?= $i ?? 0 ;?></td>
+                                <td><?=$bank->name ?? '' ?></td>
+                                <td><?=$bank->url ?? '' ?></td>
+                                <td><?=$bank->description ?? '' ?></td>
+                                <td>{{ \Carbon\Carbon::parse($bank->created_at)->format('F j, Y,  h : i A') }}</td>
+                                <td>
+                                    <button type="button" 
+                                        id="edit-btn" 
+                                        data-id="<?=$bank->id ?? 0 ?>"
+                                        class="btn btn-sm btn-secondary"
+                                        >Edit
+                                    </button>
+                                    <button type="button" 
+                                        id="edit-btn-api-key" 
+                                        data-id="<?=$bank->id ?? 0 ?>"
+                                        class="btn btn-sm btn-success"
+                                    >api key
+                                </button>
+                                <button type="button" 
+                                        id="edit-btn-img" 
+                                        data-id="<?=$bank->id ?? 0 ?>"
+                                        class="btn btn-sm btn-primary"
+                                    >change image
+                                </button>
+                                </td>
+                            </tr>
+                            <?php
+                          $i++;  }    
+                        ?>
                          
                         </tbody>
                     </table>
@@ -88,6 +121,7 @@
 </div>
 
 @include('admin.bankPartners.modal.add')
-<script src="{{asset('assets/js/admin/BankPartners/bank.js')}}"></script>
+@include('admin.bankPartners.modal.edit')
+<script src="{{asset('assets/js/admin/bankPartners/bank.js')}}"></script>
 
-@endsection
+@endSection

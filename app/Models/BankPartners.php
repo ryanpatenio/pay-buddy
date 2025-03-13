@@ -12,7 +12,8 @@ class BankPartners extends Model
         'name',
         'url',
         'api_key',
-        'img_url'
+        'img_url',
+        'description'
     ];
 
     // Optionally, you can encrypt the API key when storing it

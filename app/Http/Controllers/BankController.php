@@ -7,8 +7,10 @@ use App\Services\TransactionServices;
 use App\Services\WalletService;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Str;
 
 class BankController extends Controller
 {
@@ -19,6 +21,11 @@ class BankController extends Controller
     {
        $this->walletService = $walletService; 
        $this->transactionService = $transactionService;
+    }
+
+    public function index_admin(){
+        $Banks = $this->showBankPartners();
+        return view('admin.bankPartners.index',compact('Banks'));
     }
 
     
@@ -37,6 +44,76 @@ class BankController extends Controller
 
         return view('users.bankTransfer.bankTransfer',compact('userWalletBalance','transactionFee'));
     }
+
+    public function create(Request $request){
+        $validatedData = $request->validate([
+            'name' => 'required|string|max:255|unique:bank_partners,name',
+            'url'  => 'required|url',
+            'api_key' => 'required|string|max:256',
+            'img_url' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'description' => 'required|string|max:255'
+        ]);
+
+        $api_key = Crypt::encryptString($validatedData['api_key']);//encrypted api key
+        try {
+            $file = $request->file('img_url');
+            $fileName = 'img/banks/' . Str::random(10) . '_' . time() . '.' . $file->getClientOriginalExtension();
+            $path = $file->storeAs('public', $fileName);
+
+            $insert = BankPartners::create([
+                'name' => $validatedData['name'],
+                'url'  => $validatedData['url'],
+                'api_key' => $api_key,
+                'img_url' => $fileName,
+                'description' => $validatedData['description']
+            ]);
+            if(!$insert){
+                return json_message(EXIT_BE_ERROR,'failed to create new Bank');
+            }
+
+            return json_message(EXIT_SUCCESS,'ok');
+
+        } catch (\Throwable $th) {
+            handleException($th,'Failed to create new Banks');
+            return json_message(EXIT_BE_ERROR,'Failed to create new Bank');
+        }
+    }
+
+    public function updateBank(Request $request){
+
+        $bank = BankPartners::find($request->hidden_id);
+        if (!$bank) {
+            return json_message(EXIT_404, 'The selected ID is invalid.');
+        }
+        //continue validations
+        $validatedData = $request->validate([
+            'hidden_id' => 'bail|required|numeric|exists:bank_partners,id',
+            'name'      => 'required|string|max:255|unique:bank_partners,name,'.$request->hidden_id,
+            'url'       => 'required|url|unique:bank_partners,url,'.$request->hidden_id,
+            'description' => 'required|string|max:255',
+           
+        ],[
+            'hidden_id.exists' => 'The selected ID is invalid.',
+            'name.unique' => 'The name has already been taken.',
+            'url.unique' => 'The URL has already been taken.',
+        ]);
+
+        try {   
+
+            $bank->update([
+                'name' => $validatedData['name'],
+                'url'  => $validatedData['url'],
+                'description' => $validatedData['description']
+            ]);
+
+            return json_message(EXIT_SUCCESS,'ok');
+
+        } catch (\Throwable $th) {
+            handleException($th,'Failed to update  Bank!');
+            return json_message(EXIT_BE_ERROR,'Failed to update Bank!');
+        }
+    }
+    
 
     public function processBankTransfer(Request $request){
        
@@ -110,7 +187,26 @@ class BankController extends Controller
 
         // If no bank name is provided, return all rows
         return DB::table('bank_partners')
-            ->select('name', 'url', 'img_url', 'description')
+            ->select('id','name', 'url', 'img_url', 'description','created_at')
             ->get();
+    }
+
+    public function getBank(int $id){
+        if(empty($id) || !is_numeric($id)){
+            return json_message(EXIT_FORM_NULL,'Invalid Id');
+        }
+
+        try {
+
+            $bank = BankPartners::where('id',$id)
+                ->select('id','name','url','img_url','description')
+                ->first();
+
+            return json_message(EXIT_SUCCESS,'ok',$bank);
+
+        } catch (\Throwable $th) {
+            handleException($th,'Failed to fetch bank');
+            return json_message(EXIT_BE_ERROR,'Failed to fetch Bank');
+        }
     }
 }

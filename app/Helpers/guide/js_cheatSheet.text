@@ -2,6 +2,14 @@
     
 //Convert the serialized string into an object
 const formData = serializeToObject(serializedData);
+
+
+const file = updateImg[0].files[0];
+
+    if (!file) {
+        alert('Please select an image first!');
+        return;
+    }
        
 
 #Axios Errors

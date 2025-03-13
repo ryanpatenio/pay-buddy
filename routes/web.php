@@ -164,9 +164,12 @@ Route::middleware(['auth'])->group(function(){
         Route::post('/Currency-update-img',[CurrenciesController::class,'updateImage']);
 
         #Bank-Partners
-        Route::get('/Bank-Partners',function(){
-            return view('admin.bankPartners.index');
-        });
+        Route::get('/Bank-Partners',[BankController::class,'index_admin']);
+        Route::post('/Bank-create',[BankController::class,'create']);
+        Route::get('/Bank-get/{id}',[BankController::class,'getBank']);
+        Route::patch('/Bank-update',[BankController::class,'updateBank']);
+       
+        
 
     });
     
