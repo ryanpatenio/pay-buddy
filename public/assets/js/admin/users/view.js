@@ -22,10 +22,14 @@ $(document).ready(function(){
         const formData = serializeToObject(serializedData);
        
         formData.id = user_id;
+
+        toggleLoader(true);
+
         try {
             const response = await axios.post('/Dashboard-user-updateDetails',formData);
             if(response.status === 200){
-                message('User details updated successfully','success');
+                msg('User details updated successfully','success');
+                fetchBasicDetails(user_id);
             }    
 
         } catch (error) {
@@ -46,10 +50,8 @@ $(document).ready(function(){
             }else{
                 msg('Unexpected Error! Please try again!','error');
             }
-        
-
-
-
+        } finally{
+            toggleLoader(false);
         }
     });
     
@@ -62,6 +64,8 @@ $(document).ready(function(){
         formData.id = user_id;
 
         swalMessage('custom','Are you sure you want to update you Email?',async () => {
+
+            toggleLoader(true);
             try {
                 const response = await axios.patch('/Dashboard-user-upEmail',formData);
                 if(response.status === 200){
@@ -78,6 +82,8 @@ $(document).ready(function(){
                      msg('Failed to update Email. Please try again!','error');
                  }
                 
+             }finally{
+                toggleLoader(false);
              }
         });
 
@@ -92,6 +98,7 @@ $(document).ready(function(){
 
         if(validatePassword()){
             swalMessage('custom','are you sure you want to update your password?',async () => {
+                toggleLoader(true);
                 try {
                     const response = await axios.patch('/Dashboard-user-pass-update',formData);
                     if(response.status === 200){
@@ -113,7 +120,9 @@ $(document).ready(function(){
                     }
 
 
-                } 
+                } finally{
+                    toggleLoader(false);
+                }
             });
         }
     });
@@ -126,6 +135,7 @@ $(document).ready(function(){
         formData.id = user_id;
 
         swalMessage('custom','Are you sure you want to Deactivate this User?',async () => {
+            toggleLoader(true);
             try {
                 const response = await axios.post('/Dashboard-user-deactivate',formData);
                 if(response.status === 200){
@@ -151,7 +161,9 @@ $(document).ready(function(){
                     msg('Internal Server Error!','error');
                }
 
-            } 
+            } finally{
+                toggleLoader(false);
+            }
         });
 
     })
@@ -163,6 +175,7 @@ $(document).ready(function(){
         };
         
         swalMessage('custom','Are you sure you want to Activate this User?',async () => {
+            toggleLoader(true);
             try {
                 const response = await axios.post('/Dashboard-user-activate',data);
                 if(response.status === 200){
@@ -182,6 +195,8 @@ $(document).ready(function(){
                 }else{
                     msg('Internal Server Error!','error');
                 }
+            }finally{
+                toggleLoader(false);
             }
         })
     });

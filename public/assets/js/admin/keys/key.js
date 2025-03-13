@@ -17,13 +17,16 @@ $(document).ready(function(){
         }
 
         swalMessage('custom',`Are you sure you want to set Disable this (${name}) User Api key?`,async () => {
+
+            toggleLoader(true);
+
             try {
                 const response = await axios.post('/Api-Keys-disable',data);
                 if(response.status === 200){
                     
                     message(`User ${name} Api Key Set ${status} `,'success')
                 }else{
-                    console.log("unpexted Error!");
+                    console.log("unexpected Error!");
                 }
 
             } catch (error) {
@@ -39,7 +42,10 @@ $(document).ready(function(){
                     msg('Internal Server Error!','error');
                 }
 
-            } 
+            } finally{
+                res('Hide loader');
+                toggleLoader(false);
+            }
         });
    })
 

@@ -13,7 +13,7 @@ $(document).ready(function(){
      if(id === ""|| id === 0){
         return alert('ID not found!');
      }
-
+        toggleLoader(true);
         try {
             const response = await axios.get(`/Dashboard-Requests-req/${id}`);
             
@@ -36,6 +36,9 @@ $(document).ready(function(){
             alert('failed to fetch request!');
            }
            
+        }finally{
+            res('hide loader');
+            toggleLoader(false);
         }
   });
   $(document).on('click','#approve-btn',async (e) => {
@@ -49,31 +52,38 @@ $(document).ready(function(){
         };
 
         swalMessage('custom','Are you sure you want to approve this Request?',async () => {
+
+            toggleLoader(true); //loader
+
             try {
                 
                 const response = await axios.post('/Dashboard-request-approve',data);
-                if(response.status === 200){
+                if(response.status === 200){             
                     message('User Request Approved successfully!','success');
+                    formModalClose(modal,$('#requestForm'));
                 }else{
                     msg('Unexpected error, Failed to approved!','error');
                 }
             } catch (error) {
-                //console.log(error)
-                let err = error.response.data;
-                if(error.status === 422){
+                //console.log(error) 
+                res(error);             
+                const {response}  = error;
+                const err = response?.data;
+
+                if(response.status === 422){
                     msg(err.message,'error');
-                    return;
-                }
-                if(error.status === 404){
+                }else if(response.status === 404){
                     msg(err.message,'error');
-                    return;
-                }
-                if(error.status === 500){
+                }else if(response.status === 500){
                     msg(err.message,'error');
-                    return;
+                }else{
+                    msg('Internal Server Error!','error');
                 }
-                //alert('failed to approved Requests!');
-            } 
+  
+            }finally{
+                res('Hide loader');
+                toggleLoader(false);
+            }
         });
 
   })
@@ -90,25 +100,34 @@ $(document).ready(function(){
         swalMessage('custom','Are you sure you want to Decline this Request?',async () => {
             try {
                 
+                toggleLoader(true);
+
                 const response = await axios.post('/Dashboard-request-decline',data);
                 if(response.status === 200){
+                    formModalClose(modal,$('#requestForm'));
                     message('user request Declined Successfully!','success');
+                }else{
+                    msg('Internal Server Error!','error');
                 }
             } catch (error) {
-                let err = error.response.data;
-                if(error.status == 404){
-                    msg(err.message,'error');
-                    return;
-                }
+                res(error);
+                const {response} = error;
+                const err = response?.data;
 
-                if(error.status === 422){
-                    msg(err.message,'info');
-                    return;
-                }
-                if(error.status === 500){
+                if(response.status === 404){
                     msg(err.message,'error');
+                   
+                }else if(response.status === 422){
+                    msg(err.message,'info');
+                }else if(response.status === 500){
+                    msg(err.message,'error');
+                }else{
+                    msg('Internal Server Error!','error');
                 }
-                
+ 
+            }finally{
+                res('Hide Loader');
+                toggleLoader(false);
             }
         });
   })

@@ -13,10 +13,12 @@ $(document).ready(function(){
         const formData = $(e.target).serialize();
 
         swalMessage('custom','Are you sure you want to update your Profile?',async () => {
+            toggleLoader(true);
             try {
                 const response = await axios.patch('/Dashboard-user-updateDetails',formData);
                 if(response.status === 200){
-                    message('User details updated successfully','success');
+                    msg('User details updated successfully','success');
+                    fetchBasicDetails();
                 }else{
                     msg('Failed to update profile Please try again Later!','info');
                 }    
@@ -42,7 +44,8 @@ $(document).ready(function(){
                     msg('Internal Server Error!','error');
                 }
     
-    
+            }finally{
+                toggleLoader(false);
             }
         });
         
@@ -54,6 +57,7 @@ $(document).ready(function(){
         const data = $(e.target).serialize();
        
         swalMessage('custom','Are you sure you want to update you Email?',async () => {
+            toggleLoader(true);
             try {
                 const response = await axios.patch('/Dashboard-profile-upEmail',data);
                 if(response.status === 200){
@@ -75,6 +79,8 @@ $(document).ready(function(){
                      msg('Failed to update Email. Please try again!','error');
                  }
                 
+             }finally{
+                toggleLoader(false);
              }
         });
 
@@ -88,6 +94,7 @@ $(document).ready(function(){
 
         if(validatePassword()){
             swalMessage('custom','are you sure you want to update your password?',async () => {
+                toggleLoader(true);
                 try {
                     const response = await axios.patch('/Dashboard-profile-pass-update',data);
                     if(response.status === 200){
@@ -108,7 +115,9 @@ $(document).ready(function(){
                         msg('Failed to update Password','error');
                     }
 
-                } 
+                } finally{
+                    toggleLoader(false);
+                }
             });
         }
     });
@@ -138,7 +147,7 @@ $(document).ready(function(){
 
         const formData = new FormData();
         formData.append('avatar', file); // Append the file to FormData
-
+       
         try {
             loading.show(); // Show loading indicator
             saveButton.prop('disabled', true); // Disable the save button

@@ -21,6 +21,7 @@ const toggleLoader = (show = true) => {
   if(show) {
     $('#loading-container').show();
   } else {
+    console.log('Hide Loader');
     $('#loading-container').attr('style', 'display: none !important');
   }
 }

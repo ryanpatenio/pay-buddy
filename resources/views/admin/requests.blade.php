@@ -137,4 +137,4 @@
 </div>
 <script src="{{asset('assets/js/admin/requests/req.js')}}"></script>
 
-@endsection
+@endSection

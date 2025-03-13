@@ -8,7 +8,7 @@ $(document).ready(function(){
         e.preventDefault();
 
         let data = $(e.target).serialize();
-
+        toggleLoader(true);
         try {
             const response = await axios.post('/Dashboard-User-create',data);
             if(response.status === 200){
@@ -35,6 +35,8 @@ $(document).ready(function(){
             } else if (err?.code === "EXIT_BE_ERROR" || response?.status === 500) {
                 msg(err?.message ?? 'Unexpected Error: Failed to create new user!', 'error');
             }
+        }finally{
+            toggleLoader(false);
         }
     });
 
@@ -52,6 +54,7 @@ $(document).ready(function(){
        };
       
        swalMessage('custom',`Are you sure you want to ${trimStatus} this ${name} account?`,async () => {
+        toggleLoader(true);
             try {
                 const response = await axios.post('/Dashboard-Users-action-status',data)
                 if(response.status === 200){
@@ -69,6 +72,8 @@ $(document).ready(function(){
                 }else{
                     msg('Failed to update User Status!','error');
                 }
+            }finally{
+                toggleLoader(false);
             }
        });
        
