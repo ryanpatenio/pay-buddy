@@ -122,6 +122,8 @@
 
 @include('admin.bankPartners.modal.add')
 @include('admin.bankPartners.modal.edit')
+@include('admin.bankPartners.modal.editApi')
+@include('admin.bankPartners.modal.editImg')
 <script src="{{asset('assets/js/admin/bankPartners/bank.js')}}"></script>
 
 @endSection

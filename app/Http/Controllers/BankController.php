@@ -9,6 +9,7 @@ use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
 
@@ -113,6 +114,64 @@ class BankController extends Controller
             return json_message(EXIT_BE_ERROR,'Failed to update Bank!');
         }
     }
+
+    public function updateBankApiKey(Request $request){
+        $bank = BankPartners::find($request->b_id);
+        if(!$bank){
+            return json_message(EXIT_401,'Bank not found!');
+        }
+
+        $validatedData = $request->validate([
+            'b_id' => 'required|numeric',
+            'api_key' => 'required|string|max:255'
+        ]);
+
+        $encrypted_api_key = Crypt::encryptString($validatedData['api_key']);//encrypt new api key
+        try {
+            $bank->update([
+                'api_key' => $encrypted_api_key
+            ]);
+
+            return json_message(EXIT_SUCCESS,'ok');//return success message
+
+        } catch (\Throwable $th) {
+            handleException($th,'failed to update Bank api key');
+            return json_message(EXIT_BE_ERROR,'Failed to update bank api key');
+        }
+    }
+
+    public function updateImage(Request $r){
+        $bank = BankPartners::find($r->id);
+        if(!$bank){
+            return json_message(EXIT_401,'Bank Not found1');
+        }
+
+        $validatedData = $r->validate([
+            'id' => 'required|numeric',
+            'new_img' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048'
+        ]);
+
+        try {
+            # Delete the old image if it exists
+            if ($bank->img_url) {
+                Storage::disk('public')->delete($bank->img_url);
+            }
+
+            $file = $r->file('new_img');
+            $filename = 'img/banks/' . Str::random(10) . '_' . time() . '.' . $file->getClientOriginalExtension();
+            $path = $file->storeAs('public', $filename);
+
+            $bank->update([
+                'img_url' => $filename
+            ]);
+
+            return json_message(EXIT_SUCCESS,'ok');
+
+        } catch (\Throwable $th) {
+           handleException($th,'Failed to update Bank Image');
+           return json_message(EXIT_BE_ERROR,'Failed to update Bank Image');
+        }
+    }
     
 
     public function processBankTransfer(Request $request){
@@ -201,7 +260,6 @@ class BankController extends Controller
             $bank = BankPartners::where('id',$id)
                 ->select('id','name','url','img_url','description')
                 ->first();
-
             return json_message(EXIT_SUCCESS,'ok',$bank);
 
         } catch (\Throwable $th) {

@@ -168,6 +168,8 @@ Route::middleware(['auth'])->group(function(){
         Route::post('/Bank-create',[BankController::class,'create']);
         Route::get('/Bank-get/{id}',[BankController::class,'getBank']);
         Route::patch('/Bank-update',[BankController::class,'updateBank']);
+        Route::patch('/Bank-update-api',[BankController::class,'updateBankApiKey']);
+        Route::post('/Bank-update-img',[BankController::class,'updateImage']);
        
         
 

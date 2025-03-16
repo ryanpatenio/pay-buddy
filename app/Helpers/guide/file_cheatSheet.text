@@ -2,3 +2,7 @@
 $filename = 'img/currencies/' . Str::random(10) . '_' . time() . '.' . $file->getClientOriginalExtension();
 $path = $file->storeAs('public', $filename);
 
+  # Delete the old image if it exists
+    if ($currency->img_url) {
+        Storage::disk('public')->delete($currency->img_url);
+    }
