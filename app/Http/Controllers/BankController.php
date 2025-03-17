@@ -172,7 +172,6 @@ class BankController extends Controller
            return json_message(EXIT_BE_ERROR,'Failed to update Bank Image');
         }
     }
-    
 
     public function processBankTransfer(Request $request){
        

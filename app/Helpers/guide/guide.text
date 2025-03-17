@@ -56,3 +56,15 @@ echo $user->id; // You can retrieve the inserted ID
 // $userArray = ['name' => 'John', 'email' => 'john@example.com']; // Array
 // $userObject = (object) $userArray; // Object
 // echo $userObject->name; // Access as object
+
+regex:/^[A-Z]{3}$/', #for USD,PHP, ensure three letters and upper case
+#this will check in the database if the data is already exist thru validations then ignore the current data
+ 'currency' => [
+            'required',
+            'string',
+            'regex:/^[A-Z]{3}$/',
+            Rule::unique('fees')->where(function ($query) use ($r) {
+                return $query->where('transaction_type', $r->transaction_type)
+                             ->where('currency', $r->currency);
+            })->ignore($fee->id), // Ignore the current fee being updated
+        ],

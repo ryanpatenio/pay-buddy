@@ -9,5 +9,10 @@ class Fees extends Model
 {
     use HasFactory;
 
+    protected $fillable = [
+        'transaction_type',
+        'currency',
+        'amount'
+    ];
     
 }

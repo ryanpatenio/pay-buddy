@@ -6,6 +6,7 @@ use App\Http\Controllers\BankController;
 use App\Http\Controllers\CurrenciesController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\ExpressController;
+use App\Http\Controllers\FeesController;
 use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\RequestsController;
@@ -171,7 +172,12 @@ Route::middleware(['auth'])->group(function(){
         Route::patch('/Bank-update-api',[BankController::class,'updateBankApiKey']);
         Route::post('/Bank-update-img',[BankController::class,'updateImage']);
        
-        
+        #Fees
+        Route::get('/Fees',[FeesController::class,'index_admin']);
+        Route::get('/Fee-Currencies',[FeesController::class,'currencies']);
+        Route::post('/Fee-create',[FeesController::class,'addFee']);
+        Route::get('/Fee-get/{id}',[FeesController::class,'getFee']);
+        Route::patch('/Fee-update',[FeesController::class,'updateFee']);
 
     });
     
