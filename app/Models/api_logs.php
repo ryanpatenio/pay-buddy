@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -17,4 +18,11 @@ class api_logs extends Model
         'status'
 
     ];
+
+     // Define an accessor to format the created_at field
+     public function getCreatedAtAttribute($value)
+     {
+         return Carbon::parse($value)->format('F j, Y g:i A');
+     }
 }
+

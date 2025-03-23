@@ -7,6 +7,7 @@ use App\Http\Controllers\CurrenciesController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\ExpressController;
 use App\Http\Controllers\FeesController;
+use App\Http\Controllers\LogsController;
 use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\RequestsController;
@@ -146,10 +147,11 @@ Route::middleware(['auth'])->group(function(){
         Route::get('/Dashboard-Api-keys',[ApiKeysController::class,'index_admin']);
         Route::post('/Api-Keys-disable',[ApiKeysController::class,'setDisable']);
        
-        Route::get('/Dashboard-Logs',function(){
-            return view('admin.logs');
-        
-        });
+       
+        Route::get('/Dashboard-Logs',[LogsController::class,'index_admin']);
+        Route::get('/Dashboard-User-logs',[LogsController::class,'userLogs']);
+        Route::get('/Dashboard-User-show/{id}',[LogsController::class,'userLogs'])->name('get.user');
+        Route::get('/Dashboard-userLogs/{id}',[LogsController::class,'getLogs']);
        
         
         Route::get('/Dashboard-viewUser',function(){

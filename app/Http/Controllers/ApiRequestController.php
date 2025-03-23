@@ -51,6 +51,18 @@ class ApiRequestController extends Controller
 
     try {
       $balance = $this->apiServices->getUserBalance($data);
+      $useLogsResponse = [
+        'balance' => $balance,
+        'status' => 'success'
+      ];
+      $useLogs = [
+        'api_key_id' => $user['api_id'],
+        'request_data' => $request->all(),
+        'response_data' => $useLogsResponse
+      ];
+   
+        //api logs
+        $this->apiLogService->createLogs($useLogs,$useLogsResponse);
 
       return json_message(EXIT_SUCCESS,'ok',['balance'=>$balance]);
 
@@ -263,6 +275,16 @@ class ApiRequestController extends Controller
         if(!$response){
             return json_message(EXIT_BE_ERROR,'Internal Server error!');
         }
+
+        $useLogs = [
+            'api_key_id' => $apiObj->id,
+            'request_data' => $request->all(),
+            'response_data' => $response
+          ];
+          $response['status'] = 'success';
+       
+            //api logs
+            $this->apiLogService->createLogs($useLogs,$response);
 
         return json_message(EXIT_SUCCESS,'Transaction retrieved successfully',$response);
 
