@@ -1,0 +1,79 @@
+php artisan make:command CheckApiKeyExpiration
+
+protected $signature = 'api:check-expiration';
+
+    /**
+     * The console command description.
+     *
+     * @var string
+     */
+    protected $description = 'Check and revoke expired API keys';
+
+     // Get the current timestamp
+        $now = Carbon::now();
+
+        // Find all API keys where expires_at is in the past and status is not already revoked
+        $expiredKeys = ApiKey::where('expires_at', '<', $now)
+                             ->where('status', '!=', 'revoked')
+                             ->get();
+
+        // Update the status of expired keys to 'revoked'
+        foreach ($expiredKeys as $key) {
+            $key->status = 'revoked';
+            $key->save();
+        }
+
+        $this->info('Expired API keys have been revoked.'); -- will show message in the command
+
+
+***SET UP TASK Scheduler in windows *****
+
+taskschd.msc --windows + r
+
+Create a New Task:
+
+In the Task Scheduler window, click on Create Basic Task on the right sidebar.
+
+Name the Task:
+
+Give your task a name like Laravel Scheduler and click Next.
+
+Set the Trigger:
+
+Choose Daily (even if you're running it every minute, daily will work).
+
+Set the time to run the task (it could be the start of the day, like 12:00 AM).
+
+Click Next.
+
+Set the Action:
+
+Choose Start a Program and click Next.
+
+In Program/script, browse to your php.exe file. If you're using XAMPP, for example, it might be:
+
+text
+Copy
+Edit
+C:\xampp\php\php.exe
+If you're using PHP directly, you might need to find the path to your PHP installation, such as:
+
+text
+Copy
+Edit
+C:\php\php.exe
+In Add arguments (optional), add the following to point to your artisan file:
+
+text
+Copy
+Edit
+C:\Users\YourUsername\Desktop\lara-projects\pay-buddy\artisan schedule:run
+In Start in (optional), add the path to your project folder (where artisan is located):
+
+text
+Copy
+Edit
+C:\Users\YourUsername\Desktop\lara-projects\pay-buddy
+Finish the Task:
+
+Click Next, then Finish.
