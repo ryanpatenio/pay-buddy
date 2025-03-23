@@ -77,7 +77,13 @@ class ApiKeysController extends Controller
         if($isAlreadyHaveKey){
             return json_message(EXIT_FORM_NULL,"You already have an active API key. Each user is allowed to have only one active API key at a time. If you'd like to create a new one, go to the actions menu, click the three dots, and select Regenerate");
         }
-        
+        #checks the api key is expired
+        $isExpired = Api_keys::where('expires_at','<',Carbon::now())
+                    ->where('status','active')
+                    ->first();
+        if($isExpired){
+            return json_message(EXIT_FORM_NULL,'Your api key is already Expired Please Generate a new one!,go to the actions menu, click the three dots, and select Regenerate');
+        }
         $hash_api =  hash('sha256',$apiKey);
 
         $findKey = Api_keys::where('api_key',$hash_api)->where('user_id',$user_id)->first();
