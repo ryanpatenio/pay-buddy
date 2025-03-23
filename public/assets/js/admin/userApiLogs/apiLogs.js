@@ -15,7 +15,6 @@ $(document).ready(function () {
         try {
             const response = await axios.get(url);
             if(response.status === 200){
-    res(response)
                 const data = response?.data?.data;
                 $('#name').text(data.name);
                 $('#api-key').text(api_key);
@@ -23,6 +22,8 @@ $(document).ready(function () {
                 $('#response-data').val(JSON.stringify(JSON.parse(data.response_data)));
                 $('#date').text(data.created_at);
                
+            }else{
+                msg('Internal Server Error::failed to fetch Logs','error');
             }
         } catch (error) {
             const {response} = error;

@@ -44,8 +44,9 @@ public function generateApiKey(){
  */
 public function showUserApiKey(){
      $result =  Api_keys::where('user_id', Auth::id())
-    ->where('status', 'active')
-    ->whereDate('expires_at', '>', Carbon::today()) // Check for non-expired keys
+    // ->where('status', 'active')
+    // ->whereDate('expires_at', '>', Carbon::today()) // Check for non-expired keys
+    ->orderByRaw("status = 'active' DESC") 
     ->get()
     ->map(function ($data){
         $data->date_created = Carbon::parse($data->created_at)->format('F j, Y g:i A');
