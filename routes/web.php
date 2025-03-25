@@ -14,6 +14,7 @@ use App\Http\Controllers\RequestsController;
 use App\Http\Controllers\Transactions;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
+use SebastianBergmann\CodeCoverage\Report\Html\Dashboard;
 
 /*
 |--------------------------------------------------------------------------
@@ -105,7 +106,9 @@ Route::middleware(['auth'])->group(function(){
     #admin
     Route::middleware(['role:admin|super_admin'])->group(function (){
         #Dashboard
-        Route::get('/Dashboard-admin',[DashboardController::class,'index_admin'])->name('admin.dashboard');;
+        Route::get('/Dashboard-admin',[DashboardController::class,'index_admin'])->name('admin.dashboard');
+        Route::get('/earnings-report', [DashboardController::class, 'getEarningsReport']);
+
        
         
         #Transactions

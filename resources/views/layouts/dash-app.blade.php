@@ -187,4 +187,5 @@
 
     </body>
     </html>
-    <script src="{{URL::asset('assets/js/dashboard/balanceChart.js')}}"></script>
+    {{-- <script src="https://cdn.jsdelivr.net/npm/chart.js"></script> --}}
+    {{-- <script src="{{URL::asset('assets/js/dashboard/balanceChart.js')}}"></script> --}}

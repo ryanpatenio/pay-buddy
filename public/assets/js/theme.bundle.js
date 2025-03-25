@@ -5389,47 +5389,130 @@
             })
         }
         )).catch(console.warn);
-        const Eo = document.getElementById("salesReportChart");
-        Eo && r.e(427).then(r.bind(r, 6329)).then(( () => {
-            new Chart(Eo,{
-                type: "line",
-                data: {
-                    labels: ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"],
-                    datasets: [{
-                        label: "Income",
-                        data: [28, 70, 68, 77, 35, 24, 18, 73, 29, 43, 19, 24],
-                        borderWidth: 4,
-                        borderColor: go.Z(`${bo}primary`)
-                    }, {
-                        label: "Expense",
-                        data: [18, 23, 79, 37, 19, 45, 55, 72, 79, 57, 32, 59],
-                        borderWidth: 4,
-                        borderColor: go.Z(`${bo}dark`),
-                        hidden: !0
-                    }]
-                },
-                options: {
-                    scales: {
-                        y: {
-                            ticks: {
-                                callback: (e, t, n) => e > 0 ? "$" + e + "k" : e
-                            }
-                        }
-                    },
-                    plugins: {
-                        tooltip: {
-                            callbacks: {
-                                label: e => new Intl.NumberFormat("en-US",{
-                                    style: "currency",
-                                    currency: "USD"
-                                }).format(e.parsed.y)
-                            }
-                        }
+
+       // const Eo = document.getElementById("salesReportChart");
+
+        // if (Eo) {
+        //     // Use the theme's module loader to ensure Chart.js is loaded
+        //     r.e(427).then(r.bind(r, 6329)).then(() => {
+        //         // Fetch data from server
+        //         fetch('/api/sales-report')
+        //             .then(response => response.json())
+        //             .then(serverData => {
+        //                 new window.Chart(Eo, {
+        //                     type: "line",
+        //                     data: {
+        //                         // Static labels (months)
+        //                         labels: ["Jan", "Feb", "Mar", "Apr", "May", "Jun", 
+        //                                 "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"],
+        //                         // Dynamic datasets from server
+        //                         datasets: [
+        //                             {
+        //                                 label: "Earnings",
+        //                                 data: serverData.income, // From server
+        //                                 borderWidth: 4,
+        //                                 borderColor: go.Z(`${bo}dark`)
+        //                             }
+        //                         ]
+        //                     },
+        //                     options: {
+        //                         scales: {
+        //                             y: {
+        //                                 ticks: {
+        //                                     callback: (e) => e > 0 ? "$" + e + "k" : e
+        //                                 }
+        //                             }
+        //                         },
+        //                         plugins: {
+        //                             tooltip: {
+        //                                 callbacks: {
+        //                                     label: e => new Intl.NumberFormat("en-US", {
+        //                                         style: "currency",
+        //                                         currency: "USD"
+        //                                     }).format(e.parsed.y)
+        //                                 }
+        //                             }
+        //                         }
+        //                     }
+        //                 });
+        //             })
+        //             .catch(error => {
+        //                 console.error("Failed to load chart data:", error);
+        //                 // You could initialize with empty data here if needed
+        //             });
+        //     })
+        //     .catch(console.warn);
+        // }
+const chartElement = document.getElementById("salesReportChart");
+const currencySelector = document.getElementById("currencySelector");
+let salesChart = null;
+
+if (chartElement && currencySelector) {
+    // Use the theme's module loader to ensure Chart.js is loaded
+    r.e(427).then(r.bind(r, 6329)).then(() => {
+
+        function fetchChartData(currency = "PHP") {
+            fetch(`/earnings-report?currency=${currency}`)
+                .then(response => response.json())
+                .then(serverData => {
+                    if (salesChart) {
+                        salesChart.destroy(); // Destroy the existing chart before creating a new one
                     }
-                }
-            })
+                    console.log(serverData);
+                    salesChart = new Chart(chartElement, {
+                        type: "line",
+                        data: {
+                            labels: ["Jan", "Feb", "Mar", "Apr", "May", "Jun", 
+                                     "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"],
+                            datasets: [
+                                {
+                                    label: `Earnings in ${currency}`,
+                                    data: serverData.income,
+                                    borderWidth: 4,
+                                    borderColor: "#007bff"
+                                }
+                            ]
+                        },
+                        options: {
+                            scales: {
+                                y: {
+                                    ticks: {
+                                        callback: (value) => 
+                                            new Intl.NumberFormat("en-US", {
+                                                style: "currency",
+                                                currency: currency
+                                            }).format(value)
+                                    }
+                                }
+                            },
+                            plugins: {
+                                tooltip: {
+                                    callbacks: {
+                                        label: (tooltipItem) => 
+                                            new Intl.NumberFormat("en-US", {
+                                                style: "currency",
+                                                currency: currency
+                                            }).format(tooltipItem.parsed.y)
+                                    }
+                                }
+                            }
+                        }
+                    });
+                })
+                .catch(error => console.error("Failed to load chart data:", error));
         }
-        )).catch(console.warn);
+        
+
+        // Listen for dropdown changes to update the chart
+        currencySelector.addEventListener("change", function () {
+            fetchChartData(this.value);
+        });
+
+        // Load default chart with PHP as the initial currency
+        fetchChartData("PHP");
+    }).catch(console.warn);
+}
+
 
         const ko = document.getElementById("currentBalanceCharts");
         ko && r.e(427).then(r.bind(r, 6329)).then(( () => {

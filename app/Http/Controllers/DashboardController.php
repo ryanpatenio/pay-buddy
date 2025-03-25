@@ -133,30 +133,31 @@ class DashboardController extends Controller
         ]);
     }
 
+    public function getEarningsReport(Request $request){
 
+        $currency = $request->query('currency', 'PHP'); // Default to PHP
 
+        $earnings = DB::table('earnings')
+            ->join('transactions', 'earnings.transaction_id', '=', 'transactions.id')
+            ->join('currencies', 'transactions.currency_id', '=', 'currencies.id')
+            ->selectRaw("
+                DATE_FORMAT(earnings.created_at, '%m') as month,
+                SUM(earnings.amount) as total_earnings
+            ")
+            ->where('currencies.code', $currency) // Filter by selected currency
+            ->groupBy('month')
+            ->orderBy('month', 'asc')
+            ->get();
 
-// public function getBalanceData()
-    // {
-    //     // Example data - Replace this with actual balance fetching logic
-    //     $balances = [
-    //         "Jan" => 40000, "Feb" => 1000, "Mar" => 1000, "Apr" => 2500,
-    //         "May" => 3000, "Jun" => 1500, "Jul" => 4000, "Aug" => 5000,
-    //         "Sep" => 8000, "Oct" => 6000, "Nov" => 5500, "Dec" => 6500
-    //     ];
+        // Initialize array for all 12 months with 0 earnings
+        $incomeData = array_fill(1, 12, 0);
 
-    //     // Simulating today's balance & previous day's balance
-    //     $today = Carbon::today()->format('M');
-    //     $yesterday = Carbon::yesterday()->format('M');
+        foreach ($earnings as $earning) {
+            $incomeData[intval($earning->month)] = $earning->total_earnings;
+        }
 
-    //     $todayBalance = $balances[$today] ?? 0;
-    //     $yesterdayBalance = $balances[$yesterday] ?? 0;
-
-    //     return response()->json([
-    //         'labels' => array_keys($balances),
-    //         'balances' => array_values($balances),
-    //         'today' => $todayBalance,
-    //         'yesterday' => $yesterdayBalance
-    //     ]);
-    // }
+        return response()->json([
+            'income' => array_values($incomeData)
+        ]);
+    }
 }
