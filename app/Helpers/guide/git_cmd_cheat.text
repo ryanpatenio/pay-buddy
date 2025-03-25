@@ -1,0 +1,13 @@
+# Switch to the main branch
+git checkout main
+
+# Pull the latest changes
+git pull origin main
+
+# Merge your branch into main
+git merge your-branch-name
+
+# Push the updated main branch to GitHub
+git push origin main
+*****Merging*** only one personal projects***
+
