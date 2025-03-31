@@ -92,7 +92,7 @@
                 <div class="row mb-2">
                     <div class="col">
                         <label for="" class="mb-2"> Account Number</label>
-                        <input type="text" class="form-control" maxlength="12" name="account_number" id="account-number" required placeholder="Account Number">
+                        <input type="text" class="form-control" maxlength="11" name="account_number" id="account-number" required placeholder="Account Number">
                         <span class="text-danger px-2 mt-2" role="alert">
                             <strong id="acct-error"></strong>
                         </span>
@@ -158,7 +158,4 @@
      //const dashboardRoute = @json(route('user.dashboard'));
 </script>
 <script src="{{asset('assets/js/bankT/bankT.js')}}"></script>
-
-
-
-@endsection
+@endSection

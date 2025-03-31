@@ -25,9 +25,9 @@ return new class extends Migration
       
 
         currency::insert([
-            ['code' => 'PHP', 'name' => '🇵🇭 PHP', 'symbol' => '₱','img_url'=>'peso.png', 'created_at' => now(), 'updated_at'=>now()],
-            ['code' => 'USD', 'name' => '🇺🇸 USD', 'symbol' => '$','img_url'=>'dollar.png', 'created_at' => now(), 'updated_at'=>now()],
-            ['code' => 'EUR', 'name' => '🇪🇺 EUR', 'symbol' => '€','img_url'=>'euro.svg', 'created_at' => now(), 'updated_at'=>now()],
+            ['code' => 'PHP', 'name' => '🇵🇭 PHP', 'symbol' => '₱','img_url'=>'', 'created_at' => now(), 'updated_at'=>now()],
+            ['code' => 'USD', 'name' => '🇺🇸 USD', 'symbol' => '$','img_url'=>'', 'created_at' => now(), 'updated_at'=>now()],
+            ['code' => 'EUR', 'name' => '🇪🇺 EUR', 'symbol' => '€','img_url'=>'', 'created_at' => now(), 'updated_at'=>now()],
            
         ]);
     }

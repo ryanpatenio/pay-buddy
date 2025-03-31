@@ -197,7 +197,7 @@ $(document).ready(function () {
                     msg('Internal Server Error!','error');
                 }  
             } catch (error) {
-                res(error);
+               // res(error);
                 const {response} = error;
                 const err = response?.data;
                 if(response.status === 401 || err?.code === "EXIT_401"){

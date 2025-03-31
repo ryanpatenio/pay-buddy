@@ -28,4 +28,9 @@ class BankPartners extends Model
     //     return decrypt($value);
     // }
 
+    public function bankTransactionDetails()
+    {
+        return $this->hasMany(bankTransactionDetails::class, 'bank_id');
+    }
+
 }

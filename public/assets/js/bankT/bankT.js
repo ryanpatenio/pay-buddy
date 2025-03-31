@@ -29,22 +29,37 @@ $(document).ready(function(){
             fee : parseFloat(fee),
             bankName : bankName
         };  
+
+        const url = '/process-bank-transfer';
         
         swalMessage('custom',
             'You are about to send PHP '+amount+' to '+account_name+' (Account: '+account_number+'). A transaction fee of PHP '+fee+' will be applied. Your total deduction will be PHP '+total+'. Do you want to proceed?', async function(){
-
+                toggleLoader(true);
                 try {
 
-                    // const processTransaction = await axios.post('/process-bank-transfer',data);
-                    // if(processTransaction.status !== 200){
-                    //     console.log('failed to process Bank Transfer!');
-                    // }
-        
-                    // console.log(processTransaction);
-                    msg('Bank Transfer Features are not available at this time Due to Update!')
-                    
+                    const response = await axios.post(url,data);
+                    const resData = response?.data;
+                    if(response.status == 200 || resData?.code ==="EXIT_SUCCESS"){
+                        message(resData?.message,'success');
+                        const url = `/Bank-receipt/${resData?.data?.transaction_id}`;
+                        msgThenRedirect(resData?.message,'success',url)
+                        res(response);
+                    }
+ 
                 } catch (error) {
-                    console.log(error)
+                   
+                    const {response} = error;
+                    const err = response?.data;
+
+                    res(error)
+                    if(response.status === 500){
+                        msg('Something went wrong on our end. Please try again later','error');
+                    }else{
+                        msg('Something went wrong on our end. Please try again later','error');
+                    }
+
+                }finally{
+                    toggleLoader(false);
                 }
 
             });

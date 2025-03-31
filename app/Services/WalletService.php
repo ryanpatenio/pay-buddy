@@ -6,6 +6,7 @@ use App\Models\currency;
 use App\Models\Earnings;
 use App\Models\Fees;
 use App\Models\Wallets;
+use Exception;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
@@ -33,6 +34,22 @@ class WalletService
     
         // If no account number or currency is provided, return all wallets of the authenticated user
         return Wallets::where('user_id', Auth::id())->get(); // Return all wallets for the authenticated user
+    }
+    /**
+     * Get User Wallets | using Auth::id() |USERS ONLY
+     * @return Object | ['id-wallet_id,user_id,account_number,balance,currency_id,code,name,symbol']
+     */
+    public function userWallet(string $currency) : ?object{
+       $query = DB::table('wallets')
+                ->join('currencies','wallets.currency_id','=','currencies.id')
+                ->where('wallets.user_id',Auth::id())
+                ->where('currencies.code',$currency)
+                ->selectRaw('wallets.id,wallets.user_id,wallets.account_number,wallets.balance,currencies.id as currency_id,currencies.code,currencies.name,currencies.symbol')
+                ->first();
+        if(!$query){
+           return null;
+        }
+        return $query;
     }
     public function getReceiverWalletCurrency($account){
         if(empty($account)){
@@ -157,5 +174,8 @@ class WalletService
     return $availableCurrencies;
    }
 
+
+
+   
    
 }

@@ -2,7 +2,9 @@
 
 namespace App\Services;
 
+use App\Exceptions\BankTransferException;
 use App\Models\BankPartners;
+use App\Models\bankTransactionDetails;
 use App\Models\Transactions;
 use App\Models\Wallets;
 use App\Services\WalletService;
@@ -11,9 +13,10 @@ use App\Services\NotificationServices;
 use Carbon\Carbon;
 use Exception;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\DB;
-
+use Illuminate\Support\Facades\Log;
 
 class TransactionServices
 {
@@ -26,72 +29,144 @@ class TransactionServices
         $this->notificationService = $notificationServices;   
     }
 
-    public function sendMoneyToBank($senderWalletId, $receiverBankNumber, $amount, $fee, $description = null, $bank, $currency)
-    {
-        // Retrieve sender wallet
-        $senderWallet = Wallets::findOrFail($senderWalletId);
-
-        // Retrieve the bank partner (e.g., BPI)s
-        $bankPartner = BankPartners::where('name', $bank)->firstOrFail();
-
-        // Generate a unique transaction ID
-        $transactionId = $this->walletService->generateTransactionID();
-
-        // Prepare the payload for the bank API
-        $payload = [
-            'account_number' => $receiverBankNumber,
-            'amount' => $amount,
-            'currency' => $currency, 
-            'reference_id' => $transactionId,
-            'timestamp' => now()->toIso8601String(),
-        ];
-
-        // Send request to the bank's API
-        $response = Http::withHeaders([
-            'Authorization' => 'Bearer ' . $bankPartner->api_key,
-            'Content-Type' => 'application/json',
-        ])->post($bankPartner->url . '/transactions/credit', $payload);
-
-        $clientRefId = $response->json('reference_id') ?? ('fallback-' . uniqid());
-        be_logs('Bank Api response : ',$response->json());
-
-        // Start a database transaction
-        DB::beginTransaction();
-
-        try {
-            // Create a new transaction record
-            $transaction = Transactions::create([
-                'wallet_id' => $senderWallet->id,
-                'receiver_wallet_id' => null, // No receiver wallet for bank transactions
-                'api_key_id' => $bankPartner->id,
-                'transaction_id' => $transactionId,#generated
-                'client_ref_id' => $clientRefId, // Bank's reference ID from api response else generated fail client_ref_id
-                'type' => 'debit', // Deduct from sender's wallet
-                'amount' => $amount, #amount to send
-                'fee' => $fee, #default 15 pesos
-                'status' => $response->successful() ? 'success' : 'failed',
-                'description' => $description,
-            ]);
-
-            // Deduct the amount from the sender's wallet only if the API request is successful
-            if ($response->successful()) { // Correct boolean check
-                $senderWallet->balance -= ($amount + $fee);
-                $senderWallet->save();
-            }
-        
-            // Commit the transaction
-            DB::commit();
-
-            return $transaction;
-            
-        } catch (\Exception $e) {
-            // Rollback the transaction on error
-            DB::rollBack();
-            be_logs('Transaction Error Sending Money to Bank',$e);
-            throw $e;
+    private function validateBankTransferData(array $data) :void{
+        if(empty($data['wallet_id'])){
+            throw new Exception('wallet id is required');
+        }
+        if(empty($data['receiverBankNumber'])){
+            throw new Exception('receiver bank number is required');
+        }
+        if(empty($data['amount'])){
+            throw new Exception('amount is required');
+        }
+        if(empty($data['currency'])){
+            throw new Exception('currency is required');
+        }
+        if(empty($data['bank'])){
+            throw new Exception('Bank is required');
+        }
+        if(empty($data['account_name'])){
+            throw new Exception('account name is required');
+        }
+        if(empty($data['fee'])){
+            throw new Exception('Fee is required');
+        }
+        if(empty($data['description'])){
+            throw new Exception('Description is required');
         }
     }
 
+    public function sendMoneyToBank(array $data)
+    {
+        // Validate input data first
+        $this->validateBankTransferData($data);
+        
+        // Retrieve bank partner
+        $bankPartner = BankPartners::where('name', $data['bank'])->first();
+        if (!$bankPartner) {
+            throw new Exception('Bank partner not found or not supported');
+        }
+    
+        // Generate unique reference
+        $clientRef = $this->walletService->genClient_ref();
+    
+        try {
+            DB::beginTransaction();
+
+            // Retrieve sender wallet with lock to prevent concurrent modifications
+            $senderWallet = Wallets::lockForUpdate()->find($data['wallet_id']);
+            if (!$senderWallet) {
+                throw new Exception('No wallet found!');
+            }
+        
+            // Check sufficient balance (amount + fee)
+            if ($senderWallet->balance < ($data['amount'] + $data['fee'])) {
+                throw new Exception('Insufficient balance for transfer');
+            }
+    
+            // 1. First deduct from wallet (including fee)
+            $this->updateWalletBalance(
+                $data['wallet_id'],
+                -($data['amount'] + $data['fee'])
+            );
+           
+            // 2. Call bank API
+            $apiResponse = $this->callBankApi($bankPartner, $clientRef, $data);
+            $responseData = $apiResponse->json();
+    
+            // 3. Record transaction only if API succeeds
+            $transaction = $this->createBankTransaction([
+                'wallet_id' => $data['wallet_id'],
+                'transaction_id' => $responseData['data']['transaction_id'],
+                'client_ref_id' => $clientRef,
+                'type' => 'debit',
+                'amount' => $data['amount'],
+                'fee' => $data['fee'],
+                'status' => 'success',
+                'description' => $data['description'],
+                'currency_id' => $senderWallet->currency_id
+            ]);
+            $transactionDetails = $this->createBankTransactionDetails([
+                'transaction_id' => $transaction->id,
+                'bank_id'    =>  $bankPartner->id,
+                'receiver_name' => $data['account_name'],
+                'receiver_account_number' => $data['receiverBankNumber'],
+                'sender_balance_before'   => $responseData['data']['old_balance'],
+                'sender_balance_after'    => $responseData['data']['new_balance'],
+                'api_response'            => $apiResponse
+            ]);
+
+            //store Earnings
+            $this->storeEarnings($transaction->id,$senderWallet->user_id,$data['fee']);
+
+            //create Notification
+            $msg = 'You have sent PHP '.$data['amount'].' to Account Number : '.$data['receiverBankNumber'].' on'.Carbon::now();
+            $this->notificationService->createNotifications([
+                'user_id' => $senderWallet->user_id,
+                'title'   => 'Bank Transfer',
+                'message' => $msg
+            ]);
+            DB::commit();
+    
+            return $apiResponse;
+    
+        } catch (\Exception $e) {
+            DB::rollBack();
+            
+            Log::error('Bank transfer failed', [
+                'error' => $e->getMessage(),
+                'request' => $data
+            ]);
+           throw $e;
+        }
+    }
+
+    protected function callBankApi($bankPartner, string $clientRef, array $data){
+        $payload = [
+            'account_number' => $data['receiverBankNumber'],
+            'amount' => $data['amount'],
+            'currency' => $data['currency'], 
+            'client_ref' => $clientRef
+        ];
+        
+        $hashApiKey = Crypt::decryptString($bankPartner->api_key);
+
+        $response = Http::bankApi()
+            ->withHeaders(['X-API-Key' => $hashApiKey])
+            ->post($bankPartner->url.'process-credit', $payload);
+
+        // logger('Bank API Response:', [
+        //     'status' => $response->status(),
+        //     'headers' => $response->headers(),
+        //     'body' => $response->json() // or ->body() if not JSON
+        // ]);
+
+        if (!$response->successful()) {
+            return json_message(EXIT_BE_ERROR,'error',$response->json());
+        }
+
+        return $response;
+    }
      /**
      * Send money from one user to another.
      *
@@ -270,6 +345,36 @@ class TransactionServices
         ]);
     }
 
+    protected function createBankTransaction(array $data) : object {
+        $transactions = Transactions::create([
+
+            'wallet_id' => $data['wallet_id'],
+            'receiver_wallet_id' => null,//no receiver wallet for bank transaction using API
+            'transaction_id'     => $data['transaction_id'],
+            'client_ref_id'      => $data['client_ref_id'],
+            'type'               => $data['type'],
+            'amount'             => $data['amount'],
+            'fee'                => $data['fee'],
+            'status'             => $data['status'],
+            'description'        => $data['description'],
+            'currency_id'        => $data['currency_id']
+        ]);
+
+        return $transactions;
+    }
+
+    protected function createBankTransactionDetails(array $data) : void {
+        bankTransactionDetails::create([
+            'transaction_id' => $data['transaction_id'],
+            'bank_id'       => $data['bank_id'],
+            'receiver_name' => $data['receiver_name'],
+            'receiver_account_number' => $data['receiver_account_number'],
+            'sender_balance_before'   => $data['sender_balance_before'],
+            'sender_balance_after'    => $data['sender_balance_after'],
+            'api_response'            => $data['api_response']
+        ]); 
+    }
+
     /**
      * Update wallet balance.
      *
@@ -374,5 +479,7 @@ class TransactionServices
  
          return $recentTransactions;
     }
+
+   
   
 }

@@ -93,6 +93,7 @@ Route::middleware(['auth'])->group(function(){
         Route::get('/Bank-Transfer',[BankController::class,'bank_option_index'])->name('bank.options');
         Route::post('/get-user-selected-balance',[BankController::class,'bankSelected']);
         Route::post('/process-bank-transfer',[BankController::class,'processBankTransfer']);
+        Route::get('/Bank-receipt/{id}',[BankController::class,'bankReceiptIndex']);
     
         #testing
         Route::get('/balance-data', [DashboardController::class, 'getBalanceData']);

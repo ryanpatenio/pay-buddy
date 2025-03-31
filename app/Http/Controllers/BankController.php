@@ -2,9 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use App\Exceptions\BankTransferException;
 use App\Models\BankPartners;
+use App\Models\bankTransactionDetails;
+use App\Models\Transactions;
 use App\Services\TransactionServices;
 use App\Services\WalletService;
+use Exception;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Crypt;
@@ -45,6 +49,16 @@ class BankController extends Controller
 
         return view('users.bankTransfer.bankTransfer',compact('userWalletBalance','transactionFee'));
     }
+
+    public function bankReceiptIndex($id){
+       // Eager load relationships in a single query
+        $transactionData = Transactions::with([
+            'bankTransactionDetail.bankPartner' // Assuming you've set up relationships
+        ])->where('transaction_id', $id)
+          ->firstOrFail();
+
+            return view('users.bankTransfer.bankReceipt',compact('transactionData'));
+        }
 
     public function create(Request $request){
         $validatedData = $request->validate([
@@ -176,7 +190,7 @@ class BankController extends Controller
     public function processBankTransfer(Request $request){
        
         $data = $request->validate([
-            'account_number' => 'required|digits:12',
+            'account_number' => 'required|digits:11',
             'account_name'   => 'required|string|max:255',
             'amount'         => 'required|numeric|min:0',
             'fee'            => 'required|numeric|min:0',
@@ -194,26 +208,37 @@ class BankController extends Controller
             'bankName.required'       => 'The bank name is required.',
         ]);
        
-        #payload
-        $account_number = $data['account_number'];
-        $account_name = $data['account_name'];
-        $amount = $data['amount'];
-        $fee = $data['fee'];
-        $bankName = $data['bankName'];
-        $currency = 'PHP';#default | app features only PHP currency
+        $currency = 'PHP';#default | PHP
         $description = 'BankTransfer';
 
-        #get the Sender Wallet ID
-        $senderWalletId = $this->walletService->getUserWallet(null,'PHP');#return data of the authenticated User wallet ID 
+        #User Wallet Obj
+        $userWallet = $this->walletService->userWallet($currency);
+        if(!$userWallet){
+            return json_message(EXIT_BE_ERROR,'No wallet Found!');
+        }
 
+        $data = [
+            'wallet_id' => $userWallet->id,
+            'receiverBankNumber' => $data['account_number'],
+            'amount'            => $data['amount'],
+            'currency'          => $currency,
+            'bank'              => $data['bankName'],
+            'account_name'      => $data['account_name'],
+            'fee'               => $data['fee'],
+            'description'       => $description
+        ];
         try {
-            $transferMoney = $this->transactionService->sendMoneyToBank($senderWalletId->sender_wallet_id,$account_number,$amount,$fee,$description,$bankName,$currency);
+            $transferMoney = $this->transactionService->sendMoneyToBank($data);
             return $transferMoney;
 
         } catch (\Throwable $th) {
             handleException($th,'transaction Error');
             return response()->json(['error' => $th->getMessage()], 500);
+
+        }catch(Exception $e){          
+            return json_message(EXIT_BE_ERROR,'errrrroor',$e->getMessage());
         }
+        
 
     }
 

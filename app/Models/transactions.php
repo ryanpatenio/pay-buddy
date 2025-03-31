@@ -23,5 +23,12 @@ class Transactions extends Model
         'currency_id'
     ];
 
+
+    // Transaction.php
+    public function bankTransactionDetail()
+    {
+        return $this->hasOne(bankTransactionDetails::class,'transaction_id');
+    }
+
     
 }
