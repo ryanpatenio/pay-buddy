@@ -68,3 +68,5 @@ regex:/^[A-Z]{3}$/', #for USD,PHP, ensure three letters and upper case
                              ->where('currency', $r->currency);
             })->ignore($fee->id), // Ignore the current fee being updated
         ],
+
+<?= explode(' ', $user->name)[0] ?? '' ?> // from Ryan Wong into "Ryan"

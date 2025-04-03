@@ -24,7 +24,7 @@
     <div class="row">
         <div class="col d-flex">
             <!-- Card -->
-            <div class="card border-0 flex-fill w-100" data-list='{"valueNames": ["name", {"name": "key", "attr": "data-key"}, {"name": "status", "attr": "data-status"}, {"name": "created", "attr": "data-created"}], "page": 10}' id="keysTable">
+            <div class="card border-0 flex-fill w-100" data-list='{"valueNames": ["name","code","symbol", {"name": "created", "attr": "data-created"}], "page": 10}' id="keysTable">
                 <div class="card-header border-0">
                     <div class="d-flex flex-column flex-md-row align-items-md-center justify-content-end">
                         <!-- Title -->
@@ -47,20 +47,20 @@
                         <thead class="thead-light">
                             <tr>
                                 <th>
-                                    <a href="javascript: void(0);" class="text-muted list-sort" data-sort="number">#
+                                    <a href="javascript: void(0);" class="text-muted list-sort" data-sort="">#
                                     </a>
                                 </th>
                                 
                                 <th>
-                                    <a href="javascript: void(0);" class="text-muted list-sort" data-sort="key">Code
+                                    <a href="javascript: void(0);" class="text-muted list-sort" data-sort="code">Code
                                     </a>
                                 </th>
                                 <th>
-                                    <a href="javascript: void(0);" class="text-muted list-sort" >Name
+                                    <a href="javascript: void(0);" class="text-muted list-sort" data-sort="name" >Name
                                     </a>
                                 </th>
                                 <th>
-                                    <a href="javascript: void(0);" class="text-muted list-sort" data-sort="status">Symbol
+                                    <a href="javascript: void(0);" class="text-muted list-sort" data-sort="symbol">Symbol
                                     </a>
                                 </th>
                                 <th>
@@ -77,10 +77,10 @@
                                ?>
                                 <tr>
                                     <td><?=$i; ?></td>
-                                    <td><?=$cur->code ?? '' ?></td>
-                                    <td><?=$cur->name ?? '' ?></td>
-                                    <td><?=$cur->symbol ?? '' ?></td>
-                                    <td><?php echo $cur->created_at->format('F j, Y,  h : i A'); ?></td>
+                                    <td class="code" data-code="<?=$cur->code ?? '' ?>"><?=$cur->code ?? '' ?></td>
+                                    <td class="name" data-name="<?=$cur->name ?? '' ?>"><?=$cur->name ?? '' ?></td>
+                                    <td class="symbol" data-symbol="<?=$cur->symbol ?? '' ?>"><?=$cur->symbol ?? '' ?></td>
+                                    <td class="created" data-created="<?php echo $cur->created_at->format('F j, Y,  h : i A'); ?>"><?php echo $cur->created_at->format('F j, Y,  h : i A'); ?></td>
                                     <td>
                                         <button type="button" class="btn btn-sm btn-secondary btn-md-sm"id="edit-btn" data-id="<?=$cur->id ?? 0 ?>" > Edit</button>
                                         <button type="button" class="btn btn-sm btn-primary btn-md-sm"id="edit-btn-img" data-id="<?=$cur->id ?? 0 ?>" > Change Image</button>                               

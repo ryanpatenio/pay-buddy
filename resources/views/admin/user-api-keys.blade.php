@@ -24,7 +24,27 @@
     <div class="row">
         <div class="col d-flex">
             <!-- Card -->
-            <div class="card border-0 flex-fill w-100" data-list='{"valueNames": ["name", {"name": "key", "attr": "data-key"}, {"name": "status", "attr": "data-status"}, {"name": "created", "attr": "data-created"}], "page": 10}' id="keysTable">
+            <div class="card border-0 flex-fill w-100" 
+            data-list=
+            '{
+            "valueNames": [
+                "num", 
+                {"name": "name", "attr": "data-name"},            
+                {"name": "key", "attr": "data-key"},
+                "role",
+                {"name": "status", "attr": "data-status"},
+                {"name": "created", "attr": "data-created"}
+             ],
+              "page": 10,
+                "fuzzySearch": {
+                    "searchClass": "list-fuzzy-search",
+                    "location": 0,
+                    "distance": 100,
+                    "threshold": 0.4,
+                    "multiSearch": true
+                }
+            }'
+             id="keysTable">
                 <div class="card-header border-0">
                     <div class="d-flex flex-column flex-md-row align-items-md-center justify-content-end">
                         <!-- Title -->
@@ -41,11 +61,11 @@
                         <thead class="thead-light">
                             <tr>
                                 <th>
-                                    <a href="javascript: void(0);" class="text-muted list-sort" data-sort="key">#
+                                    <a href="javascript: void(0);" class="text-muted list-sort" data-sort="num">#
                                     </a>
                                 </th>
                                 <th>
-                                    <a href="javascript: void(0);" class="text-muted list-sort" data-sort="key">Name
+                                    <a href="javascript: void(0);" class="text-muted list-sort" data-sort="name">Name
                                     </a>
                                 </th>
                                 <th>
@@ -53,7 +73,7 @@
                                     </a>
                                 </th>
                                 <th>
-                                    <a href="javascript: void(0);" class="text-muted list-sort" >Role
+                                    <a href="javascript: void(0);" class="text-muted list-sort" data-sort="role" >Role
                                     </a>
                                 </th>
                                 <th>
@@ -73,20 +93,20 @@
                         $i = 1;
                         foreach ($apiUsers as $user) { ?>
                           <tr>
-                            <td><?=$i ?? 0 ?></td>
-                            <td>
+                            <td class="num" data-num="<?=$i ?? 0 ?>"><?=$i ?? 0 ?></td>
+                            <td class="name" data-name=" <?=$user->name ?? '' ?>">
                                <?=$user->name ?? '' ?>
                             </td>
-                            <td class="key" data-key="">
+                            <td class="key" data-key="<?=$user->api_key ?? '' ?>">
                                 <div class="d-flex">
                                     <input id="key-01" class="form-control w-350px me-3" value="<?=$user->api_key ?? '' ?>">
                                     <!-- Button -->
                                 </div>
                             </td>
-                            <td>
+                            <td class="role" data-role=" <?=$user->role ?? '' ?>">
                                <?=$user->role ?? '' ?>
                              </td>
-                            <td class="status" data-status="Active">
+                            <td class="status" data-status="<?=$user->status ?? '' ?>">
                                 <span class="legend-circle <?=$user->status === "active" ? "bg-success": "bg-danger" ?>"></span>
                                 <?=$user->status ?? '' ?>
                             </td>

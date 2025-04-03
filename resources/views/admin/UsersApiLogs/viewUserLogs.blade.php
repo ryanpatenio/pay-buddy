@@ -24,10 +24,24 @@
     <div class="row">
         <div class="col d-flex">
             <!-- Card -->
-            <div class="card border-0 flex-fill w-100" data-list='{"valueNames": ["number","name", 
-                    {"name": "key", "attr": "data-key"},
-                     {"name": "status", "attr": "data-status"},
-                      {"name": "created", "attr": "data-created"}], "page": 10}' id="keysTable">
+            <div class="card border-0 flex-fill w-100"
+             data-list=
+             '{"valueNames": [
+                "num",
+                    {"name": "name", "attr": "data-name"},
+                    {"name": "key", "attr": "data-key"},                  
+                    {"name": "created", "attr": "data-created"},
+                    {"name": "status", "attr": "data-status"}],
+                        "page": 10,
+                        "fuzzySearch": {
+                            "searchClass": "list-fuzzy-search",
+                            "location": 0,
+                            "distance": 100,
+                            "threshold": 0.4,
+                            "multiSearch": true
+                        }
+                }'         
+                id="keysTable">
 
                 <div class="card-header border-0">
                     <div class="d-flex flex-column flex-md-row align-items-md-center justify-content-end">
@@ -45,7 +59,7 @@
                         <thead class="thead-light">
                             <tr>
                                 <th>
-                                    <a href="javascript: void(0);" class="text-muted list-sort" data-sort="number">#
+                                    <a href="javascript: void(0);" class="text-muted list-sort" data-sort="num">#
                                     </a>
                                 </th>
                                 
@@ -71,10 +85,12 @@
                             </tr>
                         </thead>
                         <tbody class="list">
-                          @forelse ($logs as $log)
+                          @forElse ($logs as $log)
                           <tr>
-                            <td><?=$loop->iteration ?></td>
-                            <td class="name">
+                            <td class="num" data-num="<?=$loop->iteration ?>">
+                                <?=$loop->iteration ?>
+                            </td>
+                            <td class="name" data-name="<?=$log->name ?? '' ?>">
                                <?=$log->name ?? '' ?>
                             </td>
                             <td class="key" data-key="<?=$log->api_key ?? '' ?>">

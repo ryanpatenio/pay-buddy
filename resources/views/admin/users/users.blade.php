@@ -24,7 +24,26 @@
     <div class="row">
         <div class="col d-flex">
             <!-- Card -->
-            <div class="card border-0 flex-fill w-100" data-list='{"valueNames": ["name", {"name": "key", "attr": "data-key"}, {"name": "status", "attr": "data-status"}, {"name": "created", "attr": "data-created"}], "page": 10}' id="keysTable">
+            <div class="card border-0 flex-fill w-100"
+             data-list=
+             '{
+                "valueNames": [
+                    "num",
+                    {"name": "name", "attr": "data-name"},
+                    "role", 
+                    {"name": "status", "attr": "data-status"}, 
+                    {"name": "created", "attr": "data-created"}
+                ],
+                "page": 10,
+                "fuzzySearch": {
+                    "searchClass": "list-fuzzy-search",
+                    "location": 0,
+                    "distance": 100,
+                    "threshold": 0.4,
+                    "multiSearch": true
+                }
+             }' 
+              id="keysTable">
                 <div class="card-header border-0">
                     <div class="d-flex flex-column flex-md-row align-items-md-center justify-content-end">
                         <!-- Title -->
@@ -47,16 +66,16 @@
                         <thead class="thead-light">
                             <tr>
                                 <th>
-                                    <a href="javascript: void(0);" class="text-muted list-sort" data-sort="number">#
+                                    <a href="javascript: void(0);" class="text-muted list-sort" data-sort="num">#
                                     </a>
                                 </th>
                                 
                                 <th>
-                                    <a href="javascript: void(0);" class="text-muted list-sort" data-sort="key">Name
+                                    <a href="javascript: void(0);" class="text-muted list-sort" data-sort="name">Name
                                     </a>
                                 </th>
                                 <th>
-                                    <a href="javascript: void(0);" class="text-muted list-sort" >Role
+                                    <a href="javascript: void(0);" class="text-muted list-sort" data-sort="role" >Role
                                     </a>
                                 </th>
                                 <th>
@@ -76,18 +95,18 @@
                             $i =1 ;
                             foreach ($users as $user) { ?>
                               <tr>   
-                                <td><?=$i ?? 0 ?></td>                           
-                                <td>
-                                  <?=$user->name ?? '' ?>
+                                <td class="num" data-num="<?=$i ?? 0 ?>"><?=$i ?? 0 ?></td>                           
+                                <td class="name" data-name="<?=$user->name ?? '' ?>">
+                                   <?=$user->name ?? '' ?>
                                 </td>
-                                <td>
+                                <td class="role" data-role=" <?=$user->role ?? '' ?>">
                                     <?=$user->role ?? '' ?>
                                  </td>
-                                <td class="status" data-status="Active">
+                                <td class="status" data-status="<?=$user->user_status ?? '' ?>">
                                     <span class="legend-circle <?=$user->status == "0" ? 'bg-success' : 'bg-danger' ?>"></span>
                                     <?=$user->user_status ?? '' ?>
                                 </td>
-                                <td class="created" data-created=""><?=$user->date_created ?? '' ?></td>
+                                <td class="created" data-created="<?=$user->date_created ?? '' ?>"><?=$user->date_created ?? '' ?></td>
                                 <td>
                                     <!-- Dropdown -->
                                     <div class="dropdown float-end">
@@ -179,4 +198,4 @@
 </div>
 <script src="{{asset('assets/js/admin/users/user.js')}}"></script>
 
-@endsection
+@endSection

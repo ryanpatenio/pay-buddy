@@ -1,0 +1,21 @@
+data-list=
+             '{
+                "valueNames": [
+                    "num",
+                    {"name": "name", "attr": "data-name"},
+                    "role", 
+                    {"name": "status", "attr": "data-status"}, 
+                    {"name": "created", "attr": "data-created"}
+                ],
+                "page": 10,
+                "fuzzySearch": {
+                    "searchClass": "list-fuzzy-search",
+                    "location": 0,
+                    "distance": 100,
+                    "threshold": 0.4,
+                    "multiSearch": true
+                }
+  }' 
+
+  multi search for the Name ex: Ryan Wong it will search also in the Last name
+  td class="name" data-name"<?= $user->name?>"
