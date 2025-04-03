@@ -1,0 +1,5 @@
+// routes/web.php
+Route::get('/Profile-Account', '...')->name('profile.account');
+
+// In blade
+request()->routeIs('profile.account') //recommended in navbar for active

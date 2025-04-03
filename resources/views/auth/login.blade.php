@@ -14,10 +14,11 @@
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         }
         .card {
-            width: 480px;
+            width: 480px; /* Slightly larger form size */
             border-radius: 12px;
-            box-shadow: 0 10px 16px rgba(0, 0, 0, 0.1);
-            background-color: #ffffff
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+            margin-top: 50px; /* Add margin from the top */
+            margin-bottom: 50px; /* Add margin to the bottom */
         }
         .paybuddy-header {
             text-align: center;
@@ -104,13 +105,11 @@
         }
     </style>
 </head>
-<body class="">
+<body>
     {{-- /@dump(session()->all()) --}}
 
-   <div class="container d-flex align-items-center justify-content-center  min-vh-100">
+   <div class="container d-flex align-items-center justify-content-center min-vh-100">
 
-    <div class="row mt-5 mb-5">
-        <div class="col d-flex col-lg-12">
             <div class="card shadow-sm">
                 <div class="card-body">
                     <!-- PayBuddy Header -->
@@ -187,10 +186,9 @@
                         <a href="{{route('register')}}" class="text-decoration-none">Register here</a>
                     </div>
                 </div>
-            </div>
+           
         </div>
-    </div>
-    
+
    </div>
 
     <!-- Bootstrap Bundle with Popper -->
