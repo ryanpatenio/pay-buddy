@@ -37,12 +37,17 @@
                                         </g>
                                     </svg>
                                 </span>
-                                <input type="file" name="avatar" class="d-none">
-                            </label>
-                            <img src="https://d33wubrfki0l68.cloudfront.net/053f2dfd0df2f52c41e903a21d177b0b44abc9b1/1282c/assets/images/profiles/profile-06.jpeg" alt="Profile picture" class="avatar-img" width="112" height="112">
+                                <form action="" enctype="multipart/form-data" method="POST">
+                                    <input type="file" name="avatar" id="avatar-input" class="d-none">
+                                </form>
+                            </label>        
+                            <img src="" alt="Profile picture" id="current-avatar" class="avatar-img" width="112" height="112">
+                            <div class="loading-indicator">Loading...</div>
+                            <button id="save-button" class="btn btn-primary mt-3 mb-5" style="display: none;">Save</button>
+                            
                         </div>
                         <h3 class="mb-0" id="side-name"></h3>
-                        <span class="small text-secondary fw-semibold" id="role">Assistant Manager</span>
+                        <span class="small text-secondary fw-semibold" id="role"></span>
                     </div>
                     <!-- Divider -->
                     <hr class="mb-0">
@@ -112,23 +117,7 @@
                     </li>
                 </ul>
                 <div class="card-footer text-center">
-                    {{-- <div class="row">
-                        <label for="" class="mb-2">Acount Number</label>
-                        <input id="key-01" class="form-control w-350px me-3" value="34434327">
-                        <!-- Button -->
-                        <button class="clipboard btn btn-link px-0" data-clipboard-target="#key-01" data-bs-toggle="tooltip" data-bs-title="Copy to clipboard">
-                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" height="18" width="18">
-                                <g>
-                                    <path d="M13.4,4.73a.24.24,0,0,0,.2.26,1.09,1.09,0,0,1,.82,1.11V7.5a1.24,1.24,0,0,0,1.25,1.24h0A1.23,1.23,0,0,0,16.91,7.5V4a1.5,1.5,0,0,0-1.49-1.5H13.69a.29.29,0,0,0-.18.07.26.26,0,0,0-.07.18C13.44,3.2,13.44,4.22,13.4,4.73Z" style="fill: currentColor"/>
-                                    <path d="M9,21.26A1.23,1.23,0,0,0,7.71,20H3.48a1.07,1.07,0,0,1-1-1.14V6.1A1.08,1.08,0,0,1,3.33,5a.25.25,0,0,0,.2-.26c0-.77,0-1.6,0-2a.25.25,0,0,0-.25-.25H1.5A1.5,1.5,0,0,0,0,4V21a1.5,1.5,0,0,0,1.49,1.5H7.71A1.24,1.24,0,0,0,9,21.26Z" style="fill: currentColor"/>
-                                    <path d="M11.94,4.47v-2a.5.5,0,0,0-.5-.49h-.76a.26.26,0,0,1-.25-.22,2,2,0,0,0-3.95,0A.25.25,0,0,1,6.23,2H5.47A.49.49,0,0,0,5,2.48v2a.49.49,0,0,0,.49.5h6A.5.5,0,0,0,11.94,4.47Z" style="fill: currentColor"/>
-                                    <path d="M19,17.27H15a.75.75,0,0,0,0,1.5h4a.75.75,0,0,0,0-1.5Z" style="fill: currentColor"/>
-                                    <path d="M14.29,14.54a.76.76,0,0,0,.75.75h2.49a.75.75,0,0,0,0-1.5H15A.76.76,0,0,0,14.29,14.54Z" style="fill: currentColor"/>
-                                    <path d="M23.5,13.46a2,2,0,0,0-.58-1.41l-1.41-1.4a2,2,0,0,0-1.41-.59H12.49a2,2,0,0,0-2,2V22a2,2,0,0,0,2,2h9a2,2,0,0,0,2-2Zm-11-.4a1,1,0,0,1,1-1h6.19a1,1,0,0,1,.71.29l.82.82a1,1,0,0,1,.29.7V21a1,1,0,0,1-1,1h-7a1,1,0,0,1-1-1Z" style="fill: currentColor"/>
-                                </g>
-                            </svg>
-                        </button>
-                    </div> --}}
+                   
                 </div>
             </div>
         </div>
@@ -346,7 +335,7 @@
                                         <div class="ms-4 d-flex">
                                             <h3 class="h4 mb-0"><?=$wallet->name ?? '' ?></h3>
                                             {{-- <p class="small text-muted mb-0">Expires 9/2024</p> --}}
-                                            <input id="key-01" class="form-control w-200px me-3 " value="<?=$wallet->account_number ?? 0 ?>" style="margin-left: 18px;" readonly>
+                                            <input class="form-control w-200px me-3 " value="<?=$wallet->account_number ?? 0 ?>" style="margin-left: 18px;" readonly>
                                             <!-- Button -->
                                             <button class="clipboard btn btn-link px-0" data-clipboard-target="#key-01" data-bs-toggle="tooltip" data-bs-title="Copy to clipboard">
                                                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" height="18" width="18">
@@ -423,8 +412,8 @@
     <!-- / .row -->
 </div>
 @include('users.profile.modal.addWallet');
-<script src="https://cdnjs.cloudflare.com/ajax/libs/zxcvbn/4.4.2/zxcvbn.js"></script>
+<script src="{{asset('assets/js/admin/users/zxcvbn.js')}}"></script>
 <script src="{{asset('assets/js/profile/profile.js')}}"></script>
 
 
-@endsection
+@endSection

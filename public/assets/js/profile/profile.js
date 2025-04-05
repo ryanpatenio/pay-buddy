@@ -1,5 +1,12 @@
 $(document).ready(function(){
+    const avatarInput = $('#avatar-input');
+    const saveButton = $('#save-button');
+    const loading = $('.loading');
+
+    const current_avatar = $('#current-avatar');
+
     fetchEmail();
+    fetchAvatar();
 
     $('#basicForm').on('submit', function(e){
         e.preventDefault();
@@ -125,6 +132,55 @@ $(document).ready(function(){
         
     });
 
+    saveButton.on('click', async function () {
+        const file = avatarInput[0].files[0]; // Get the selected file
+        if (!file) {
+            alert('Please select an image first!');
+            return;
+        }
+
+        const formData = new FormData();
+        formData.append('avatar', file); // Append the file to FormData
+        toggleLoader(true);
+        try {
+            loading.show(); // Show loading indicator
+            saveButton.prop('disabled', true); // Disable the save button
+
+            const response = await axios.post('/Profile-upload-avatar', formData, {
+                headers: {
+                    'Content-Type': 'multipart/form-data', // Important for file uploads
+                },
+            });
+
+            if(response.status === 200){             
+                message('Avatar updated successfully!','success');
+                await fetchAvatar();
+            }else{
+                msg('Internal Sever Error!','error');
+            }
+
+            
+        } catch (error) {
+            //alert('Error uploading profile image.')  
+            res(error);        
+            const {response} = error;
+            const err = response?.data;
+
+            if(error.status === 422 || err?.code === "EXIT_FORM_NULL"){
+                displayFieldErrors(err.errors?.avatar, '', msg);
+            }else if(error.status === 500 || err?.code === "EXIT_BE_ERROR"){
+                msg('Failed to update Avatar Please try again later!','info');
+            }else{
+                message('Internal Server Error!','error');
+            }
+
+        } finally {
+            toggleLoader(false);
+            loading.hide(); // Hide loading indicator
+            saveButton.prop('disabled', false); // Re-enable the save button
+        }
+    });
+
     async function fetchEmail(){
       
         try {
@@ -143,6 +199,7 @@ $(document).ready(function(){
             console.log(error.response)
         }
     }
+
 
     function validatePassword() {
         var newPassword = $('#newPassword').val();
@@ -171,5 +228,47 @@ $(document).ready(function(){
         return isValid;
     }
 
+    $('#avatar-input').on('change', function(event) {
+        var file = event.target.files[0];
+        if (file) {
+            var reader = new FileReader();
+            $('.loading').show(); // Show loading indicator
 
+            reader.onload = function(e) {
+                $('#current-avatar').attr('src', e.target.result); // Update image src
+                $('.loading').hide(); // Hide loading indicator
+                $('#save-button').show(); // Show save button
+            };
+
+            reader.readAsDataURL(file); // Read the file as a Data URL
+        }
+    });
+
+    async function fetchAvatar() {
+        try {
+            
+            const response = await axios.get('/user-avatar');
+            if(response.status === 200){
+                
+                const img = response?.data ? `/storage/${response.data}` : '/assets/img/avatar/default.jpg';
+                current_avatar.attr('src',img);                             
+            }else{
+                res('Cannot load avatar');
+            }
+
+        } catch (error) {
+            res(error);
+            const {response} = error;
+            const err = response?.data;
+            if(response.status === 500){
+                res('cannot load Image');
+                
+            }else{
+                res(error);
+            }
+
+        }
+    }
+
+///sdsds
 });

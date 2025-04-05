@@ -65,6 +65,8 @@ Route::middleware(['auth'])->group(function(){
         Route::patch('/Profile-password-update',[ProfileController::class,'updatePassword']);
         Route::post('/Profile-deactivate',[ProfileController::class,'deactivateAccount']);
         Route::post('/Profile-new-wallet',[ProfileController::class,'addNewWallet']);
+        Route::get('/user-avatar',[ProfileController::class,'fetchAvatar']);
+        Route::post('/Profile-upload-avatar',[ProfileController::class,'uploadAvatar']);
 
         #Requests
         Route::get('/Profile-Request',[RequestsController::class,'index_user']);
@@ -139,7 +141,7 @@ Route::middleware(['auth'])->group(function(){
         Route::get('/Dashboard-profile-details',[ProfileController::class,'myDetails']);
         Route::get('/Dashboard-profile-email',[ProfileController::class,'myEmail']);
         Route::patch('/Dashboard-user-updateDetails',[ProfileController::class,'updateBasicInfo']);
-        Route::patch('/Dashboard-profile-upEmail',[Profilecontroller::class,'updateEmail']);
+        Route::patch('/Dashboard-profile-upEmail',[ProfileController::class,'updateEmail']);
         Route::patch('/Dashboard-profile-pass-update',[ProfileController::class,'updateProfilePassword']);
         Route::post('/Dashboard-profile-upload-avatar',[ProfileController::class,'uploadAvatar']);
 

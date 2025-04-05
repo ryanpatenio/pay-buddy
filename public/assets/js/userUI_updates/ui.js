@@ -1,9 +1,11 @@
-$(document).ready(function(){
+$(document).ready( async () =>{
 
     const banner = $('#unread-banner');
     const navBanner = $('#unread-banner-nav');
+    const user_avatar = $('#user-avatar');
 
-    fetchUi();
+   await fetchUi();
+   await fetchAvatar();
 
     // Start polling
     const intervalId = setInterval(() => {
@@ -87,6 +89,32 @@ $(document).ready(function(){
         }
     } catch (error) {
         console.error(error);
+    }
+}
+
+async function fetchAvatar() {
+    try {
+        
+        const response = await axios.get('/user-avatar');
+        if(response.status === 200){
+            
+            const img = response?.data ? `/storage/${response.data}` : '/assets/img/avatar/default.jpg';
+            user_avatar.attr('src',img);                             
+        }else{
+            res('Cannot load avatar');
+        }
+
+    } catch (error) {
+        res(error);
+        const {response} = error;
+        const err = response?.data;
+        if(response.status === 500){
+            res('cannot load Image');
+            
+        }else{
+            res(error);
+        }
+
     }
 }
 

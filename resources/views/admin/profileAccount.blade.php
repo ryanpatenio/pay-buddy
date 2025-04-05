@@ -320,4 +320,4 @@
 <script src="{{asset('assets/js/admin/users/zxcvbn.js')}}"></script>
 <script src="{{asset('assets/js/admin/profile/profile.js')}}"></script>
 
-@endsection
+@endSection

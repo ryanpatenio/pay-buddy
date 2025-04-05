@@ -217,7 +217,7 @@
         <div class="dropdown">
             <a href="javascript: void(0);" class="dropdown-toggle no-arrow d-flex align-items-center justify-content-center bg-white rounded-circle shadow-sm mx-1 mx-lg-2 w-40px h-40px" role="button" data-bs-toggle="dropdown" data-bs-auto-close="outside" aria-haspopup="true" aria-expanded="false" data-bs-offset="0,0">
                 <div class="avatar avatar-circle avatar-sm avatar-online">
-                    <img src="https://d33wubrfki0l68.cloudfront.net/053f2dfd0df2f52c41e903a21d177b0b44abc9b1/1282c/assets/images/profiles/profile-06.jpeg" alt="..." class="avatar-img" width="40" height="40">
+                    <img src="" alt="profile" id="user-avatar" class="avatar-img" width="40" height="40">
                 </div>
             </a>
             <div class="dropdown-menu">

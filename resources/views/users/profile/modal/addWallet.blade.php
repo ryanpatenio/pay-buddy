@@ -12,7 +12,7 @@
                 <div class="row">
                     <div class="col">
                         <label for="" class="mb-2">Select Wallet to add</label>
-                        <select name="currency" id="" class="form-control" required>
+                        <select name="currency" id="cur-id" class="form-control" required>
                             <?php
                             foreach ($availableCurrencies as $curr) { ?>
                                 <option value="<?=$curr->id ?? 0 ?>"><?=$curr->name ?? '' ?></option>

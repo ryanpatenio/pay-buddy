@@ -24,7 +24,6 @@ $(document).ready(function(){
             const {response} = error;
             const err = response?.data;
 
-
         }
     }
 
