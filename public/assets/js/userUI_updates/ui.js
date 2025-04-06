@@ -4,6 +4,8 @@ $(document).ready( async () =>{
     const navBanner = $('#unread-banner-nav');
     const user_avatar = $('#user-avatar');
 
+    const notifModal = $('#global-Notification-Modal');
+
    await fetchUi();
    await fetchAvatar();
 
@@ -24,6 +26,62 @@ $(document).ready( async () =>{
         fetchNotificationMsg();
     }
 
+    $('#mark-all-read-btn').click(async (e) =>{ 
+        e.preventDefault();
+        const notificationCount = $('#hidden-count').val();
+
+        if(notificationCount == 0){
+             msg('Notification list is empty!','info');
+             return;
+        }
+        const url = '/user-mark-all-read';
+        swalMessage('custom','Mark all as read?',async () => {
+            toggleLoader(true);
+            try {
+                const response = await axios.patch(url);
+                if(response.status === 200){
+                    const data = response?.data;
+                    msg(data?.message,'success');
+                    await fetchUi();
+                }else{
+                    msg('Internal Server Error!','error');
+                }
+            } catch (error) {
+              const errorMessage = error.response?.data?.message || 
+                        error.message || 
+                        'Failed to mark all as read';
+              msg(errorMessage, 'error');
+
+            }finally{
+                toggleLoader(false);
+            }
+        });
+    
+    });
+
+    $('#g-notif-form').submit(async (e) =>{ 
+        e.preventDefault();
+    
+        const data = $(e.target).serialize();
+        const url = '/user-UI-mark-as-read';
+        swalMessage('custom','Are you sure you want to mark this as read?', async () =>{
+            toggleLoader(true);
+            try {
+                const response = await axios.patch(url,data);
+                if(response.status === 200){
+                    formModalClose(notifModal,$('#g-notif-form'));
+                    await fetchUi();
+                }
+            } catch (error) {
+                const errorMessage = error.response?.data?.message || 
+                error.message || 'Failed to mark all as read';
+                msg(errorMessage, 'error');
+            }finally{
+                toggleLoader(false);
+            }
+        });
+    });
+ 
    async function fetchUnreadNotifCount() {
 
     try {
@@ -34,6 +92,7 @@ $(document).ready( async () =>{
 
             banner.text(count >= 100 ? '99+' : `${count}`);
             navBanner.text(count >= 100 ? '99+' : `${count}`);
+            $('#hidden-count').val(count ?? 0);
         } 
     } catch (error) {
       
@@ -49,11 +108,41 @@ $(document).ready( async () =>{
     }
    }
 
+   $(document).on('click','.notification-item', async function (e){
+        e.preventDefault();
+        resetForm($('#g-notif-form'));
+
+        const id = $(this).data('id');
+        const url = `/user-UI-selected-notif-item/${id}`;
+        try {
+            toggleLoader(true);
+            const response = await axios.get(url);
+            if(response.status === 200){
+                const data = response?.data?.data;
+                $('#g-title').text(data?.title);
+                $('#g-msg').text(data?.message);
+                $('#g-date').text(data?.date_created);
+                $('#ntif-id').val(data?.id);
+            }else{
+                msg('Internal Server Error!','error');
+            }
+        } catch (error) {
+            const errorMessage = error.response?.data?.message || 
+                        error.message || 
+                        'Failed fetch Notification';
+              msg(errorMessage, 'error');
+        }finally{
+            toggleLoader(false);
+            notifModal.modal('show');
+        }
+
+   });
+
    async function fetchNotificationMsg() {
     try {
         const response = await axios.get('/Notifications-all');
         if (response.status === 200) {
-            console.log('notif')
+           
             const data = response?.data?.data; // Assuming data is an array of notifications
             const notificationsList = $('#notifications-list'); // Get the notifications list container
 
@@ -64,10 +153,10 @@ $(document).ready( async () =>{
             // Loop through the data and create list items
             data.forEach(notification => {
                 const listItem = `
-                    <a href="javascript:void(0);" data-id="${notification.id}" class="list-group-item list-group-item-action">
+                    <a href="#" data-id="${notification.id}" class="notification-item list-group-item list-group-item-action ">
                         <div class="d-flex">
                             <div class="avatar avatar-circle avatar-xs me-2">
-                                <img src="https://d33wubrfki0l68.cloudfront.net/5dfa4398a7f2beddbcfa617402e193f2f13aaa94/2ecb0/assets/images/profiles/profile-28.jpeg" alt="..." class="avatar-img" width="30" height="30">
+                                <img src="assets/img/root_img/p-buddy.webp" alt="..." class="avatar-img" width="30" height="30">
                             </div>
                             <div class="d-flex flex-column flex-grow-1">
                                 <div class="d-flex w-100 justify-content-between">
@@ -92,30 +181,30 @@ $(document).ready( async () =>{
     }
 }
 
-async function fetchAvatar() {
-    try {
-        
-        const response = await axios.get('/user-avatar');
-        if(response.status === 200){
+    async function fetchAvatar() {
+        try {
             
-            const img = response?.data ? `/storage/${response.data}` : '/assets/img/avatar/default.jpg';
-            user_avatar.attr('src',img);                             
-        }else{
-            res('Cannot load avatar');
-        }
+            const response = await axios.get('/user-avatar');
+            if(response.status === 200){
+                
+                const img = response?.data ? `/storage/${response.data}` : '/assets/img/avatar/default.jpg';
+                user_avatar.attr('src',img);                             
+            }else{
+                res('Cannot load avatar');
+            }
 
-    } catch (error) {
-        res(error);
-        const {response} = error;
-        const err = response?.data;
-        if(response.status === 500){
-            res('cannot load Image');
-            
-        }else{
+        } catch (error) {
             res(error);
-        }
+            const {response} = error;
+            const err = response?.data;
+            if(response.status === 500){
+                res('cannot load Image');
+                
+            }else{
+                res(error);
+            }
 
+        }
     }
-}
 
 });

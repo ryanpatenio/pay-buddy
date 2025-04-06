@@ -24,7 +24,18 @@
     <div class="row">
         <div class="col d-flex">
             <!-- Card -->
-            <div class="card border-0 flex-fill w-100" data-list='{"valueNames": ["name", {"name": "key", "attr": "data-key"}, {"name": "status", "attr": "data-status"}, {"name": "created", "attr": "data-created"}], "page": 10}' id="keysTable">
+            <div class="card border-0 flex-fill w-100" 
+            data-list=
+            '{"valueNames":
+                [
+                    "name", 
+                    {"name": "key", "attr": "data-key"},
+                    {"name": "status", "attr": "data-status"},
+                    {"name": "created", "attr": "data-created"}
+                ], 
+              "page": 10
+              }'
+             id="keysTable">
                 <div class="card-header border-0">
                     <div class="d-flex flex-column flex-md-row align-items-md-center justify-content-end">
                         <!-- Title -->
@@ -51,11 +62,11 @@
                                     </a>
                                 </th>
                                 <th>
-                                    <a href="javascript: void(0);" class="text-muted list-sort" data-sort="key">Status
+                                    <a href="javascript: void(0);" class="text-muted list-sort" data-sort="status">Status
                                     </a>
                                 </th>
                                 <th>
-                                    <a href="javascript: void(0);" class="text-muted list-sort" data-sort="key">Date
+                                    <a href="javascript: void(0);" class="text-muted list-sort" data-sort="created">Date
                                     </a>
                                 </th>
                                
@@ -67,16 +78,16 @@
                             foreach ($requests as $req) { ?>
                                <tr>
                                 <td class="name"><?=$i; ?></td>
-                                <td class="key"><?=$req->message ?? '' ?></td>
+                                <td class="key" data-key="<?=$req->message ?? '' ?>"><?=$req->message ?? '' ?></td>
                                 
-                                <td class="status">
+                                <td class="status" data-status="<?= $req->status ?? '' ?>">
                                     <span class="legend-circle 
                                             <?= $req->status === 'approved' ? 'bg-success' : ($req->status === 'pending' ? 'bg-warning' : 'bg-danger') ?>">
-                                           
+                   
                                     </span> 
                                     <?=$req->status ?? '' ?>
                                 </td>
-                                <td><?=$req->date_created ?? '' ?></td>
+                                <td class="created" data-created="<?=$req->date_created ?? '' ?>"><?=$req->date_created ?? '' ?></td>
                                
                             </tr>
                                

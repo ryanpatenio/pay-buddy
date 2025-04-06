@@ -20,7 +20,7 @@
         </nav>
     </div>
     <!-- Card -->
-    <div class="card border-0">
+    <div class="card border-0" id="capture-area">
         <div class="card-body">
             <div class="row justify-content-between">
                 <div class="col-md-7 col-xl-6 col-xxl-5">
@@ -115,7 +115,7 @@
                 </div>
                 <div class="col-md-auto">
                     <!-- Button -->
-                    <button type="button" class="btn btn-light bg-primary">Print</button>
+                    <button type="button" id="screenshotBtn" class="btn btn-light bg-primary">Save</button>
                     <!-- Button -->                  
                 </div>
             </div>
@@ -124,5 +124,23 @@
     </div>
 </div>
 <script src="{{asset('assets/js/xpress/receipt.js')}}"></script>
+<script src="{{asset('assets/js/html2/html2canvas.min.js')}}"></script>
+<script>
+document.getElementById('screenshotBtn').addEventListener('click', function() {
+  const element = document.getElementById('capture-area');
+  const randomNum = Math.floor(Math.random() * 10000);
 
-@endsection
+  html2canvas(element, {
+    useCORS: true,     // Try to load securely first
+    allowTaint: true,  // Fallback for local HTTP
+    logging: false,    // Silence internal logs
+  }).then(canvas => {
+    const link = document.createElement('a');
+    link.download = `screenshot-${randomNum}.png`;
+    link.href = canvas.toDataURL('image/png');
+    link.click();
+  });
+});
+</script>
+
+@endSection

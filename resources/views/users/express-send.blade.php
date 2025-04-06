@@ -167,4 +167,4 @@
 <script src="{{asset('assets/js/xpress/xpress.js')}}"></script>
 
 
-@endsection
+@endSection

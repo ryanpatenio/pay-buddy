@@ -20,3 +20,7 @@ if(response.status === 422){
     displayFieldErrors(err.errors?.code, '', msg);
 }
 else if(response.status === 500 || err.code === "EXIT_BE_ERROR" )
+
+ const errorMessage = error.response?.data?.message || 
+        error.message || 'Failed to mark all as read';
+        msg(errorMessage, 'error');

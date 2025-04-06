@@ -1,0 +1,8 @@
+// Notifications::where('user_id', $user_id)
+            //     ->where('status', 'unread') // Only unread notifications
+            //     ->cursor() // Uses Lazy Collection
+            //     ->each(function ($notification) {
+            //         $notification->update(['is_read' => true]);
+            //     });
+use case //when
+Best when you need to fire Eloquent events (e.g., updated_at, observers).

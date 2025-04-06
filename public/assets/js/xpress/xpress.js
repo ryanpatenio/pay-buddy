@@ -32,23 +32,25 @@ $(document).ready(function(){
         
         swalMessage('custom',
             'You are about to send '+currency+' '+amount+' to '+account_name+' (Account: '+account+'). A transaction fee of '+currency+' '+fee+' will be applied. Your total deduction will be '+currency+' '+total+'. Do you want to proceed?', 
-            async function () {  // ✅ Make this function async
+            async function () { 
                 try {
+                    toggleLoader(true);
+
                     const checkAccount = await axios.post('/checkAccount', { account_number: account });
                     if (checkAccount.status !== 200) {
-                        return alert('Account cannot be found!');
+                        return msg('Account cannot be found!','info');
                     }
         
                     const sendTransaction = await axios.post('/process-transaction', data);
                     if (sendTransaction.status !== 200) {
-                        return alert('Cannot process Transaction!');
+                        return msg('Cannot process Transaction!','error');
                     }
 
                     resetForm($('#xpressForm'));
 
                     // Redirect user to receipt page
                     const transactionId = sendTransaction.data.transaction_id;
-                    console.log(sendTransaction)
+                    //console.log(sendTransaction)
 
                     msg(sendTransaction.data.message,'success');
                    
@@ -57,21 +59,21 @@ $(document).ready(function(){
                         window.location.href = `/Xpress-Receipt?transaction_id=${transactionId}`;
                     }, 2000);
                
-                } catch (error) {
-                    console.log(error)
+                } catch (error) {    
+                   // res(error)            
                     const {response} = error;
-                    
-                    let err_response = error?.response?.data;
-                    console.log(error)
-                   console.log(error?.response?.data?.error);
-                   alert(error?.response?.data?.error);
-        
-                    if (error.response?.status === 422 || err_response?.code === 'EXIT_FORM_NULL') {
-                        alert(err_response?.message || 'An error occurred');
+                    const err = response?.data;
+                              
+                    if (response?.status === 422 || err?.code === 'EXIT_FORM_NULL') {                       
+                        msg(err?.message || "Account Number not found!",'info');
+                    }else if(response.status === 500 || err?.code === "EXIT_BE_ERROR"){
+                        msg(err?.code || err?.error || 'Wallet not found or Account Number','error');
+                    }else{
+                        msg('Server Error!','error');
                     }
-                    
-                      // alert(error.response.data.error);
-                   
+        
+                }finally{
+                    toggleLoader(false);
                 }
             }
         );
@@ -92,15 +94,20 @@ $(document).ready(function(){
             if(response.data.message == "Invalid-acct"){
                return $('#acct-error').text('Account cannot be found!')
             }
-
             $('#acct-error').text('')
-            $('#account-name').val(response.data.data.user_name)
-           
-           
-           
+            $('#account-name').val(response?.data?.data?.user_name);
+
         } catch (error) {
             console.error('An error occurred:', error);
-         
+            const {response} = error;
+            const err = response?.data;
+            if(response.status === 422 || err?.code === "EXIT_FORM_NULL"){
+                res('Account number not found');
+            }else if(response.status === 500 || err?.code === "EXIT_BE_ERROR"){
+                msg('Internal Server Error!','error');
+            }else{
+                msg('Internal Server Error!','error');
+            }
         }
     });
 

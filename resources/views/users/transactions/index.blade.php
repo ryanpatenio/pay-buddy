@@ -24,7 +24,18 @@
     <div class="row">
         <div class="col d-flex">
             <!-- Card -->
-            <div class="card border-0 flex-fill w-100" data-list='{"valueNames": ["name", {"name": "key", "attr": "data-key"}, {"name": "status", "attr": "data-status"}, {"name": "created", "attr": "data-created"}], "page": 10}' id="keysTable">
+            <div class="card border-0 flex-fill w-100" data-list=
+            '{"valueNames":
+                [
+             "num",
+             "name",           
+                    {"name": "key", "attr": "data-key"},
+                    {"name": "status", "attr": "data-status"},
+                    {"name": "created", "attr": "data-created"}
+                ], 
+                    "page": 10
+               }' 
+               id="keysTable">
                 <div class="card-header border-0">
                     <div class="d-flex flex-column flex-md-row align-items-md-center justify-content-end">
                         <!-- Title -->
@@ -40,6 +51,10 @@
                     <table class="table align-middle table-hover table-nowrap mb-0">
                         <thead class="thead-light">
                             <tr>
+                                <th>
+                                    <a href="javascript: void(0);" class="text-muted list-sort" data-sort="num">#
+                                    </a>
+                                </th>
                                 <th>
                                     <a href="javascript: void(0);" class="text-muted list-sort" data-sort="name">Transaction Type
                                     </a>
@@ -71,10 +86,11 @@
                         <tbody class="list">
 
                            <?php
-
+                            $i = 1;
                             foreach ($Transactions as $recent) { ?>
                                
                                <tr>
+                                   <td class="num"><?=$i ?? 0; ?></td>
                                    <td class="name"><?=$recent->description ?? '' ?></td>
                                    <td class="key" data-key="<?= $recent->transaction_id ?? 0?>">
                                        <div class="d-flex">
@@ -100,11 +116,11 @@
                                        <span class="legend-circle <?= $recent->status === 'success' ? 'bg-success' : 'bg-danger' ?>"></span>
                                        <?=$recent->status ?? '' ?>
                                    </td>
-                                   <td class="created" data-created=""><?=$recent->date_created ?></td>
+                                   <td class="created" data-created="<?=$recent->date_created ?>"><?=$recent->date_created ?></td>
                                   
                                </tr>
    
-                             <?php  }
+                             <?php  $i++; }
                                
                             
                             ?>

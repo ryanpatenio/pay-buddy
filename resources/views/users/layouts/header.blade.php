@@ -74,8 +74,10 @@
                 <path d="M12 3L12 0.75" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"/>
                 <path d="M12,3a7.5,7.5,0,0,1,7.5,7.5c0,7.046,1.5,8.25,1.5,8.25H3s1.5-1.916,1.5-8.25A7.5,7.5,0,0,1,12,3Z" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"/>
             </svg>
+            <input type="hidden" id="hidden-count">
             <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill text-bg-danger" id="unread-banner">
                 0+<span class="visually-hidden">unread messages</span>
+                
             </span>
         </a>
         <!-- Notifications offcanvas -->
@@ -95,7 +97,7 @@
                         </a>
                         <ul class="dropdown-menu">
                             <li>
-                                <a class="dropdown-item" href="javascript: void(0);">
+                                <a class="dropdown-item" href="javascript: void(0);" id="mark-all-read-btn">
                                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="me-2 text-secondary" height="14" width="14">
                                         <g>
                                             <path d="M23.22,2.06a1.49,1.49,0,0,0-2,.59l-8.5,15.43L6.46,11.29a1.5,1.5,0,1,0-2.21,2l7.64,8.34a1.52,1.52,0,0,0,2.42-.29L23.81,4.1A1.5,1.5,0,0,0,23.22,2.06Z" style="fill: currentColor"/>
@@ -120,6 +122,7 @@
             </div>
             <div class="offcanvas-body p-0">
                 <div class="list-group list-group-flush" id="notifications-list">
+                    
                     
                    {{-- Populated using Jquery assets/usersUI_updates --}}
                     

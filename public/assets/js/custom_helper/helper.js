@@ -233,6 +233,30 @@ function displayFieldErrors(errorArray, fieldName, msg) {
   }
 }
 
+//return promise
+// const userConfirmed = await swalMessage('delete', "This cannot be undone!");
+    
+//     if (userConfirmed) {
+//         await deleteItem(); // Proceed if user clicked "Yes"
+//     } else {
+//         console.log("User cancelled.");
+//     }
+// function swalMessage(swal_type, message) {
+//   const defaultMessages = {
+//       'update': "Are you sure you want to update this item?",
+//       'delete': "Are you sure you want to delete this item?",
+//       'custom': message || "Are you sure you want to proceed?",
+//   };
+
+//   return Swal.fire({
+//       title: defaultMessages[swal_type] || defaultMessages['custom'],
+//       icon: swal_type === 'delete' ? 'warning' : 'question',
+//       showCancelButton: true,
+//       confirmButtonText: 'Yes',
+//       cancelButtonText: 'No',
+//   }).then((result) => result.isConfirmed); // Returns `true` (Yes) or `false` (No)
+// }
+
 
 
  /**

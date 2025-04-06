@@ -7,6 +7,8 @@ use App\Services\NotificationServices;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Exception;
+use Illuminate\Support\Facades\Auth;
+use PDO;
 
 class NotificationController extends Controller
 {
@@ -42,14 +44,12 @@ class NotificationController extends Controller
         try {
             $notif = Notifications::where('id',$data['id'])->firstOrFail();
             $notif->update(['status'=>'read']);
-            
-            if(!$notif){
-                return json_message(EXIT_BE_ERROR,'failed to update',$notif);
-            }
-            return json_message(EXIT_SUCCESS,'ok');
+
+            return json_message(EXIT_SUCCESS,'Notification updated successfully!');
 
         } catch (\Throwable $th) {
-            be_logs('Failed to update Notification to read',$th);
+            handleException($th,'Failed to update Notification to read');
+            return json_message(EXIT_BE_ERROR,'Failed to update notification!');
         }
     }
 
@@ -73,6 +73,19 @@ class NotificationController extends Controller
         } catch (\Throwable $th) {
             handleException($th,'failed to fetch Notificaitions !');
            return json_message(EXIT_BE_ERROR,'failed to fetch Notificaitions !');
+        }
+    }
+
+    public function markAllRead(Request $request){
+
+        $user_id = Auth::id();
+        try {           
+            Notifications::where('user_id', $user_id)->update(['status' => 'read']);
+
+            return json_message(EXIT_SUCCESS,'Notification mark all read');
+        } catch (\Throwable $th) {
+           handleException($th,'failed to update notifications');
+           return json_message(EXIT_BE_ERROR,'Failed to update Notification! Server Error!');
         }
     }
 }

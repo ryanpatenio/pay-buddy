@@ -335,7 +335,7 @@
                                         <div class="ms-4 d-flex">
                                             <h3 class="h4 mb-0"><?=$wallet->name ?? '' ?></h3>
                                             {{-- <p class="small text-muted mb-0">Expires 9/2024</p> --}}
-                                            <input class="form-control w-200px me-3 " value="<?=$wallet->account_number ?? 0 ?>" style="margin-left: 18px;" readonly>
+                                            <input id="key-01" class="form-control w-200px me-3 " value="<?=$wallet->account_number ?? 0 ?>" style="margin-left: 18px;" readonly>
                                             <!-- Button -->
                                             <button class="clipboard btn btn-link px-0" data-clipboard-target="#key-01" data-bs-toggle="tooltip" data-bs-title="Copy to clipboard">
                                                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" height="18" width="18">

@@ -130,11 +130,34 @@
                     <!--Recent Transactions-->
                     <div class="col-xxl-12 d-flex">
                         <!-- Card -->
-                        <div class="card border-0 flex-fill w-100" data-list='{"valueNames": ["name", "price", "quantity", "amount", {"name": "sales", "attr": "data-sales"}], "page": 5}' id="topSellingProducts">
+                        <div class="card border-0 flex-fill w-100"
+                         data-list=
+                         '{
+                            "valueNames":
+                            [
+                                "name", 
+                                    {"name": "key", "attr": "data-key"}, 
+                                    {"name": "amount", "attr": "data-amount"},
+                                    {"name": "fee", "attr": "data-fee"},
+                                    {"name": "status", "attr": "data-status"},
+                                    {"name": "created", "attr": "data-created"}
+                            ], 
+                            "fuzzySearch": {
+                                "searchClass": "list-fuzzy-search",
+                                "location": 0,
+                                "distance": 100,
+                                "threshold": 0.4,
+                                "multiSearch": true
+                            }
+                        }'
+
+                            id="topSellingProducts">
                             <div class="card-header border-0 card-header-space-between">
                                 <!-- Title -->
                                 <h2 class="card-header-title h4 text-uppercase">Transactions Today
                                 </h2>
+                                <input class="form-control list-fuzzy-search mw-md-300px ms-md-auto mt-5 mt-md-0 mb-3 mb-md-0" type="search" placeholder="Search in keys">
+                                <!-- Button -->
                                 <!-- Dropdown -->
                                 <div class="dropdown">
                                     <a href="javascript: void(0);" class="dropdown-toggle no-arrow text-secondary" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -170,11 +193,11 @@
                                                 </a>
                                             </th>
                                             <th>
-                                                <a href="javascript: void(0);" class="text-muted list-sort" data-sort="key">Amount
+                                                <a href="javascript: void(0);" class="text-muted list-sort" data-sort="amount">Amount
                                                 </a>
                                             </th>
                                             <th>
-                                                <a href="javascript: void(0);" class="text-muted list-sort" data-sort="key">Fee (Optional)
+                                                <a href="javascript: void(0);" class="text-muted list-sort" data-sort="fee">Fee (Optional)
                                                 </a>
                                             </th>
                                             
@@ -194,7 +217,7 @@
                                         foreach ($recentTransactions as $recent) { ?>
                                           <tr>
                                             <td class="name"><?=$recent->description ?? '' ?></td>
-                                            <td class="key" data-key="<?= $recent->transaction_id ?? 0?>">
+                                            <td class="key" data-key="<?= $recent->transaction_id ?? 0 ?>">
                                                 <div class="d-flex">
                                                     <input id="key-01" class="form-control w-350px me-3" value="<?=$recent->transaction_id?? 0 ?>" readonly>
                                                     <!-- Button -->
@@ -212,13 +235,14 @@
                                                     </button>
                                                 </div>
                                             </td>
-                                            <td><?=$recent->amount ? $recent->amount .' ('.$recent->code.')' : 0 ?></td>
-                                            <td><?=$recent->fee ?? 0 ?></td>
-                                            <td class="status" data-status="Active">
+                                            <td class="amount" data-amount="<?=$recent->amount ? $recent->amount .' ('.$recent->code.')' : 0 ?>">
+                                                <?=$recent->amount ? $recent->amount .' ('.$recent->code.')' : 0 ?></td>
+                                            <td class="fee" data-fee="<?=$recent->fee ?? 0 ?>"><?=$recent->fee ?? 0 ?></td>
+                                            <td class="status" data-status="<?=$recent->status ?? '' ?>">
                                                 <span class="legend-circle <?= $recent->status === 'success' ? 'bg-success' : 'bg-danger' ?>"></span>
                                                 <?=$recent->status ?? '' ?>
                                             </td>
-                                            <td class="created" data-created=""><?=$recent->date_created ?></td>
+                                            <td class="created" data-created="<?=$recent->date_created ?>"><?=$recent->date_created ?></td>
                                            
                                         </tr>
 

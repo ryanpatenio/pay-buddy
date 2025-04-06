@@ -95,13 +95,14 @@ class Transactions extends Controller
             ->select('users.name as user_name', 'currencies.id as currency_id', 'currencies.code as currency_code')
             ->first(); // Use first() if expecting only one result
 
-            if(empty($find)){
-                return json_message(EXIT_SUCCESS,'Invalid-acct');
+            if(!$find){
+                return json_message(EXIT_SUCCESS,'Invalid-acct');//
             }
 
             return json_message(EXIT_SUCCESS,'ok',$find);
         } catch (\Throwable $th) {
-            \Log::error('Registration failed', ['error' => $th->getMessage()]);
+            \Log::error('Failed to fetch wallet', ['error' => $th->getMessage()]);
+            return json_message(EXIT_BE_ERROR,'Failed to fetch wallet');
         }
 
     }

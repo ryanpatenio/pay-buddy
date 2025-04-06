@@ -13,6 +13,7 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\RequestsController;
 use App\Http\Controllers\Transactions;
 use App\Http\Controllers\UserController;
+use Illuminate\Notifications\Notification;
 use Illuminate\Support\Facades\Route;
 use SebastianBergmann\CodeCoverage\Report\Html\Dashboard;
 
@@ -56,6 +57,9 @@ Route::middleware(['auth'])->group(function(){
         Route::post('/Notifications-update',[NotificationController::class,'update']);
         Route::get('/Notifications-count',[NotificationController::class,'notificationsCount']);
         Route::get('/Notifications-all',[NotificationController::class,'allNotifications']);
+        Route::patch('/user-mark-all-read',[NotificationController::class,'markAllRead']);
+        Route::get('/user-UI-selected-notif-item/{id}',[NotificationController::class,'getNotification']);
+        Route::patch('/user-UI-mark-as-read',[NotificationController::class,'update']);
         
         #Profile
         Route::get('/Profile-Account',[ProfileController::class,'index_user']);

@@ -21,3 +21,4 @@
     Customize
 
 </a>
+@include('users.globalModal.notificationModal')

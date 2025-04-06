@@ -26,7 +26,7 @@ body #loading-container {
 #loading-spinner {
   width: 5rem;
   height: 5rem;
-  animation: spin 1s linear infinite; /* Add spinning animation */
+  animation: spin 0.5s linear infinite; /* Add spinning animation */
 }
 /* for profile avatar loading state */
 .loading-indicator {
