@@ -156,7 +156,7 @@
         <div class="dropdown">
             <a href="javascript: void(0);" class="dropdown-toggle no-arrow d-flex align-items-center justify-content-center bg-white rounded-circle shadow-sm mx-1 mx-lg-2 w-40px h-40px" role="button" data-bs-toggle="dropdown" data-bs-auto-close="outside" aria-haspopup="true" aria-expanded="false" data-bs-offset="0,0">
                 <div class="avatar avatar-circle avatar-sm avatar-online">
-                    <img src="" alt="..." class="" id="avatar-header" width="40" height="40">
+                    <img src="" alt="..." class="avatar-img" id="avatar-header" width="40" height="40">
                 </div>
             </a>
             <div class="dropdown-menu">
@@ -166,7 +166,7 @@
                             <?php
                              //$avatar_img = $avatar ? 'storage/'.$avatar : 'assets/img/avatar/default.jpg';    
                             ?>
-                            <img src="" alt="..." class="" id="avatar-img-side-header" width="40" height="40">
+                            <img src="" alt="..." class="avatar-img" id="avatar-img-side-header" width="40" height="40">
                         </div>
                         <div class="flex-grow-1 ms-3">
                             <h4 class="mb-0"><?=Auth::user()->name ?? '' ?></h4>

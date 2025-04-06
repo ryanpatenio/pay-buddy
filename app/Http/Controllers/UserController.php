@@ -10,6 +10,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 
 class UserController extends Controller
 {
@@ -316,5 +318,54 @@ class UserController extends Controller
             handleException($th,'Failed to '.$status.' User');
             return json_message(EXIT_BE_ERROR,'failed to '.$status.' User account');
         }
+    }
+    public function updateAvatar(Request $request){
+        $request->validate([
+            'avatar' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048', 
+            'id'     => 'required|numeric|exists:users,id'
+        ]);
+
+        $user = UserDetails::where('user_id',$request->id)->first();
+        if(!$user){
+            return json_message(EXIT_404,'User not found!');
+        }
+
+       try {
+
+        # Delete the old avatar if it exists
+        if ($user->img_url) {
+            Storage::disk('public')->delete($user->img_url);
+        }
+
+         // Store the uploaded file with a unique name
+         $file = $request->file('avatar');
+         $filename = 'img/avatar/' . Str::random(10) . '_' . time() . '.' . $file->getClientOriginalExtension();
+         $path = $file->storeAs('public', $filename);
+
+         $user->update(['img_url'=>$filename]);
+
+         return json_message(EXIT_SUCCESS,'User avatar updated successfully');
+
+       } catch (\Throwable $th) {
+          handleException($th,'Failed to update User Avatar');
+          return json_message(EXIT_BE_ERROR,'Failed to update user avatar');
+       }
+
+
+    }
+    public function fetchUser($id) {
+       try {
+        $user = User::where('id', $id)
+        ->select(['id', 'name', 'email']) // Add columns you want from users table
+        ->with(['userDetails' => function($query) {
+            $query->select(['id', 'user_id','img_url']); // Add columns from user_details
+        }])
+        ->firstOrFail();
+
+        return json_message(EXIT_SUCCESS,'ok',$user);
+
+       } catch (\Throwable $th) {
+        return json_message(EXIT_BE_ERROR,'failed to fetch user data');
+       }
     }
 }

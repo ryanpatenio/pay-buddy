@@ -227,7 +227,7 @@
                 <div class="dropdown-item-text">
                     <div class="d-flex align-items-center">
                         <div class="avatar avatar-sm avatar-circle">
-                            <img src="https://d33wubrfki0l68.cloudfront.net/053f2dfd0df2f52c41e903a21d177b0b44abc9b1/1282c/assets/images/profiles/profile-06.jpeg" alt="..." class="avatar-img" width="40" height="40">
+                            <img id="pop-up-profile-im" src="" alt="..." class="avatar-img" width="40" height="40">
                         </div>
                         <div class="flex-grow-1 ms-3">
                             <h4 class="mb-0">{{Auth::user()->name}}</h4>
@@ -238,8 +238,8 @@
                 <hr class="dropdown-divider">
                 <!-- Dropdown -->
                 <div class="dropdown dropend">
-                    <a class="dropdown-item dropdown-toggle" href="javascript: void(0);" id="statusDropdown" data-bs-toggle="dropdown" aria-expanded="false" data-bs-offset="-16,10">Set status
-                    </a>
+                    {{-- <a class="dropdown-item dropdown-toggle" href="javascript: void(0);" id="statusDropdown" data-bs-toggle="dropdown" aria-expanded="false" data-bs-offset="-16,10">Set status
+                    </a> --}}
                     <div class="dropdown-menu dropdown-menu-end navbar-dropdown-menu navbar-dropdown-menu-borderless navbar-dropdown-sub-menu" aria-labelledby="statusDropdown">
                         <a class="dropdown-item" href="javascript: void(0);">
                             <span class="legend-circle bg-success me-2"></span>

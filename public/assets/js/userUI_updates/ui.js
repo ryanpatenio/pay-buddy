@@ -188,7 +188,8 @@ $(document).ready( async () =>{
             if(response.status === 200){
                 
                 const img = response?.data ? `/storage/${response.data}` : '/assets/img/avatar/default.jpg';
-                user_avatar.attr('src',img);                             
+                user_avatar.attr('src',img);
+                $('#pop-up-profile-im').attr('src',img);                            
             }else{
                 res('Cannot load avatar');
             }

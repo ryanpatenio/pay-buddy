@@ -38,12 +38,17 @@
                                         </g>
                                     </svg>
                                 </span>
-                                <input type="file" name="avatar" class="d-none">
+                                <form action="" enctype="multipart/form-data" method="POST">
+                                    <input type="file" name="avatar" id="avatar-input" class="d-none">
+                                </form>
                             </label>
-                            <img src="https://d33wubrfki0l68.cloudfront.net/053f2dfd0df2f52c41e903a21d177b0b44abc9b1/1282c/assets/images/profiles/profile-06.jpeg" alt="Profile picture" class="avatar-img" width="112" height="112">
+                            <img src="" alt="Profile picture" id="u-profile" class="avatar-img" width="112" height="112">
+                            <button id="save-button" class="btn btn-primary mt-3 mb-5" style="display: none;">Save</button>
+                            <div class="loading-indicator" id="loading">Loading...</div>
                         </div>
-                        <h3 class="mb-0" id="side-name"></h3>
-                        <span class="small text-secondary fw-semibold" id="role">Assistant Manager</span>
+                       
+                        <h3 class="mb-0" id="side-name"></h3>   
+                        <span class="small text-secondary fw-semibold" id="role">User</span>
                     </div>
                     <!-- Divider -->
                     <hr class="mb-0">
@@ -112,6 +117,7 @@
                         </a>
                     </li>
                 </ul>
+              
                 <div class="card-footer text-center">
                     {{-- <div class="row">
                         <label for="" class="mb-2">Acount Number</label>
@@ -149,7 +155,7 @@
                                 <label for="fullName" class="col-form-label">Full Name</label>
                             </div>
                             <div class="col-lg">
-                                <input type="text" name="name" class="form-control" placeholder="Full Name" id="fullName" required value="<?=$profile->name ?? '' ?>">
+                                <input type="text" name="name" class="form-control" placeholder="Full Name" id="fullName" required value="">
                                 <div class="invalid-feedback">Please add your full name</div>
                             </div>
                         </div>
@@ -159,7 +165,7 @@
                                 <label for="phone" class="col-form-label">Phone Number</label>
                             </div>
                             <div class="col-lg">
-                                <input type="text" name="phone_number" maxlength="11" class="form-control" id="phoneNumber" required placeholder="(+63) 934 349 232" value="<?=$profile->phone_number ?? '' ?>">
+                                <input type="text" name="phone_number" maxlength="11" class="form-control" id="phoneNumber" required placeholder="(+63) 934 349 232" value="">
                                 <div class="invalid-feedback">Please add your phone number</div>
                             </div>
                         </div>
@@ -179,15 +185,15 @@
                                     <div class="invalid-feedback">Please select a country</div>
                                 </div>
                                 <div class="mb-4">
-                                    <input type="text" name="city" class="form-control" placeholder="City" id="city" required value="<?=$profile->city ?? '' ?>">
+                                    <input type="text" name="city" class="form-control" placeholder="City" id="city" required value="">
                                     <div class="invalid-feedback">Please add a city</div>
                                 </div>
                                 <div class="mb-4">
-                                    <input type="text" name="brgy" class="form-control" placeholder="Brgy" id="brgy" required value="<?=$profile->brgy ?? '' ?>">
+                                    <input type="text" name="brgy" class="form-control" placeholder="Brgy" id="brgy" required value="">
                                     <div class="invalid-feedback">Please add a Brgy</div>
                                 </div>
                                 <div class="mb-4">
-                                    <input type="text" name="province" class="form-control" id="province" placeholder="Province" required value="<?=$profile->province ?? '' ?>">
+                                    <input type="text" name="province" class="form-control" id="province" placeholder="Province" required value="">
                                     <div class="invalid-feedback">Please add a state or Province</div>
                                 </div>
                             </div>
@@ -199,7 +205,7 @@
                                 <label for="zipCode" class="col-form-label">Zip code</label>
                             </div>
                             <div class="col-lg">
-                                <input type="text" name="zip_code" class="form-control" id="zip-code" placeholder="6110" required value="<?=$profile->zip_code ?? '' ?>">
+                                <input type="text" name="zip_code" class="form-control" id="zip-code" placeholder="6110" required value="">
                                 <div class="invalid-feedback">Please add a zip code</div>
                             </div>
                         </div>
@@ -377,4 +383,4 @@
 <script src="{{asset('assets/js/admin/users/view.js')}}"></script>
 
 
-@endsection
+@endSection

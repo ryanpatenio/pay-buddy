@@ -45,8 +45,8 @@
                             $avatar_img = $avatar ? 'storage/'.$avatar : 'assets/img/avatar/default.jpg';
                             
                             ?>
-                            <img src="{{asset($avatar_img)}}" alt="Profile picture" class="avatar-img" width="112" height="112">
-                            <div class="loading-indicator">Loading...</div>
+                            <img src="{{asset($avatar_img)}}" alt="Profile picture" id="current-avatar" class="avatar-img" width="112" height="112">
+                            <div class="loading-indicator" id="loading-admin">Loading...</div>
                             <button id="save-button" class="btn btn-primary mt-3 mb-5" style="display: none;">Save</button>
                         </div>
                         

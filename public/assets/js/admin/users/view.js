@@ -1,17 +1,20 @@
-$(document).ready(function(){
+$(document).ready( async function(){
 
     const urlParams = new URLSearchParams(window.location.search);
     const user_id = urlParams.get('user_id');
+    const avatarInput = $('#avatar-input');
+    const saveButton = $('#save-button');
+    const loading = $('#loading');
 
     if(!user_id){
         alert('No ID found!');
         window.location.href = '/Dashboard-Users';
         return;
     }
-
-    fetchBasicDetails(user_id);
-    fetchEmail(user_id);
-    checkStatus(user_id);
+    fetchBasicDetails(user_id)
+    fetchEmail(user_id)
+    checkStatus(user_id)
+    fetchNameAndAvatar(user_id)
 
     $('#basicForm').submit(async (e) => {
         e.preventDefault();
@@ -201,6 +204,91 @@ $(document).ready(function(){
         })
     });
 
+    $('#save-button').click( async function (e){
+        e.preventDefault();
+
+        const file = avatarInput[0].files[0]; // Get the selected file
+        if (!file) {
+            alert('Please select an image first!');
+            return;
+        }
+
+        const formData = new FormData();
+        formData.append('avatar', file);
+        formData.append('id',user_id);
+
+        const url = '/User-update-avatar';
+
+       swalMessage('custom','Are you sure you want to update this User profile?', async () => {
+            toggleLoader(true);
+            try {
+                loading.show(); // Show loading indicator
+                saveButton.prop('disabled', true); // Disable the save button
+
+                const response = await axios.post(url, formData, {
+                    headers: {
+                        'Content-Type': 'multipart/form-data', // Important for file uploads
+                    },
+                });
+                
+                if(response.status === 200){                
+                    const data = response?.data;
+                    msg(data?.message,'success');
+                    await fetchNameAndAvatar(user_id);
+                }
+        } catch (error) {          
+            const {response} = error;
+            const err = response?.data;
+            if(response.status === 422 || err?.code === "EXIT_FORM_NULL"){
+                displayFieldErrors(err.errors?.avatar, '', msg);
+                displayFieldErrors(err.errors?.id, '', msg);
+
+            }else if(response.status === 500 || err?.code === "EXIT_BE_ERROR"){
+                msg('Internal Server Error!','error');
+            }else{
+                msg('Internal Server Error!','error');
+            }
+
+        }finally{
+            toggleLoader(false);
+            loading.hide();
+            saveButton.prop('disabled', false);
+            saveButton.hide();
+        }
+       });
+
+    });
+
+    async function fetchNameAndAvatar(id){
+        const fullName = $('#side-name');
+        const u_img = $('#u-profile');
+
+        try {
+            const url = `/fetch-user/${id}`;
+            const response = await axios.get(url);
+            if(response.status === 200){              
+                const data = response?.data?.data;
+                           
+                const defaultAvatar = 'assets/img/avatar/default.jpg';
+                const userAvatar = data?.user_details?.img_url;
+                const imgPath = userAvatar ? `/storage/${userAvatar}` : defaultAvatar;
+
+                fullName.text(data?.name);
+                u_img.attr('src',imgPath);
+            }
+        } catch (error) {
+            res(error);
+            const {response} = error;
+            const err = error?.data;
+
+            if(err?.code === "EXIT_BE_ERROR"){
+                msg(err?.message || "failed to fetch avatar",'error');
+            }else{
+                res(err?.message || "Internal server Error!");
+            }
+        }
+    
+    }
     async function fetchBasicDetails(id){
         const fullname = $('#fullName');
         const phone = $('#phoneNumber');
@@ -355,5 +443,20 @@ $(document).ready(function(){
         return isValid;
     }
 
+    $('#avatar-input').on('change', function(event) {
+        var file = event.target.files[0];
+        if (file) {
+            var reader = new FileReader();
+            $('.loading').show(); // Show loading indicator
+
+            reader.onload = function(e) {
+                $('#u-profile').attr('src', e.target.result); // Update image src
+                $('.loading').hide(); // Hide loading indicator
+                $('#save-button').show(); // Show save button
+            };
+
+            reader.readAsDataURL(file); // Read the file as a Data URL
+        }
+    });
     
 });

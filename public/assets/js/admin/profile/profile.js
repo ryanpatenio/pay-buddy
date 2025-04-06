@@ -126,11 +126,11 @@ $(document).ready(function(){
         var file = event.target.files[0];
         if (file) {
             var reader = new FileReader();
-            $('.loading').show(); // Show loading indicator
+            $('#loading-admin').show(); // Show loading indicator
 
             reader.onload = function(e) {
-                $('.avatar-img').attr('src', e.target.result); // Update image src
-                $('.loading').hide(); // Hide loading indicator
+                $('#current-avatar').attr('src', e.target.result); // Update image src
+                $('#loading-admin').hide(); // Hide loading indicator
                 $('#save-button').show(); // Show save button
             };
 

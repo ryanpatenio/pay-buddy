@@ -20,4 +20,8 @@ class UserDetails extends Model
         'overview',
         'img_url'
     ];
+
+    public function user(){
+       return $this->belongsTo(User::class);
+    }
 }

@@ -398,5 +398,6 @@ class ProfileController extends Controller
         
         return $this->dashboardService->getUserImgUrl();
     }
+    
 
 }

@@ -168,6 +168,8 @@ Route::middleware(['auth'])->group(function(){
             return view('admin.users.viewUser');
         
         });
+        Route::get('/fetch-user/{id}',[UserController::class,'fetchUser']);
+        Route::post('/User-update-avatar',[UserController::class,'updateAvatar']);
     
         #CURRENCIES
         Route::get('/Currencies',[CurrenciesController::class,'index_admin']);
