@@ -228,6 +228,7 @@ class ProfileController extends Controller
             ->select('w.id as wallet_id','c.name','c.img_url','w.account_number')
             ->get();
     }
+   
     
     public function deactivateAccount(Request $request){
        

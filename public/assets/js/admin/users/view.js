@@ -6,6 +6,10 @@ $(document).ready( async function(){
     const saveButton = $('#save-button');
     const loading = $('#loading');
 
+    const editModal = $('.editModal');
+    const addModal = $('#addNewWalletModal');
+
+    
     if(!user_id){
         alert('No ID found!');
         window.location.href = '/Dashboard-Users';
@@ -15,6 +19,8 @@ $(document).ready( async function(){
     fetchEmail(user_id)
     checkStatus(user_id)
     fetchNameAndAvatar(user_id)
+    fetchUserWallets(user_id);
+    fetchAvailableCurrencies(user_id)
 
     $('#basicForm').submit(async (e) => {
         e.preventDefault();
@@ -258,6 +264,102 @@ $(document).ready( async function(){
        });
 
     });
+    $(document).on('click','.edit-wallet-btn',async function(e){
+        e.preventDefault();
+
+        resetForm($('#editForm'));
+
+        const id = $(this).data('id');
+        const balance = $(this).data('balance');
+         
+        const hidden_id = $('#hh-id');
+        const bal = $('#current-balance');
+
+        hidden_id.val(id);
+        bal.val(balance);
+
+        editModal.modal('show');
+    });
+    $('#editForm').submit(async function (e)  {
+        e.preventDefault();
+
+        const data = $(this).serialize();
+
+        swalMessage('custom','Are you sure you want to update this user Balance?',async () => {
+            toggleLoader(true);
+            try {
+                const url = '/update-user-walletBalance';
+                const response = await axios.patch(url,data);
+                if(response.status === 200){
+                    
+                    const data = response?.data;
+                    msg(data?.message,'success');
+                    await fetchUserWallets(user_id);
+                }else{
+                    msg('Error Overlap','error');
+                }
+            } catch (error) {
+                
+                const {response} = error;
+                const err = response?.data;
+                if(response.status === 422){
+                    displayFieldErrors(err.errors?.id, '', msg);
+                    displayFieldErrors(err.errors?.balance, '', msg);
+                }else if(response.status === 500 || err?.code === "EXIT_BE_ERROR"){
+                    msg(err?.message || "Failed to update user wallet balance",'error');
+                }else{
+                    msg('Internal Server Error!','error');
+                }
+
+            }finally{
+                toggleLoader(false);
+                formModalClose(editModal,$('#editForm'));
+            }
+            
+        });
+    });
+
+    $('#addWalletForm').submit(async function (e){
+        e.preventDefault();
+
+        const data = $(this).serialize();
+        const url = '/add-newCurrency-toUserWallet';
+
+        swalMessage('custom','Are you sure you want to add new E-Wallet in this User?',async () => {
+            toggleLoader(true);
+            try {
+                const response = await axios.post(url,data);
+                if(response.status === 200){
+                   const data = response?.data;
+                   msg(data?.message,'success');
+                   
+                }else{
+                    msg('Error Overlap','error');
+                }
+            } catch (error) {
+               
+                const {response} = error;
+                const err = response?.data;
+                if(response.status === 422){
+                    displayFieldErrors(err.errors?.id, '', msg);
+                    displayFieldErrors(err.errors?.currency, '', msg);
+                }else if(response.status === 404 || err?.code === "EXIT_404"){
+                    msg(err?.message || "404 not found!",'error');
+                }else if(response.status === 500 || err?.code === "EXIT_BE_ERROR"){
+                    msg(err?.message || "Internal Server Error!",'error');
+                }else{
+                    msg('Internal server Error!','error');
+                }
+
+            }finally{
+               toggleLoader(false);
+               formModalClose(addModal,$('#addWalletForm'));
+               await fetchUserWallets(user_id);
+               await fetchAvailableCurrencies(user_id);
+            }
+        });
+    });
+
 
     async function fetchNameAndAvatar(id){
         const fullName = $('#side-name');
@@ -441,6 +543,105 @@ $(document).ready( async function(){
         }
 
         return isValid;
+    }
+    async function fetchUserWallets(id){
+
+        try {
+            const url = `/user-wallets/${id}`;
+            const response = await axios.get(url);
+            if(response.status === 200){
+                const data = response?.data?.data;
+                const walletList = $('#wallet-list');
+
+                walletList.empty();//clear list
+
+                data.forEach(wallet => {
+                    const listItem = `
+                     <li class="list-group-item d-flex justify-content-between align-items-center px-0">
+                                    <div class="d-flex align-items-center">
+                                        <!--SVG for VISA CARD-->
+                                        
+                                        <div class="ms-4 d-flex">
+                                            <h3 class="h4 mb-0 px-4 nav-link">(${wallet.currency.code}) <strong> ${wallet.balance}</strong></h3>
+        
+                                            <input id="key-0${wallet.id}" class="form-control w-200px me-3 " value="${wallet.account_number}" style="margin-left: 18px;" readonly>
+                                            <!-- Button -->
+                                            <button class="clipboard btn btn-link px-0" data-clipboard-target="#key-0${wallet.id}" data-bs-toggle="tooltip" data-bs-title="Copy to clipboard">
+                                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" height="18" width="18">
+                                                    <g>
+                                                        <path d="M13.4,4.73a.24.24,0,0,0,.2.26,1.09,1.09,0,0,1,.82,1.11V7.5a1.24,1.24,0,0,0,1.25,1.24h0A1.23,1.23,0,0,0,16.91,7.5V4a1.5,1.5,0,0,0-1.49-1.5H13.69a.29.29,0,0,0-.18.07.26.26,0,0,0-.07.18C13.44,3.2,13.44,4.22,13.4,4.73Z" style="fill: currentColor"/>
+                                                        <path d="M9,21.26A1.23,1.23,0,0,0,7.71,20H3.48a1.07,1.07,0,0,1-1-1.14V6.1A1.08,1.08,0,0,1,3.33,5a.25.25,0,0,0,.2-.26c0-.77,0-1.6,0-2a.25.25,0,0,0-.25-.25H1.5A1.5,1.5,0,0,0,0,4V21a1.5,1.5,0,0,0,1.49,1.5H7.71A1.24,1.24,0,0,0,9,21.26Z" style="fill: currentColor"/>
+                                                        <path d="M11.94,4.47v-2a.5.5,0,0,0-.5-.49h-.76a.26.26,0,0,1-.25-.22,2,2,0,0,0-3.95,0A.25.25,0,0,1,6.23,2H5.47A.49.49,0,0,0,5,2.48v2a.49.49,0,0,0,.49.5h6A.5.5,0,0,0,11.94,4.47Z" style="fill: currentColor"/>
+                                                        <path d="M19,17.27H15a.75.75,0,0,0,0,1.5h4a.75.75,0,0,0,0-1.5Z" style="fill: currentColor"/>
+                                                        <path d="M14.29,14.54a.76.76,0,0,0,.75.75h2.49a.75.75,0,0,0,0-1.5H15A.76.76,0,0,0,14.29,14.54Z" style="fill: currentColor"/>
+                                                        <path d="M23.5,13.46a2,2,0,0,0-.58-1.41l-1.41-1.4a2,2,0,0,0-1.41-.59H12.49a2,2,0,0,0-2,2V22a2,2,0,0,0,2,2h9a2,2,0,0,0,2-2Zm-11-.4a1,1,0,0,1,1-1h6.19a1,1,0,0,1,.71.29l.82.82a1,1,0,0,1,.29.7V21a1,1,0,0,1-1,1h-7a1,1,0,0,1-1-1Z" style="fill: currentColor"/>
+                                                    </g>
+                                                </svg>
+                                            </button>
+                                            <button class="clipboard btn btn-link px-3 edit-wallet-btn" data-balance="${wallet.balance}" data-id="${wallet.id}">
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pencil-square" viewBox="0 0 16 16">
+                                                    <path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z"/>
+                                                    <path fill-rule="evenodd" d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5z"/>
+                                                  </svg>
+                                            </button>
+                                        </div>
+                                    </div>
+                                   
+                                </li>
+                    `;
+                    walletList.append(listItem);
+                });
+                new ClipboardJS('.clipboard');
+                $('[data-bs-toggle="tooltip"]').tooltip();
+            }else{
+                res('Error overlap');
+            }
+        } catch (error) {
+           
+            const {response} = error?.data;
+            const err = response.data;
+            if(response.status === 404 || err?.code === "EXIT_404"){
+                res('no data found1');
+            }else if(response.status === 500 || err?.code === "EXIT_BE_ERROR"){
+                res(err?.message || 'Failed to fetch user wallets');
+            }else{
+                res('Internal Server Error!');
+            }
+        }
+    }
+
+    async function fetchAvailableCurrencies(id){
+        $('#user-id').val(id);
+        const url = `/fetch-available-currenciesById/${id}`;
+        try {
+            const response = await axios.get(url);
+            if(response.status === 200){
+               
+                const data = response?.data?.data;
+                const currencyList = $('#currency-list');
+                currencyList.empty();
+
+                data.forEach(currency => {
+                    const listItems = `
+                       <option value="${currency.id}">${currency.code}</option> 
+                    `;
+                    currencyList.append(listItems);
+                });
+            }else{
+                res('Internal Server Error!');
+            }
+        } catch (error) {
+           const {response} = error;
+           const err = response?.data;
+
+           if(response.status === 404 || err?.code === "EXIT_404"){
+             res(err?.message || 'unable to fetch currencies');
+           }else if(response.status === 500){
+             res('Internal Server Error!');
+           }else{
+            res('Internal Server Error!');
+           }
+        }
     }
 
     $('#avatar-input').on('change', function(event) {

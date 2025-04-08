@@ -163,13 +163,18 @@ Route::middleware(['auth'])->group(function(){
         Route::get('/Dashboard-User-show/{id}',[LogsController::class,'userLogs'])->name('get.user');
         Route::get('/Dashboard-userLogs/{id}',[LogsController::class,'getLogs']);
        
-        
+        #Dashboard View User
         Route::get('/Dashboard-viewUser',function(){
             return view('admin.users.viewUser');
         
         });
         Route::get('/fetch-user/{id}',[UserController::class,'fetchUser']);
         Route::post('/User-update-avatar',[UserController::class,'updateAvatar']);
+        Route::get('/user-wallets/{id}',[UserController::class,'showAllUserWallets']);
+        Route::patch('/update-user-walletBalance',[UserController::class,'updateUserBalance']);
+        Route::get('/fetch-available-currenciesById/{id}',[UserController::class,'fetchCurrencies']);
+        Route::post('/add-newCurrency-toUserWallet',[UserController::class,'addNewWallet']);
+
     
         #CURRENCIES
         Route::get('/Currencies',[CurrenciesController::class,'index_admin']);

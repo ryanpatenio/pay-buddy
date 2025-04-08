@@ -25,10 +25,10 @@ if (!defined('EXIT_DEFAULT')) {
     define('EXIT_DEFAULT', 'EXIT_DEFAULT'); // Maps to HTTP 400
 }
 if (!defined('EXIT_404')) {
-    define('EXIT_404', 'EXIT_404'); // Maps to HTTP 400
+    define('EXIT_404', 'EXIT_404'); // Maps to HTTP 404
 }
 if (!defined('EXIT_401')) {
-    define('EXIT_401', 'EXIT_401'); // Maps to HTTP 400
+    define('EXIT_401', 'EXIT_401'); // Maps to HTTP 401
 }
 define('STATUS_ENABLED', 0);
 define('STATUS_DISABLED', 1);

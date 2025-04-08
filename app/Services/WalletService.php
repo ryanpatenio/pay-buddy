@@ -173,6 +173,17 @@ class WalletService
 
     return $availableCurrencies;
    }
+   public function availableCurrency(int $user_id){
+    
+        // Get currencies that are not already associated with the user's wallets
+        $availableCurrencies = currency::whereNotIn('id', function ($query) use ($user_id) {
+            $query->select('currency_id')
+                ->from('wallets')
+                ->where('user_id', $user_id);
+        })->get();
+
+    return $availableCurrencies;
+   }
 
 
 

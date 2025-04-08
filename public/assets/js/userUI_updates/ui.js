@@ -143,7 +143,7 @@ $(document).ready( async () =>{
         const response = await axios.get('/Notifications-all');
         if (response.status === 200) {
            
-            const data = response?.data?.data; // Assuming data is an array of notifications
+            const data = response?.data?.data; 
             const notificationsList = $('#notifications-list'); // Get the notifications list container
 
            

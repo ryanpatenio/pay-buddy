@@ -21,11 +21,18 @@ class UserController extends Controller
     {
         $this->walletService = $walletServices;
     }
-    
+    //admin
     public function index(){
         $users = $this->showAllUsers();
 
         return view('admin.users.users',compact('users'));
+    }
+    public function fetchCurrencies($id) {
+        if(!is_numeric($id) || empty($id)){
+            return json_message(EXIT_404,'No data found!');
+        }
+        $data = $this->walletService->availableCurrency($id);
+        return json_message(EXIT_SUCCESS,'ok',$data);
     }
 
     public function showAllUsers(){
@@ -367,5 +374,70 @@ class UserController extends Controller
        } catch (\Throwable $th) {
         return json_message(EXIT_BE_ERROR,'failed to fetch user data');
        }
+    }
+
+    public function showAllUserWallets($id){
+        if(!is_numeric($id) || empty($id)){
+            return json_message(EXIT_404,'No data found');
+        }
+
+        try {
+            $wallets = Wallets::where('user_id', $id)
+            ->with('currency')
+            ->get();
+         if(empty($wallets)){
+            return json_message(EXIT_404,'No wallets found');
+         }
+
+         return json_message(EXIT_SUCCESS,'ok',$wallets);
+        } catch (\Throwable $th) {
+            //throw $th;
+            json_message(EXIT_BE_ERROR,'Failed to fetch wallets');
+        }
+    }
+    public function updateUserBalance(Request $request){
+        $request->validate([
+            'id' => 'required|numeric|exists:wallets,id',
+            'balance' => 'required|numeric'
+        ]); 
+
+        try {
+            $wallets = Wallets::findOrFail($request->id);
+            $wallets->update(['balance'=>$request->balance]);
+
+            return json_message(EXIT_SUCCESS,'User Balance Updated Successfully!');
+        } catch (\Throwable $th) {
+            handleException($th,'failed to update user wallet balance');
+            return json_message(EXIT_BE_ERROR,'Failed to update user wallet Balance');
+        }
+
+    }
+    public function addNewWallet(Request $request){
+        $request->validate([
+            'id' => 'required|numeric|exists:users,id',
+            'currency' => 'required|numeric|exists:currencies,id'
+        ]);
+        //check wallet existence
+        $isWalletExist = Wallets::where('currency_id',$request->currency)->where('user_id',$request->id)->first();
+
+        if($isWalletExist){
+            return json_message(EXIT_404,'Wallet already existed!');
+        }
+
+        $data = [
+            'user_id'=> $request->id,
+            'currency_id'=>$request->currency,
+            'account_number'=> $this->walletService->generateUniqueAccountNumber(),
+            'balance'    => 0
+        ];
+        try {
+            Wallets::create($data);
+            return json_message(EXIT_SUCCESS,'Congratulation you successfully added a new E-Wallet');
+        } catch (\Throwable $th) {
+            //throw $th;
+            handleException($th,'Failed to add new wallet');
+            return json_message(EXIT_BE_ERROR,'failed to add new wallet');
+        }
+
     }
 }

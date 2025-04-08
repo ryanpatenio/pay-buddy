@@ -337,7 +337,23 @@
                     </div>
                 </div>
 
-                <!-- Card -->
+                <div class="card border-0 scroll-mt-3" id="paymentMethodsSection">
+                    <div class="card-header d-flex justify-content-between">
+                        <h2 class="h3 mb-0">Wallet Account(s)</h2>
+                        <button class="btn btn-success" type="button" data-bs-toggle="modal" data-bs-target="#addNewWalletModal">add new currency (account)</button>
+                    </div>
+                    <div class="card-body">
+                        <ul class="list-group list-group-flush" id="wallet-list">
+                       
+                        </ul>
+                        <div class="d-flex justify-content-end mt-5">
+                            <!-- Button -->
+                            
+                        </div>
+                    </div>
+                </div>
+
+                <!--Delete Account Card -->
                 <div class="card border-0 scroll-mt-3" id="deleteAccountSection">
                     <div class="card-header">
                         <h2 class="h3 mb-0">Delete Account</h2>
@@ -379,6 +395,10 @@
     </div>
     <!-- / .row -->
 </div>
+@include('admin.users.modal.addModal')
+@include('admin.users.modal.editModal')
+<script src="{{asset('assets/js/dl-clipboard.js')}}"></script>
+
 <script src="{{asset('assets/js/admin/users/zxcvbn.js')}}"></script>
 <script src="{{asset('assets/js/admin/users/view.js')}}"></script>
 
