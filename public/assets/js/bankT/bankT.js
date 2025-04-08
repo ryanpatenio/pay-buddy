@@ -47,7 +47,7 @@ $(document).ready(function(){
                     }
  
                 } catch (error) {
-                   
+                   res(error)
                     const {response} = error;
                     const err = response?.data;
 
@@ -82,7 +82,7 @@ $(document).ready(function(){
             const imgUrl = response.data.data.img_url;
     
             // Construct the full image URL
-            const fullImgUrl = `assets/img/bank_img/${imgUrl}`;
+            const fullImgUrl = `storage/${imgUrl}`;
     
             // Update the image source
             $('#bank-img')

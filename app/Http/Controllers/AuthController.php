@@ -84,8 +84,7 @@ class AuthController extends Controller
             'password' => 'required|string|min:8|confirmed',
             
         ]);
-       
-    
+           
         try {
 
             DB::transaction(function () use ($request) {
@@ -93,8 +92,8 @@ class AuthController extends Controller
                 $user = User::create([
                     'name' => $request->name,
                     'email' => $request->email,
-                    'password' => Hash::make($request->password),
-                    
+                    'password' => Hash::make($request->password)
+                
                 ]);
                 UserDetails::create([
                     'user_id'=> $user->id
@@ -112,7 +111,7 @@ class AuthController extends Controller
                     'user_id' => $user->id,
                     'currency_id' => $currency,//which mean PHP or PESO DEFAULT
                     'account_number'=> $accountNumber ,
-                    'balance' => 500.00, // Default starting balance
+                    'balance' => 0.00, // Default starting balance
                 ]);
             });
             

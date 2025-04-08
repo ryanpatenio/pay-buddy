@@ -32,7 +32,7 @@
                 </div>
                 <div class="col-auto text-md-end">
                     <p class="fw-bold">
-                        <img src="{{ asset('assets/img/bank_img/' . ($transactionData->bankTransactionDetail?->bankPartner?->img_url ?? '')) }}" width="95" height="95" class="img-fluid" alt="...">                         
+                        <img src="{{ asset('storage/' . ($transactionData->bankTransactionDetail?->bankPartner?->img_url ?? '')) }}" width="95" height="95" class="img-fluid" alt="...">                         
                     </p>                
                     {{$transactionData->bankTransactionDetail->bankPartner->description ?? ''}}
                 </div>
@@ -99,7 +99,7 @@
                     <span class="text-secondary mb-2">Fee (<span id="currency" class="text-primary">PHP</span>)</span>
                     <h3 class="display-5 mb-2" id="total-amount">{{$transactionData->fee ?? 0}}</h3>
                     <span class="text-secondary">Total Amount Sent (<span id="currency" class="text-primary">PHP</span>)</span>
-                    <h3 class="display-2 mb-2" id="total-amount">{{$transactionData->amount + $transactionData->fee ?? 0}}</h3>
+                    <h3 class="display-2 mb-2" id="total-amount">{{$transactionData->amount ?? 0}}</h3>
                    
                     <span class="text-secondary">status</span>
                     <br>

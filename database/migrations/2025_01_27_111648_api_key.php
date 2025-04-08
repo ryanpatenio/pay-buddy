@@ -17,11 +17,12 @@ return new class extends Migration
             $table->id();
             $table->foreignId('user_id')->constrained()->onDelete('cascade');
          
-            $table->text('api_key')->unique(); // Unique API key for each user
+            $table->string('api_key')->unique(); // Unique API key for each user
             $table->string('callback_url')->nullable(); // Optional callback URL for third-party integrations
             $table->enum('status', ['active', 'inactive', 'revoked'])->default('active');
             $table->timestamp('expires_at')->nullable(); // Expiration date   
 
+            $table->index('api_key');
             $table->timestamps();
 
             $table->timestamp('revoked_at')->nullable(); // When the key was revoked

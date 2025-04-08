@@ -32,50 +32,52 @@
                             <h3>Choose Bank</h3>
                             <div class="row">
                                 <?php
-                                foreach ($bankPartners as $bank) { ?>
-                                     <div class="col-sm-6 col-xxl-4">
-                                        <div class="form-check form-state-switch w-100">
-                                            <input class="form-state-input" type="radio" name="platforms" id="connection1">
-                                            <label class="form-state-label w-100" for="connection1">
-                                                <span class="">
-                                                    <!-- Button -->
-                                                    <span class="card shadow-sm">
-                                                        <span class="card-body">
-                                                            <span class="d-flex justify-content-between">
-                                                                <span class="d-flex align-items-center">
-                                                                    <span class="avatar avatar-lg text-bg-gray-300 d-flex align-items-center justify-content-center">
-                                                                        <img src="{{asset('assets/img/bank_img')}}<?= '/'.$bank->img_url ?>" class="img-fluid" width="42" alt="...">
+                                    if (count($bankPartners) > 0) {
+                                        foreach ($bankPartners as $bank) { ?>
+                                            <div class="col-sm-6 col-xxl-4">
+                                                <div class="form-check form-state-switch w-100">
+                                                    <input class="form-state-input" type="radio" name="platforms" id="connection1">
+                                                    <label class="form-state-label w-100" for="connection1">
+                                                        <span class="">
+                                                            <!-- Button -->
+                                                            <span class="card shadow-sm">
+                                                                <span class="card-body">
+                                                                    <span class="d-flex justify-content-between">
+                                                                        <span class="d-flex align-items-center">
+                                                                            <span class="avatar avatar-lg text-bg-gray-300 d-flex align-items-center justify-content-center">
+                                                                                <img src="{{asset('storage')}}<?= '/'.$bank->img_url ?>" class="img-fluid" width="42" alt="...">
+                                                                            </span>
+                                                                            <span class="ms-4">
+                                                                                <span class="h3 card-title mb-0"><?=$bank->name?? '' ?></span>
+                                                                                <br>
+                                                                            </span>
+                                                                        </span>
                                                                     </span>
-                                                                    <span class="ms-4">
-                                                                        <span class="h3 card-title mb-0"><?=$bank->name?? '' ?></span>
-                                                                        <br>
-                                                                       
+                                                                </span>
+                                                                <span class="card-footer p-0">
+                                                                    <!-- Button -->
+                                                                    <span id="selectedBank" data-id="<?= $bank->name?? ''?>" class="btn text-bg-light link-secondary d-flex align-items-center justify-content-center rounded-0 rounded-bottom">Select
                                                                     </span>
                                                                 </span>
                                                             </span>
                                                         </span>
-                                                        <span class="card-footer p-0">
-                                                            <!-- Button -->
-                                                            <span id="selectedBank" data-id="<?= $bank->name?? ''?>" class="btn text-bg-light link-secondary d-flex align-items-center justify-content-center rounded-0 rounded-bottom">Select
-                                                            </span>
-                                                        </span>
-                                                    </span>
-                                                </span>
-                                                
-                                            </label>
+                                                    </label>
+                                                </div>
+                                            </div>
+                                        <?php } 
+                                    } else { ?>
+                                        <div class="col-12">
+                                            <div class="alert alert-danger text-center" role="alert">
+                                                Bank transfer unavailable at the moment.
+                                            </div>
                                         </div>
-                                    </div>
-
-                               <?php }    
-                                    
-                                ?>
-
+                                    <?php } ?>
                             </div>
                         </div>
                         <div class="card-footer">
                             <div class="d-flex justify-content-end">
                                 <!-- Button -->
-                                <a class="btn btn-primary" data-toggle="wizard" href="#wizardStepTwoSelected">Next</a>
+                                {{-- <a class="btn btn-primary" data-toggle="wizard" href="#wizardStepTwoSelected">Next</a> --}}
                             </div>
                         </div>
                     </div>

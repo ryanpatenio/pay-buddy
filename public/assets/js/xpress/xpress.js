@@ -117,9 +117,9 @@ $(document).ready(function(){
         const response = await axios.get("/user-wallet-balance");
 
         if (response.status === 200) {
-           
-            $('#wallet-balance').text(`₱ ${response.data.balance}`);
-            $('#hidden_val').val(response.data.balance);
+          
+            $('#wallet-balance').text(`₱ ${response?.data?.balance ?? 0}`);
+            $('#hidden_val').val(response?.data?.balance ?? 0);
         }
     } catch (error) {
         console.error("Failed to fetch wallet balance:", error.response ? error.response.data : error);

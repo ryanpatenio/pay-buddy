@@ -331,7 +331,7 @@
                                  <li class="list-group-item d-flex justify-content-between align-items-center px-0">
                                     <div class="d-flex align-items-center">
                                         <!--SVG for VISA CARD-->
-                                        <img src="{{asset('assets/img/currencies')}}<?='/'.$wallet->img_url ?? '' ?>" alt="" width="40" height="31">
+                                        <img src="{{asset('storage/')}}<?='/'.$wallet->img_url ?? '' ?>" alt="" width="40" height="31">
                                         <div class="ms-4 d-flex">
                                             <h3 class="h4 mb-0"><?=$wallet->name ?? '' ?></h3>
                                             {{-- <p class="small text-muted mb-0">Expires 9/2024</p> --}}
