@@ -146,17 +146,17 @@
     
     <!--Jquery-->
     <script src="{{asset('assets/js/jquery.js')}}"></script>
+    
+    <script src="{{ asset('assets/js/axios/axios.min.js') }}"></script>
+    <script src="{{ asset('assets/js/app.js') }}"></script>
+
+    <script src="{{asset('assets/swal/sweet.js')}}"></script> {{--Sweet alert Lib--}}
+    <script src="{{asset('assets/js/custom_helper/helper.js')}}"></script>  {{--helper--}}
+
 
         <!-- Page Title -->
         <title>@yield('title', 'Pay Buddy | Admin')</title>
-
-        <script src="{{ asset('assets/js/axios/axios.min.js') }}"></script>
-        <script src="{{ asset('assets/js/app.js') }}"></script>
-
-        <script src="{{asset('assets/swal/sweet.js')}}"></script> {{--Sweet alert Lib--}}
-        <script src="{{asset('assets/js/custom_helper/helper.js')}}"></script>  {{--helper--}}
-
-        
+     
 
     </head>
     <body>
@@ -182,10 +182,9 @@
         @include('admin.layouts.footer') <!-- Reusable footer -->
 
 
-        <script src="{{URL::asset('assets/js/theme.bundle.js')}}"></script>
+        <script src="{{asset('assets/js/theme.bundle.js')}}"></script>
        
 
     </body>
     </html>
-    {{-- <script src="https://cdn.jsdelivr.net/npm/chart.js"></script> --}}
-    {{-- <script src="{{URL::asset('assets/js/dashboard/balanceChart.js')}}"></script> --}}
+ 
