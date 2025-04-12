@@ -73,7 +73,7 @@
                                 <td class="name"><?=$notif->title ?? '' ?></td>
                                 
                                 <td class="name"><?=$notif->message ?? '' ?></td>
-                                <td class="created" data-created="1642550400"><?=$notif->created_at ?? '' ?></td>
+                                <td class="created" data-created="<?= $notif->date_created ?? ''?>"><?=$notif->date_created ?? '' ?></td>
                                
                             </tr>  
                            <?php }

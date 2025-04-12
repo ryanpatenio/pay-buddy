@@ -1,9 +1,9 @@
 <footer class="mt-auto">
     <div class="container-fluid mt-4 mb-6 text-muted">
         <div class="row justify-content-between">
-            <div class="col">© Dashly. 2023 Webinning.
+            <div class="col">
             </div>
-            <div class="col-auto">v1.5.0
+            <div class="col-auto">&copy; PayBuddy {{ date('Y') }}
             </div>
         </div>
         <!-- / .row -->
