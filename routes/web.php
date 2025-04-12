@@ -198,6 +198,17 @@ Route::middleware(['auth'])->group(function(){
         Route::get('/Fee-get/{id}',[FeesController::class,'getFee']);
         Route::patch('/Fee-update',[FeesController::class,'updateFee']);
 
+        Route::get('/debug-file-check', function() {
+            $filename = 'um94TX3bg9_1744444766.jfif';
+            $path = storage_path('app/public/img/avatar/'.$filename);
+            
+            return response()->json([
+                'file_exists' => file_exists($path),
+                'full_path' => $path,
+                'files_in_folder' => scandir(dirname($path))
+            ]);
+        });
+
     });
     
     #authenticated routes
