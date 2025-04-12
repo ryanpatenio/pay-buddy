@@ -13,6 +13,39 @@
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
         <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;600;700;800&display=swap">
         <link rel="stylesheet" media="print" onload="this.onload=null;this.removeAttribute('media');" href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;600;700;800&display=swap">
+        <style>
+            /* 1. Fix collapsing animation for high refresh rates */
+            .collapsing {
+                transition: height 0.2s cubic-bezier(0.4, 0, 0.2, 1); /* Smoother curve */
+                will-change: height; /* Helps browsers optimize */
+            }
+
+            /* 2. Stabilize dropdown positioning */
+            .navbar-collapse {
+                transform: translate3d(0, 0, 0);
+                backface-visibility: hidden;
+            }
+
+            /* 3. Smoother dropdown appearance with fade */
+            .dropdown-menu {              
+                transition: opacity 0.2s ease, transform 0.2s ease; /* Fade + slide */             
+            }
+
+            .dropdown-menu.show {
+                opacity: 1;
+                visibility: visible;
+            }
+
+            /* 4. Fix for navbar-toggler animation */
+            .navbar-toggler {
+            transition: transform 0.2s ease;
+            }
+
+            .navbar-toggler[aria-expanded="true"] {
+            transform: rotate(90deg);
+            }
+        </style>
+
         <!-- no-JS fallback -->
         <noscript>
             <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;600;700;800&display=swap">
