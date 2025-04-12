@@ -35014,10 +35014,10 @@ a,button {
 }
 
 .dropdown-menu {
-    --bs-slidein-margin: calc(var(--bs-dropdown-spacer)*2);
-    animation-duration: .2s;
-    animation-fill-mode: both;
-    animation-name: slideIn
+     animation: slideIn 0.2s ease forwards;
+    will-change: transform, opacity;
+    backface-visibility: hidden;
+    -webkit-transform: translateZ(0);
 }
 
 .dropdown-item {
@@ -35178,14 +35178,13 @@ a,button {
 }
 
 @keyframes slideIn {
-    to {
-        margin-top: var(--bs-dropdown-spacer);
-        opacity: 1
-    }
-
     0% {
-        margin-top: var(--bs-slidein-margin);
-        opacity: 0
+        transform: translateY(10px);
+        opacity: 0;
+    }
+    100% {
+        transform: translateY(0);
+        opacity: 1;
     }
 }
 

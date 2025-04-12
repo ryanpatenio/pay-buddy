@@ -7,7 +7,7 @@
         <meta name="csrf-token" content="{{ csrf_token() }}">
         <!-- Theme CSS -->
         
-        <link rel="stylesheet" href="{{URL::asset('assets/css/theme.bundle.css')}}" id="stylesheetLTR">
+        <link rel="stylesheet" href="{{asset('assets/css/theme.bundle.css')}}" id="stylesheetLTR">
         <link rel="stylesheet" href="{{asset('assets/css/loader.css')}}">
         
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
