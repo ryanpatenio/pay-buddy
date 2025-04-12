@@ -39,11 +39,11 @@
 
             /* 4. Fix for navbar-toggler animation */
             .navbar-toggler {
-            transition: transform 0.2s ease;
+                 transition: transform 0.2s ease;
             }
 
             .navbar-toggler[aria-expanded="true"] {
-            transform: rotate(90deg);
+                 transform: rotate(90deg);
             }
         </style>
         <!-- no-JS fallback -->
