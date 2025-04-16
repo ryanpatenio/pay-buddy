@@ -60,7 +60,7 @@ $(document).ready(function(){
                     }, 2000);
                
                 } catch (error) {    
-                   // res(error)            
+                    res(error)            
                     const {response} = error;
                     const err = response?.data;
                               

@@ -1,4 +1,11 @@
 #!/bin/bash
+
+# Create directories if they don't exist
+mkdir -p storage/app/public/img/avatar
+
+# Set proper permissions
+chmod -R 775 storage/app/public
+
 # 1. Create storage link
 php artisan storage:link
 
