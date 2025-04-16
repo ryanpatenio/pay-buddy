@@ -5,7 +5,7 @@ namespace App\Services;
 use App\Exceptions\BankTransferException;
 use App\Models\BankPartners;
 use App\Models\bankTransactionDetails;
-use App\Models\Transactions;
+use App\Models\Transaction;
 use App\Models\Wallets;
 use App\Services\WalletService;
 use App\Services\NotificationServices;
@@ -331,7 +331,7 @@ class TransactionServices
      */
     protected function createTransaction(array $data)
     {
-        return Transactions::create([
+        return Transaction::create([
             'wallet_id' => $data['wallet_id'],
             'receiver_wallet_id' => $data['receiver_wallet_id'],
             'transaction_id' => $this->walletService->generateTransactionID(),
@@ -346,7 +346,7 @@ class TransactionServices
     }
 
     protected function createBankTransaction(array $data) : object {
-        $transactions = Transactions::create([
+        $transactions = Transaction::create([
 
             'wallet_id' => $data['wallet_id'],
             'receiver_wallet_id' => null,//no receiver wallet for bank transaction using API
