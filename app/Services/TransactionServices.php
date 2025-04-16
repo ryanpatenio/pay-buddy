@@ -329,7 +329,7 @@ class TransactionServices
      * @param array $data
      * @return Transaction
      */
-    protected function createTransaction(array $data): Transactions
+    protected function createTransaction(array $data): ?Transactions
     {
         return Transactions::create([
             'wallet_id' => $data['wallet_id'],

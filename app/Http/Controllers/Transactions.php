@@ -43,7 +43,7 @@ class Transactions extends Controller
             return response()->json($response, 200);
 
         } catch (\Throwable $th) {
-            handleException($th,'transaction Error');
+            //handleException($th,'transaction Error');
             return response()->json(['error' => $th->getMessage()], 500);
         }
     }
